@@ -25,4 +25,4 @@ The build candidate is therefore not yet eligible for the `gen9-engine-baseline`
 
 ## Emulator method
 
-The installed desktop mGBA could launch under Wayland, but this agent session did not have the compositor/X11 authority needed to control or inspect that GUI. Tests above used the same installed mGBA 0.10.5 core through a small temporary harness, deterministic key schedules, framebuffer captures, and separate processes for save/reload. No BIOS was supplied; mGBA's HLE BIOS was used.
+The installed desktop mGBA could launch under Wayland. With temporary X11 display permission, its title frame was captured successfully, but the Qt frontend exited when synthetic key events were sent, before a reliable GUI gameplay run could be completed. Tests above therefore used the same installed mGBA 0.10.5 core through a small temporary harness, deterministic key schedules, framebuffer captures, and separate processes for save/reload. No BIOS was supplied; mGBA's HLE BIOS was used.
