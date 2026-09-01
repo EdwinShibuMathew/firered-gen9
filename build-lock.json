@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "upstreams": {
+    "pret_pokefirered": {
+      "url": "https://github.com/pret/pokefirered.git",
+      "commit": "c75f352304d529f6ba92d4f74b9cf8b5c3810788"
+    },
+    "dpe_gen9": {
+      "url": "https://github.com/grilokapu/Dynamic-Pokemon-Expansion-Gen-9.git",
+      "commit": "376849ea0887131689a36cc51846c573f7735f22",
+      "offset": "0x1600000"
+    },
+    "cfru_expansion": {
+      "url": "https://github.com/Shiny-Miner/CFRU-expansion.git",
+      "branch": "Experiments",
+      "commit": "dade256a1db1fa036fedd9f8566cb48de405e97a",
+      "offset": "0x1000000"
+    }
+  },
+  "artifacts": {
+    "vanilla": {
+      "size": 16777216,
+      "sha1": "41cb23d8dccc8ebd7c649cd8fbb58eeace6e2fdc",
+      "sha256": "3d0c79f1627022e18765766f6cb5ea067f6b5bf7dca115552189ad65a5c3a8ac"
+    },
+    "dpe": {
+      "size": 33554432,
+      "sha1": "48e59a1ebc7b519606c480bfa6675cc103c9fbfb",
+      "sha256": "c2c27af7ab7ca9efa0a02a90d78a614b43fe65c1cf2eb45bd01935d3c5e02a25",
+      "payload_sha256": "6a796e57e307e7499a29c1b3ce166f1131329685d50c24707768e03858648f4f"
+    },
+    "cfru": {
+      "size": 33554432,
+      "sha1": "a20c39647320ffc372365117068a78ded9041c8e",
+      "sha256": "32136e7063ea8ea54eed429a4f311f3ae093037e4281cda00ee9618a353b52cc",
+      "payload_sha256": "34511426e08a2716ad09f95416422d00d978619d6f2a0938e99c2fbd7d329a5c"
+    }
+  },
+  "compatibility_overlays": {
+    "cfru_modern_gcc_freestanding": {
+      "path": "patches/cfru/0001-modern-gcc-freestanding.patch",
+      "sha256": "f3d19f78616d0c8956e26a36d2012403d9c817bd76f1e47805579c3448d76833"
+    }
+  },
+  "toolchain": {
+    "python": "3.14.4",
+    "make": "4.4.1",
+    "arm_gcc": "14.2.1",
+    "arm_binutils": "2.45.50.20251209-1ubuntu1+23build1",
+    "grit": "0.9.2",
+    "pillow": "12.3.0",
+    "mgba": "0.10.5"
+  }
+}
