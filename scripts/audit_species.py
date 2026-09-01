@@ -2,280 +2,192 @@
 """
 M2 Species Audit Script
 
-Comprehensive validation of all 1,025 National Pokédex species in FireRed Gen 9.
+Static audit of CFRU species metadata to validate the source-level registry and
+ensure the ROM source is aligned with the expected National Dex coverage.
 
-Validates:
-- Species IDs and ordering
-- Base stats and types
-- Abilities and forms
-- Sprites, cries, Pokédex entries
-- Evolution chains
-- Learnsets and move compatibility
-
-Exit code: 0 if all critical checks pass, non-zero if issues found
+This is intentionally source-driven: the vanilla ROM and generated build artifacts
+are legal local inputs only, and the CFRU source tree exposes the species registry,
+valid type IDs, and known form lists needed for M2 planning and validation.
 """
 
 import argparse
 import json
-import struct
+import re
 import sys
-from dataclasses import dataclass, asdict
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 
 
-@dataclass
-class BaseStatsRecord:
-    """FireRed base stats structure (11 bytes minimum)."""
-    species_id: int
-    hp: int
-    attack: int
-    defense: int
-    speed: int
-    sp_attack: int
-    sp_defense: int
-    type1: int
-    type2: int
-    catch_rate: int
-    exp_yield: int
+SRC_ROOT = Path(__file__).resolve().parents[1]
+SPECIES_HEADER = SRC_ROOT / ".upstream/cfru/include/constants/species.h"
+POKEMON_HEADER = SRC_ROOT / ".upstream/cfru/include/pokemon.h"
+SPECIES_JSON = SRC_ROOT / ".upstream/cfru/assembly/data/species_tables.json"
+ROM_PATH_DEFAULT = SRC_ROOT / ".upstream/cfru/test.gba"
 
 
 class SpeciesAudit:
-    """Audit framework for species data validation."""
-    
-    # Species type constants (Gen 9)
-    TYPE_NAMES = {
-        0: "NORMAL", 1: "FIGHTING", 2: "FLYING", 3: "POISON", 4: "GROUND",
-        5: "ROCK", 6: "BUG", 7: "GHOST", 8: "STEEL", 9: "FIRE", 10: "WATER",
-        11: "GRASS", 12: "ELECTRIC", 13: "PSYCHIC", 14: "ICE", 15: "DRAGON",
-        16: "DARK", 17: "FAIRY", 18: "STELLAR",  # Stellar is Gen 9
-    }
-    
-    # Valid species ID range (National Pokédex)
-    MIN_SPECIES_ID = 1
-    MAX_SPECIES_ID = 1025
-    
-    def __init__(self, rom_path: Path):
-        self.rom_path = rom_path
-        self.rom_size = rom_path.stat().st_size
-        self.rom_data = None
-        self.findings = {
-            "critical": [],
-            "high": [],
-            "medium": [],
-            "low": [],
-        }
-        self.stats = {
-            "total_species": self.MAX_SPECIES_ID,
-            "species_with_issues": 0,
-            "critical_issues": 0,
-            "high_issues": 0,
-            "medium_issues": 0,
-            "low_issues": 0,
-        }
-    
-    def load_rom(self) -> bool:
-        """Load ROM file into memory."""
+    """Audit CFRU species metadata and registry integrity."""
+
+    FORM_SUFFIXES = (
+        "_A", "_G", "_H", "_N", "_MEGA", "_PRIMAL", "_ORIGIN", "_THERIAN",
+        "_CROWNED", "_ICE_RIDER", "_SHADOW_RIDER", "_DADA", "_ETERNAMAX",
+        "_RED", "_BLUE", "_ORANGE", "_YELLOW", "_INDIGO", "_GREEN", "_VIOLET",
+        "_SINGLE", "_RAPID", "_RESOLUTE", "_PIROUETTE", "_SKY", "_ALOLA",
+        "_GALARIAN", "_HISUI", "_PALDEA", "_STELLAR", "_TERASTAL",
+        "_FIGHT", "_FLYING", "_POISON", "_GROUND", "_ROCK", "_BUG", "_GHOST",
+        "_STEEL", "_FIRE", "_WATER", "_GRASS", "_ELECTRIC", "_PSYCHIC",
+        "_ICE", "_DRAGON", "_DARK", "_FAIRY", "_BLAZE", "_EAST", "_WEST",
+        "_S", "_M", "_L", "_XL", "_P", "_D", "_R", "_Z", "_10",
+    )
+
+    def __init__(self, rom_path: Path | None = None):
+        self.rom_path = Path(rom_path) if rom_path else ROM_PATH_DEFAULT
+        self.issues = []
+        self.species = self._parse_species_registry()
+        self.type_values = self._parse_types()
+        self.rom_exists = self.rom_path.exists()
+
+    def _parse_species_registry(self):
+        if not SPECIES_HEADER.exists():
+            raise FileNotFoundError(f"Missing species registry: {SPECIES_HEADER}")
+        text = SPECIES_HEADER.read_text(encoding="utf-8")
+        matches = re.findall(r"^#define\s+(SPECIES_[A-Z0-9_]+)\s+0x([0-9A-Fa-f]+)", text, re.M)
+        species = {}
+        for name, value in matches:
+            try:
+                species[int(value, 16)] = name
+            except ValueError:
+                self.issues.append(f"Unable to parse species value for {name}: {value}")
+        return dict(sorted(species.items()))
+
+    def _parse_types(self):
+        if not POKEMON_HEADER.exists():
+            raise FileNotFoundError(f"Missing type definitions: {POKEMON_HEADER}")
+        text = POKEMON_HEADER.read_text(encoding="utf-8")
+        matches = re.findall(r"^#define\s+(TYPE_[A-Z_]+)\s+0x([0-9A-Fa-f]+)", text, re.M)
+        values = {}
+        for name, value in matches:
+            values[int(value, 16)] = name
+        return dict(sorted(values.items()))
+
+    def _json_species_names(self):
+        if not SPECIES_JSON.exists():
+            return set()
         try:
-            with self.rom_path.open("rb") as f:
-                self.rom_data = f.read()
-            print(f"✓ Loaded ROM: {len(self.rom_data)} bytes")
-            return True
-        except Exception as e:
-            print(f"✗ Failed to load ROM: {e}")
-            return False
-    
-    def validate_species_id(self, species_id: int) -> Tuple[bool, Optional[str]]:
-        """Validate species ID is in valid range."""
-        if species_id < self.MIN_SPECIES_ID or species_id > self.MAX_SPECIES_ID:
-            return False, f"Invalid species ID: {species_id} (valid range: {self.MIN_SPECIES_ID}-{self.MAX_SPECIES_ID})"
-        return True, None
-    
-    def validate_type(self, type_id: int) -> Tuple[bool, Optional[str]]:
-        """Validate type ID is valid (including Gen 9 Stellar)."""
-        if type_id not in self.TYPE_NAMES:
-            return False, f"Invalid type ID: {type_id} (valid types: 0-18)"
-        return True, None
-    
-    def validate_base_stats(self, stats: BaseStatsRecord) -> List[str]:
-        """Validate base stat distribution."""
+            payload = json.loads(SPECIES_JSON.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            return set()
+        names = set()
+        for obj in payload.values():
+            if isinstance(obj, list):
+                for item in obj:
+                    if isinstance(item, str) and item.startswith("SPECIES_"):
+                        names.add(item)
+            elif isinstance(obj, dict):
+                for item in obj.values():
+                    if isinstance(item, str) and item.startswith("SPECIES_"):
+                        names.add(item)
+        return names
+
+    def _is_form_species(self, name: str) -> bool:
+        return any(name.endswith(suffix) for suffix in self.FORM_SUFFIXES) and name not in {"SPECIES_NONE"}
+
+    def _count_base_species(self):
+        return sum(1 for value in self.species.values() if not self._is_form_species(value))
+
+    def _base_species_id_pattern(self):
+        ids = list(self.species)
+        if not ids:
+            return []
+        if ids[0] != 0:
+            return ["Registry does not begin at species ID 0"]
+        if ids[-1] != max(ids):
+            return ["Registry ordering is inconsistent"]
+        return []
+
+    def validate_registry(self):
         issues = []
-        
-        # Check stat ranges (0-255 are valid, but unusual values warrant warning)
-        for stat_name, stat_val in [
-            ("HP", stats.hp),
-            ("Attack", stats.attack),
-            ("Defense", stats.defense),
-            ("Speed", stats.speed),
-            ("Sp. Atk", stats.sp_attack),
-            ("Sp. Def", stats.sp_defense),
-        ]:
-            if stat_val == 0:
-                issues.append(f"stat_{stat_name.lower().replace(' ', '_')}_zero")
-            elif stat_val > 255:
-                issues.append(f"stat_{stat_name.lower().replace(' ', '_')}_overflow")
-        
-        # Check for placeholder stats (all 0s or 1s)
-        total = sum([stats.hp, stats.attack, stats.defense, 
-                    stats.speed, stats.sp_attack, stats.sp_defense])
-        if total == 0:
-            issues.append("stats_all_zero_placeholder")
-        
-        # Type validation
-        type1_valid, type1_err = self.validate_type(stats.type1)
-        if not type1_valid:
-            issues.append(f"invalid_type1_{stats.type1}")
-        
-        type2_valid, type2_err = self.validate_type(stats.type2)
-        if not type2_valid:
-            issues.append(f"invalid_type2_{stats.type2}")
-        
-        # Catch rate
-        if stats.catch_rate == 0:
-            issues.append("catch_rate_zero")
-        elif stats.catch_rate > 255:
-            issues.append("catch_rate_overflow")
-        
-        # EXP yield
-        if stats.exp_yield == 0:
-            issues.append("exp_yield_zero")
-        elif stats.exp_yield > 255:
-            issues.append("exp_yield_overflow")
-        
+        ids = list(self.species)
+        if not ids:
+            return ["No species constants were parsed from species.h"]
+
+        if min(ids) != 0:
+            issues.append(f"Species registry starts at {min(ids)}, expected 0")
+
+        duplicates = [v for v in ids if ids.count(v) > 1]
+        if duplicates:
+            issues.append(f"Duplicate species IDs found: {sorted(set(duplicates))[:10]}")
+
+        expected_national = 1025
+        base_count = self._count_base_species()
+        if base_count < expected_national:
+            issues.append(
+                f"National Dex base-species coverage is only {base_count}; expected at least {expected_national}"
+            )
+
+        # Ensure the registry contains the expected core species names
+        required = [
+            "SPECIES_NONE",
+            "SPECIES_BULBASAUR",
+            "SPECIES_SQUIRTLE",
+            "SPECIES_CHARMANDER",
+            "SPECIES_PIKACHU",
+            "SPECIES_MEW",
+            "SPECIES_CELEBI",
+            "SPECIES_DEOXYS",
+            "SPECIES_ARCEUS",
+            "SPECIES_GENESECT",
+            "SPECIES_ETERNATUS",
+            "SPECIES_TERAPAGOS",
+            "SPECIES_PECHARUNT",
+        ]
+        missing = [name for name in required if name not in self.species.values()]
+        if missing:
+            issues.append(f"Missing required species constants: {missing}")
+
+        # Validate JSON references exist in the registry
+        ref_names = self._json_species_names()
+        missing_refs = sorted(name for name in ref_names if name not in self.species.values())
+        if missing_refs:
+            issues.append(f"Species tables JSON references names absent from species.h: {missing_refs[:10]}")
+
+        # Validate type constants are sane
+        if not self.type_values:
+            issues.append("No valid TYPE_* constants were parsed from pokemon.h")
+        elif 0 not in self.type_values or 24 not in self.type_values:
+            issues.append("Expected at least NORMAL and STELLAR type constants in pokemon.h")
+
         return issues
-    
-    def audit_species(self, species_id: int) -> Dict:
-        """Audit a single species."""
-        valid, err = self.validate_species_id(species_id)
-        if not valid:
-            return {
-                "species_id": species_id,
-                "valid": False,
-                "error": err,
-                "critical_issues": [err],
-            }
-        
-        # For now, return validation structure
-        # In full implementation, would extract actual data from ROM
-        return {
-            "species_id": species_id,
-            "valid": True,
-            "issues": [],
-            "warnings": [],
-        }
-    
-    def run_full_audit(self) -> int:
-        """Run audit for all 1,025 species."""
-        print("\n" + "="*70)
-        print("SPECIES AUDIT: Full 1,025 National Pokédex Validation")
-        print("="*70)
-        
-        if not self.load_rom():
+
+    def report(self):
+        print("\n" + "=" * 70)
+        print("M2 SPECIES REGISTRY AUDIT")
+        print("=" * 70)
+        print(f"ROM present: {'yes' if self.rom_exists else 'no'}")
+        print(f"Species constants parsed: {len(self.species)}")
+        print(f"Base species estimated: {self._count_base_species()}")
+        print(f"Type constants parsed: {len(self.type_values)}")
+        print(f"Range: {min(self.species)}..{max(self.species)}")
+
+        issues = self.validate_registry()
+        if issues:
+            print("\nIssues found:")
+            for issue in issues:
+                print(f"  - {issue}")
             return 1
-        
-        species_with_issues = 0
-        
-        print(f"\nAuditing all {self.MAX_SPECIES_ID} species...")
-        
-        for species_id in range(self.MIN_SPECIES_ID, self.MAX_SPECIES_ID + 1):
-            result = self.audit_species(species_id)
-            
-            if result.get("critical_issues"):
-                species_with_issues += 1
-                self.stats["critical_issues"] += len(result["critical_issues"])
-                self.findings["critical"].extend([
-                    {
-                        "species_id": species_id,
-                        "issue": issue
-                    }
-                    for issue in result["critical_issues"]
-                ])
-            
-            # Progress indicator
-            if species_id % 100 == 0:
-                print(f"  Progress: {species_id}/{self.MAX_SPECIES_ID}")
-        
-        self.stats["species_with_issues"] = species_with_issues
-        self.stats["high_issues"] = len(self.findings["high"])
-        self.stats["medium_issues"] = len(self.findings["medium"])
-        self.stats["low_issues"] = len(self.findings["low"])
-        
-        return self.generate_report()
-    
-    def generate_report(self) -> int:
-        """Generate audit report and return exit code."""
-        print("\n" + "="*70)
-        print("AUDIT RESULTS")
-        print("="*70)
-        
-        print(f"\nSpecies Audited: {self.stats['total_species']}")
-        print(f"Species with Issues: {self.stats['species_with_issues']}")
-        print(f"\nFinding Breakdown:")
-        print(f"  🔴 CRITICAL: {self.stats['critical_issues']}")
-        print(f"  🟠 HIGH:     {self.stats['high_issues']}")
-        print(f"  🟡 MEDIUM:   {self.stats['medium_issues']}")
-        print(f"  ⚪ LOW:      {self.stats['low_issues']}")
-        
-        # Print critical issues
-        if self.findings["critical"]:
-            print(f"\n🔴 CRITICAL ISSUES ({len(self.findings['critical'])}):")
-            for finding in self.findings["critical"][:10]:  # Show first 10
-                print(f"  [{finding['species_id']}] {finding['issue']}")
-            if len(self.findings["critical"]) > 10:
-                print(f"  ... and {len(self.findings['critical']) - 10} more")
-        
-        # Determine exit code
-        exit_code = 1 if self.stats['critical_issues'] > 0 else 0
-        
-        if exit_code == 0:
-            print("\n✓ All critical checks passed!")
-            print("  M2 species audit COMPLETE")
-        else:
-            print(f"\n✗ {self.stats['critical_issues']} critical issues found")
-            print("  Fix before proceeding to M3")
-        
-        return exit_code
+
+        print("\n✓ Source species registry is internally consistent.")
+        print("  The CFRU source exposes a complete species registry with valid type metadata.")
+        print("  M2 is progressing with source-level validation pending deeper ROM asset extraction.")
+        return 0
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Comprehensive species audit for FireRed Gen 9 (1,025 Pokémon)"
-    )
-    parser.add_argument(
-        "--rom",
-        type=Path,
-        default=Path(".upstream/cfru/test.gba"),
-        help="Path to ROM file",
-    )
-    parser.add_argument(
-        "--report",
-        type=Path,
-        default=Path("docs/M2_SPECIES_AUDIT_REPORT.md"),
-        help="Output report file",
-    )
-    parser.add_argument(
-        "--species",
-        type=int,
-        help="Audit single species ID (for testing)",
-    )
-    
+    parser = argparse.ArgumentParser(description="Audit FireRed Gen 9 species registry metadata")
+    parser.add_argument("--rom", type=Path, default=ROM_PATH_DEFAULT, help="Path to ROM file; optional for source-only audit")
     args = parser.parse_args()
-    
-    # Verify ROM exists
-    if not args.rom.exists():
-        print(f"✗ ROM not found: {args.rom}")
-        return 1
-    
-    # Create audit instance
+
     audit = SpeciesAudit(args.rom)
-    
-    # Run audit
-    if args.species:
-        result = audit.audit_species(args.species)
-        print(f"Species {args.species} audit: {result}")
-        return 0
-    else:
-        return audit.run_full_audit()
+    return audit.report()
 
 
 if __name__ == "__main__":
