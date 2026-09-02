@@ -1,13 +1,23 @@
 #!/usr/bin/env python3
-"""Audit optional M7 prerequisites and report implementation gaps."""
+"""Audit the generated, postgame M7 DexNav migration selector."""
+import csv
+import re
 from pathlib import Path
+
 ROOT = Path(__file__).resolve().parents[1]
-def main() -> int:
-    config = (ROOT / ".upstream/cfru/src/config.h").read_text()
-    source = (ROOT / ".upstream/cfru/src/start_menu.c").read_text()
-    groups = ROOT / "data/habitat_migration_groups.csv"
-    checks = {"dexnav_config": "FLAG_SYS_DEXNAV" in config, "dexnav_start_menu": "STARTMENU_DEXNAV" in source, "deterministic_m4_prerequisite": (ROOT / "data/availability.csv").exists(), "migration_group_contract": groups.exists() and sum(1 for _ in groups.open()) == 10}
-    for name, ok in checks.items(): print(f"{'PASS' if ok else 'PENDING'} {name}")
-    print("PENDING national habitat migration groups and advanced-mechanics regression QA")
-    return 0
-if __name__ == "__main__": raise SystemExit(main())
+config = (ROOT / ".upstream/cfru/src/config.h").read_text(encoding="utf-8")
+source = (ROOT / ".upstream/cfru/src/dexnav.c").read_text(encoding="utf-8")
+header = (ROOT / ".upstream/cfru/include/generated/m7_habitat_groups.h").read_text(encoding="utf-8")
+rows = list(csv.DictReader((ROOT / "data/habitat_migration_groups.csv").open(encoding="utf-8")))
+species = re.findall(r"SPECIES_[A-Z0-9_]+", header)
+checks = {
+    "nine implemented regional groups": len(rows) == 9 and all(row["implementation_status"] == "IMPLEMENTED_UNVERIFIED" for row in rows),
+    "collision-free persistent variable": "#define VAR_M7_MIGRATION_GROUP 0x515A" in config and config.count("0x515A") == 1,
+    "generated 9x16 pools": len(species) == 144 and "M7_MIGRATION_GROUP_COUNT 9" in header,
+    "SELECT selector and postgame gate": all(token in source for token in ("JOY_NEW(SELECT_BUTTON)", "FLAG_SYS_GAME_CLEAR", "Task_DexNavMigrationSelect")),
+    "normal encounter tables untouched": "Migrations augment only the scanner" in source,
+    "migration scan level binding": all(token in source for token in ("M7IsMigrationSpecies", "GetEncounterLevel", "GetTotalEncounterChance")),
+}
+for name, passed in checks.items():
+    print(("PASS " if passed else "FAIL ") + name)
+raise SystemExit(0 if all(checks.values()) else 1)

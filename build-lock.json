@@ -136,6 +136,11 @@
       "upstream": "cfru_expansion",
       "path": "patches/cfru/0017-form-research-preserve.patch",
       "sha256": "0508099e109c8f8b59a9cf93e1cb1e2e6ee040027eda3ad0e71bf5b6292ee51d"
+    },
+    "cfru_dexnav_habitat_migrations": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0018-dexnav-habitat-migrations.patch",
+      "sha256": "c5f4d08939961c070c3493d79285d2dd10f920c739f954f0eda528aae6006918"
     }
   },
   "toolchain": {

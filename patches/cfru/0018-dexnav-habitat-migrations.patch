@@ -1,0 +1,273 @@
+diff --git a/src/dexnav.c b/src/dexnav.c
+index cd00fbf..a1b7138 100644
+--- a/src/dexnav.c
++++ b/src/dexnav.c
+@@ -58,6 +58,7 @@
+ #include "../include/new/wild_encounter.h"
+ #include "../include/new/util.h"
+ #include "../include/new/terastallization.h"
++#include "../include/generated/m7_habitat_groups.h"
+ 
+ /*
+ dexnav.c
+@@ -182,6 +183,8 @@ static void Task_HandleContextMenu(u8 taskId);
+ static void FreeAndCloseDexNav(u8 taskId);
+ static void Task_DexNavFadeOutToStartMenu(u8 taskId);
+ static void Task_DexNavFadeOutToScan(u8 taskId);
++static void Task_DexNavFadeOutToMigrationRefresh(u8 taskId);
++static void Task_DexNavMigrationSelect(u8 taskId);
+ static void CB1_OpenDexNavScan(void);
+ static void MainCB2_DexNav(void);
+ static void VBlankCB_DexNav(void);
+@@ -199,6 +202,33 @@ static void CB2_DexNav(void);
+ 
+ #include "../include/new/dexnav_data.h"
+ 
++static const u8 *const sM7MigrationNames[M7_MIGRATION_GROUP_COUNT] = {
++	gText_DexNav_MigrationKanto, gText_DexNav_MigrationJohto, gText_DexNav_MigrationHoenn,
++	gText_DexNav_MigrationSinnoh, gText_DexNav_MigrationUnova, gText_DexNav_MigrationKalos,
++	gText_DexNav_MigrationAlola, gText_DexNav_MigrationGalarHisui, gText_DexNav_MigrationPaldea,
++};
++
++static u16 M7GetMigrationSpecies(void)
++{
++	u16 group = VarGet(VAR_M7_MIGRATION_GROUP);
++	if (group < 1 || group > M7_MIGRATION_GROUP_COUNT)
++		return SPECIES_NONE;
++	return sM7MigrationGroups[group - 1][GetCurrentRegionMapSectionId() % M7_MIGRATION_GROUP_SIZE];
++}
++
++static bool8 M7IsMigrationSpecies(u16 species)
++{
++	return species != SPECIES_NONE && species == M7GetMigrationSpecies();
++}
++
++static void M7PrintMigrationChoice(u16 group)
++{
++	if (group < 1 || group > M7_MIGRATION_GROUP_COUNT)
++		group = 1;
++	StringCopy(gStringVar1, sM7MigrationNames[group - 1]);
++	PrintDexNavMessage(MESSAGE_MIGRATION_SELECT);
++}
++
+ 
+ // ===================================== //
+ // ===== Dex Nav Pokemon Generator ===== //
+@@ -1152,6 +1182,8 @@ static u8 GetTotalEncounterChance(u16 species, u8 environment)
+ 	const struct WildPokemonInfo* waterMonsInfo = LoadProperMonsData(WATER_MONS_HEADER);
+ 	const struct WildPokemonInfo* fishingMonsInfo = LoadProperMonsData(FISHING_MONS_HEADER);
+ 	u8 chance = 0;
++	if (environment == ENCOUNTER_TYPE_LAND && M7IsMigrationSpecies(species))
++		return 5;
+ 
+ 	switch (environment)
+ 	{
+@@ -1215,6 +1247,8 @@ static u8 GetEncounterLevel(u16 species, u8 environment, bool8 detectorMode)
+ 
+ 	u8 min = 100;
+ 	u8 max = 0;
++	if (environment == ENCOUNTER_TYPE_LAND && M7IsMigrationSpecies(species))
++		return 30 + (VarGet(VAR_M7_MIGRATION_GROUP) * 2);
+ 
+ 	switch (environment)
+ 	{
+@@ -2207,6 +2241,16 @@ static void DexNavPopulateEncounterList(void)
+ 		}
+ 	}
+ 
++	// Migrations augment only the scanner. The map's normal encounter header
++	// remains unchanged, preserving deterministic M4 availability and identity.
++	species = M7GetMigrationSpecies();
++	if (landMonsInfo != NULL && species != SPECIES_NONE)
++	{
++		u8 slot = grassIndex < MAX_TOTAL_LAND_MONS ? grassIndex : MAX_TOTAL_LAND_MONS - 1;
++		sDexNavGUIPtr->landEncounterMethod[slot] = ENCOUNTER_METHOD_GRASS;
++		sDexNavGUIPtr->grassSpecies[slot] = species;
++	}
++
+ 	Memset(sDexNavGUIPtr->hiddenSpecies, HIDDEN_SPEECIES_TERMIN & 0xFF, sizeof(sDexNavGUIPtr->hiddenSpecies)); //Used in TryAddSpeciesToArray
+ 
+ 	if (waterMonsInfo != NULL)
+@@ -2442,6 +2486,9 @@ static void PrintDexNavMessage(u8 messageId)
+ 		case MESSAGE_NO_POKEMON_HERE:
+ 			text = gText_DexNav_NoPokemonHere;
+ 			break;
++		case MESSAGE_MIGRATION_SELECT:
++			text = gText_DexNav_MigrationSelect;
++			break;
+ 		default:
+ 			text = NULL;
+ 			break;
+@@ -3257,7 +3304,17 @@ static void Task_PrintMessageThenClose(u8 taskId)
+ 
+ static void Task_DexNavWaitForKeyPress(u8 taskId)
+ {
+-	if (JOY_NEW(A_BUTTON))
++	if (JOY_NEW(SELECT_BUTTON) && FlagGet(FLAG_SYS_GAME_CLEAR))
++	{
++		u16 group = VarGet(VAR_M7_MIGRATION_GROUP);
++		if (group < 1 || group > M7_MIGRATION_GROUP_COUNT)
++			group = 1;
++		gTasks[taskId].data[14] = group;
++		PlaySE(SE_SELECT);
++		M7PrintMigrationChoice(group);
++		gTasks[taskId].func = Task_DexNavMigrationSelect;
++	}
++	else if (JOY_NEW(A_BUTTON))
+ 	{
+ 		//Check selection is valid. Play sound if invalid
+ 		u16 species = GetSpeciesAtCursorPos();
+@@ -3337,6 +3394,38 @@ static void Task_DexNavWaitForKeyPress(u8 taskId)
+ 	}
+ }
+ 
++static void Task_DexNavMigrationSelect(u8 taskId)
++{
++	u16 group = gTasks[taskId].data[14];
++	if (JOY_REPT(DPAD_UP))
++	{
++		group = group <= 1 ? M7_MIGRATION_GROUP_COUNT : group - 1;
++		gTasks[taskId].data[14] = group;
++		PlaySE(SE_POKENAV_ONE_BEEP);
++		M7PrintMigrationChoice(group);
++	}
++	else if (JOY_REPT(DPAD_DOWN))
++	{
++		group = group >= M7_MIGRATION_GROUP_COUNT ? 1 : group + 1;
++		gTasks[taskId].data[14] = group;
++		PlaySE(SE_POKENAV_ONE_BEEP);
++		M7PrintMigrationChoice(group);
++	}
++	else if (JOY_NEW(A_BUTTON))
++	{
++		VarSet(VAR_M7_MIGRATION_GROUP, group);
++		PlaySE(SE_SELECT);
++		BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB_BLACK);
++		gTasks[taskId].func = Task_DexNavFadeOutToMigrationRefresh;
++	}
++	else if (JOY_NEW(B_BUTTON) || JOY_NEW(SELECT_BUTTON))
++	{
++		PlaySE(SE_SELECT);
++		HideDexNavMessage();
++		gTasks[taskId].func = Task_DexNavWaitForKeyPress;
++	}
++}
++
+ static void Task_WaitForContextMenuPreMessage(u8 taskId)
+ {
+ 	if (!RunTextPrintersAndIsPrinter0Active())
+@@ -3409,6 +3498,15 @@ static void Task_DexNavFadeOutToStartMenu(u8 taskId)
+ 	}
+ }
+ 
++static void Task_DexNavFadeOutToMigrationRefresh(u8 taskId)
++{
++	if (!gPaletteFade->active)
++	{
++		SetMainCallback2(CB2_DexNav);
++		FreeAndCloseDexNav(taskId);
++	}
++}
++
+ static void Task_DexNavFadeOutToScan(u8 taskId)
+ {
+ 	if (!gPaletteFade->active)
+diff --git a/src/config.h b/src/config.h
+index b0d7ae6..5ae9656 100644
+--- a/src/config.h
++++ b/src/config.h
+@@ -387,6 +387,7 @@ enum //These vars need to be one after the other (hence the enum)
+ #define FLAG_SANDBOX_MODE 0xA0D // Use it only when you know what it does, lol.
+ #define VAR_DEBUG_MENU_SET_CUSTOM_VAR 0x5158 // The var that stores the value used for set custom var option in debug menu.
+ #define VAR_DEBUG_MENU_SET_CUSTOM_VAR_VALUE 0x5159 // The var that stores the value used for set custom var option in debug menu.
++#define VAR_M7_MIGRATION_GROUP 0x515A // 0=unset; 1-9 select the generated regional DexNav pool.
+ //#define NEW_MINI_NAME_BOX //New box frame for Mini Name Box
+ 
+ /* DexNav Options */
+diff --git a/include/new/dexnav_data.h b/include/new/dexnav_data.h
+index 24a3285..9c0cdee 100644
+--- a/include/new/dexnav_data.h
++++ b/include/new/dexnav_data.h
+@@ -86,6 +86,10 @@ extern const u8 gText_DexNav_Locked[];
+ extern const u8 gText_DexNav_NeedRod[];
+ extern const u8 gText_DexNav_TooDark[];
+ extern const u8 gText_DexNav_NoPokemonHere[];
++extern const u8 gText_DexNav_MigrationSelect[];
++extern const u8 gText_DexNav_MigrationKanto[], gText_DexNav_MigrationJohto[], gText_DexNav_MigrationHoenn[];
++extern const u8 gText_DexNav_MigrationSinnoh[], gText_DexNav_MigrationUnova[], gText_DexNav_MigrationKalos[];
++extern const u8 gText_DexNav_MigrationAlola[], gText_DexNav_MigrationGalarHisui[], gText_DexNav_MigrationPaldea[];
+ extern const u8 gText_DexNav_UpArrow[];
+ extern const u8 gText_DexNav_DownArrow[];
+ extern const u8 gText_DexNav_LeftArrow[];
+@@ -177,6 +181,7 @@ enum DexNavMessages
+ 	MESSAGE_NO_DATA,
+ 	MESSAGE_TOO_DARK,
+ 	MESSAGE_NO_POKEMON_HERE,
++	MESSAGE_MIGRATION_SELECT,
+ };
+ 
+ enum EncounterTypes
+diff --git a/strings/dexnav.string b/strings/dexnav.string
+index 624d4bb..8f89784 100644
+--- a/strings/dexnav.string
++++ b/strings/dexnav.string
+@@ -161,3 +161,24 @@ No.
+ 
+ #org @gText_MenuCube
+ Cube
++
++#org @gText_DexNav_MigrationSelect
++[BUFFER1] migration\nUP/DOWN: CHOOSE  A: SET  B: BACK
++#org @gText_DexNav_MigrationKanto
++KANTO
++#org @gText_DexNav_MigrationJohto
++JOHTO
++#org @gText_DexNav_MigrationHoenn
++HOENN
++#org @gText_DexNav_MigrationSinnoh
++SINNOH
++#org @gText_DexNav_MigrationUnova
++UNOVA
++#org @gText_DexNav_MigrationKalos
++KALOS
++#org @gText_DexNav_MigrationAlola
++ALOLA
++#org @gText_DexNav_MigrationGalarHisui
++GALAR/HISUI
++#org @gText_DexNav_MigrationPaldea
++PALDEA
+diff --git a/.upstream/cfru/include/generated/m7_habitat_groups.h b/include/generated/m7_habitat_groups.h
+new file mode 100644
+index 0000000..80059bc
+--- /dev/null
++++ b/include/generated/m7_habitat_groups.h
+@@ -0,0 +1,28 @@
++/* Generated by scripts/generate_m7_habitat.py. Do not edit. */
++#ifndef GUARD_GENERATED_M7_HABITAT_GROUPS_H
++#define GUARD_GENERATED_M7_HABITAT_GROUPS_H
++
++static const u16 sM7MigrationGroup1[] = {SPECIES_BULBASAUR, SPECIES_CATERPIE, SPECIES_RATICATE, SPECIES_NIDORINA, SPECIES_JIGGLYPUFF, SPECIES_VENOMOTH, SPECIES_ARCANINE, SPECIES_BELLSPROUT, SPECIES_RAPIDASH, SPECIES_GRIMER, SPECIES_KRABBY, SPECIES_LICKITUNG, SPECIES_SEADRA, SPECIES_PINSIR, SPECIES_PORYGON, SPECIES_MEW};
++static const u16 sM7MigrationGroup2[] = {SPECIES_CHIKORITA, SPECIES_TOTODILE, SPECIES_NOCTOWL, SPECIES_LANTURN, SPECIES_NATU, SPECIES_AZUMARILL, SPECIES_AIPOM, SPECIES_ESPEON, SPECIES_GIRAFARIG, SPECIES_SNUBBULL, SPECIES_TEDDIURSA, SPECIES_CORSOLA, SPECIES_HOUNDOUR, SPECIES_SMEARGLE, SPECIES_MILTANK, SPECIES_TYRANITAR};
++static const u16 sM7MigrationGroup3[] = {SPECIES_TREECKO, SPECIES_SWAMPERT, SPECIES_DUSTOX, SPECIES_SWELLOW, SPECIES_BRELOOM, SPECIES_EXPLOUD, SPECIES_MAWILE, SPECIES_MINUN, SPECIES_WAILMER, SPECIES_VIBRAVA, SPECIES_SOLROCK, SPECIES_CRADILY, SPECIES_DUSKULL, SPECIES_SPHEAL, SPECIES_SHELGON, SPECIES_JIRACHI};
++static const u16 sM7MigrationGroup4[] = {SPECIES_TURTWIG, SPECIES_PIPLUP, SPECIES_BIBAREL, SPECIES_ROSERADE, SPECIES_MOTHIM, SPECIES_CHERRIM, SPECIES_LOPUNNY, SPECIES_SKUNTANK, SPECIES_SPIRITOMB, SPECIES_HIPPOPOTAS, SPECIES_FINNEON, SPECIES_LICKILICKY, SPECIES_LEAFEON, SPECIES_DUSKNOIR, SPECIES_PALKIA, SPECIES_SHAYMIN};
++static const u16 sM7MigrationGroup5[] = {SPECIES_SNIVY, SPECIES_WATCHOG, SPECIES_PANPOUR, SPECIES_BOLDORE, SPECIES_TYMPOLE, SPECIES_SCOLIPEDE, SPECIES_DARMANITAN, SPECIES_CARRACOSTA, SPECIES_GOTHITELLE, SPECIES_SAWSBUCK, SPECIES_GALVANTULA, SPECIES_BEHEEYEM, SPECIES_SHELMET, SPECIES_BOUFFALANT, SPECIES_LARVESTA, SPECIES_GENESECT};
++static const u16 sM7MigrationGroup6[] = {SPECIES_CHESPIN, SPECIES_BRAIXEN, SPECIES_BUNNELBY, SPECIES_TALONFLAME, SPECIES_PYROAR, SPECIES_GOGOAT, SPECIES_ESPURR, SPECIES_SPRITZEE, SPECIES_INKAY, SPECIES_DRAGALGE, SPECIES_TYRUNT, SPECIES_SYLVEON, SPECIES_SLIGGOO, SPECIES_TREVENANT, SPECIES_NOIBAT, SPECIES_HOOPA};
++static const u16 sM7MigrationGroup7[] = {SPECIES_ROWLET, SPECIES_INCINEROAR, SPECIES_TOUCANNON, SPECIES_VIKAVOLT, SPECIES_ROCKRUFF, SPECIES_MUDBRAY, SPECIES_MORELULL, SPECIES_BEWEAR, SPECIES_PASSIMIAN, SPECIES_PYUKUMUKU, SPECIES_TOGEDEMARU, SPECIES_JANGMO_O, SPECIES_TAPU_FINI, SPECIES_NIHILEGO, SPECIES_NECROZMA, SPECIES_MELMETAL};
++static const u16 sM7MigrationGroup8[] = {SPECIES_GROOKEY, SPECIES_SOBBLE, SPECIES_CORVISQUIRE, SPECIES_THIEVUL, SPECIES_DREDNAW, SPECIES_FLAPPLE, SPECIES_BARRASKEWDA, SPECIES_GRAPPLOCT, SPECIES_IMPIDIMP, SPECIES_SIRFETCHD, SPECIES_SNOM, SPECIES_CUFANT, SPECIES_DURALUDON, SPECIES_KUBFU, SPECIES_SPECTRIER, SPECIES_OVERQWIL};
++static const u16 sM7MigrationGroup9[] = {SPECIES_SPRIGATITO, SPECIES_QUAXWELL, SPECIES_PAWMI, SPECIES_DOLLIV, SPECIES_CERULEDGE, SPECIES_GRAFAIAI, SPECIES_RELLOR, SPECIES_WUGTRIO, SPECIES_ORTHWORM, SPECIES_VELUZA, SPECIES_GREAT_TUSK, SPECIES_IRON_HANDS, SPECIES_GHOLDENGO, SPECIES_MIRAIDON, SPECIES_FEZANDIPITI, SPECIES_TERAPAGOS};
++
++static const u16 *const sM7MigrationGroups[] = {
++    sM7MigrationGroup1,
++    sM7MigrationGroup2,
++    sM7MigrationGroup3,
++    sM7MigrationGroup4,
++    sM7MigrationGroup5,
++    sM7MigrationGroup6,
++    sM7MigrationGroup7,
++    sM7MigrationGroup8,
++    sM7MigrationGroup9,
++};
++#define M7_MIGRATION_GROUP_SIZE 16
++#define M7_MIGRATION_GROUP_COUNT 9
++#endif
+
