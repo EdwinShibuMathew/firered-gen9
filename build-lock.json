@@ -121,6 +121,16 @@
       "upstream": "cfru_expansion",
       "path": "patches/cfru/0014-expanded-legendary-research-hub.patch",
       "sha256": "70f0bc43a3d4871a4eb76d229013fd385b322a5b06c2d5db05a90d6ed14ccad3"
+    },
+    "cfru_generated_form_lab_routes": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0015-generated-form-lab-routes.patch",
+      "sha256": "8353af7311eea224ae64b6c327199c18b8332c3b72f23945e03f30eaec71b610"
+    },
+    "cfru_complete_evolution_guide_formatters": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0016-complete-evolution-guide-formatters.patch",
+      "sha256": "6f3ea16521a9c07550cf13402319500030d022d6c53936fdb4f43d47c0c961ab"
     }
   },
   "toolchain": {

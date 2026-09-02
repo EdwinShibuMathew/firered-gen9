@@ -13,7 +13,7 @@ python3 "$project_root/scripts/audit_availability.py" --require-complete
 python3 "$project_root/scripts/audit_m4_repeatable.py"
 python3 "$project_root/scripts/audit_legendary_encounters.py"
 python3 "$project_root/scripts/audit_forms.py" --require-complete
-python3 "$project_root/scripts/generate_form_routes.py"
+python3 "$project_root/scripts/generate_form_routes.py" --check
 python3 "$project_root/scripts/audit_form_routes.py"
 python3 "$project_root/scripts/audit_m5_runtime_integrity.py"
 python3 "$project_root/scripts/generate_evolution_encyclopedia.py"

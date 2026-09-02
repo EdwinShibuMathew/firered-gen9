@@ -1,0 +1,160 @@
+diff --git a/src/m5_evolution_guide.c b/src/m5_evolution_guide.c
+index 74f2028..1389200 100644
+--- a/src/m5_evolution_guide.c
++++ b/src/m5_evolution_guide.c
+@@ -17,6 +17,11 @@ extern const u8 gText_M5DexMale[], gText_M5DexFemale[], gText_M5DexAtkGt[], gTex
+ extern const u8 gText_M5DexLinkCable[], gText_M5DexLinkCableHolding[], gText_M5DexConsumed[], gText_M5DexUse[];
+ extern const u8 gText_M5DexLevelHolding[], gText_M5DexLevelKnowing[], gText_M5DexCrit[], gText_M5DexCoins[];
+ extern const u8 gText_M5DexParty[], gText_M5DexLocation[], gText_M5DexSpecial[];
++extern const u8 gText_M5DexBeauty[], gText_M5DexRain[], gText_M5DexMoveType[], gText_M5DexPartyType[];
++extern const u8 gText_M5DexTimeRange[], gText_M5DexFlag[], gText_M5DexNatureHigh[], gText_M5DexNatureLow[];
++extern const u8 gText_M5DexDamage[], gText_M5DexItemLocation[], gText_M5DexSilcoon[], gText_M5DexCascoon[];
++extern const u8 gText_M5DexNinjask[], gText_M5DexShedinja[], gText_M5DexMausholdThree[], gText_M5DexMausholdFour[];
++extern const u8 gText_M5DexItemHold[];
+ extern const u8 gText_M5DexHeader[], gText_M5DexNone[], gText_M5DexCursor[];
+ extern const u8 gText_M5DexArrow[], gText_M5DexPage[], gText_M5DexSlash[], gText_M5DexControls[];
+ 
+@@ -79,6 +84,14 @@ static void FormatCondition(const struct Evolution *evo)
+     case EVO_LEVEL_ATK_GT_DEF: FormatLevel(gText_M5DexLevel, evo->param); Append(sText, gText_M5DexAtkGt, sizeof(sText)); break;
+     case EVO_LEVEL_ATK_EQ_DEF: FormatLevel(gText_M5DexLevel, evo->param); Append(sText, gText_M5DexAtkEq, sizeof(sText)); break;
+     case EVO_LEVEL_ATK_LT_DEF: FormatLevel(gText_M5DexLevel, evo->param); Append(sText, gText_M5DexAtkLt, sizeof(sText)); break;
++    case EVO_LEVEL_SILCOON: StringCopy(sText, gText_M5DexSilcoon); break;
++    case EVO_LEVEL_CASCOON: StringCopy(sText, gText_M5DexCascoon); break;
++    case EVO_LEVEL_NINJASK: StringCopy(sText, gText_M5DexNinjask); break;
++    case EVO_LEVEL_SHEDINJA: StringCopy(sText, gText_M5DexShedinja); break;
++    case EVO_BEAUTY: StringCopy(sText, gText_M5DexBeauty); break;
++    case EVO_RAINY_FOGGY_OW: StringCopy(sText, gText_M5DexRain); break;
++    case EVO_MOVE_TYPE: StringCopy(sText, gText_M5DexMoveType); break;
++    case EVO_TYPE_IN_PARTY: StringCopy(sText, gText_M5DexPartyType); break;
+     case EVO_TRADE: StringCopy(sText, gText_M5DexLinkCable); break;
+     case EVO_TRADE_ITEM:
+         StringCopy(sText, gText_M5DexLinkCableHolding);
+@@ -100,6 +113,8 @@ static void FormatCondition(const struct Evolution *evo)
+         Append(sText, sSpace, sizeof(sText));
+         Append(sText, gItems[evo->param].name, sizeof(sText));
+         Append(sText, gText_M5DexConsumed, sizeof(sText));
++        if (evo->method == EVO_HOLD_ITEM_DAY) Append(sText, gText_M5DexDay, sizeof(sText));
++        else Append(sText, gText_M5DexNight, sizeof(sText));
+         break;
+     case EVO_MOVE:
+     case EVO_MOVE_MALE:
+@@ -111,13 +126,54 @@ static void FormatCondition(const struct Evolution *evo)
+     case EVO_CRITICAL_HIT: StringCopy(sText, gText_M5DexCrit); break;
+     case EVO_COINS: StringCopy(sText, gText_M5DexCoins); break;
+     case EVO_OTHER_PARTY_MON: StringCopy(sText, gText_M5DexParty); break;
+-    case EVO_MAP:
+-    case EVO_ITEM_LOCATION:
+-    case EVO_DAMAGE_LOCATION: StringCopy(sText, gText_M5DexLocation); break;
++    case EVO_LEVEL_SPECIFIC_TIME_RANGE: StringCopy(sText, gText_M5DexTimeRange); break;
++    case EVO_FLAG_SET: StringCopy(sText, gText_M5DexFlag); break;
++    case EVO_NATURE_HIGH: StringCopy(sText, gText_M5DexNatureHigh); break;
++    case EVO_NATURE_LOW: StringCopy(sText, gText_M5DexNatureLow); break;
++    case EVO_DAMAGE_LOCATION: StringCopy(sText, gText_M5DexDamage); break;
++    case EVO_ITEM_LOCATION: StringCopy(sText, gText_M5DexItemLocation); break;
++    case EVO_MAP: StringCopy(sText, gText_M5DexLocation); break;
++    case EVO_LEVEL_HOLD_ITEM:
++        FormatLevel(gText_M5DexReachLevel, evo->param);
++        Append(sText, sSpace, sizeof(sText)); Append(sText, gText_M5DexLevelHolding, sizeof(sText));
++        Append(sText, sSpace, sizeof(sText)); Append(sText, gItems[evo->unknown].name, sizeof(sText));
++        Append(sText, gText_M5DexConsumed, sizeof(sText));
++        break;
++    case EVO_ITEM_HOLD_ITEM:
++        StringCopy(sText, gText_M5DexUse); Append(sText, sSpace, sizeof(sText));
++        Append(sText, gItems[evo->param].name, sizeof(sText)); Append(sText, sSpace, sizeof(sText));
++        Append(sText, gText_M5DexItemHold, sizeof(sText)); Append(sText, sSpace, sizeof(sText));
++        Append(sText, gItems[evo->unknown].name, sizeof(sText)); Append(sText, gText_M5DexConsumed, sizeof(sText));
++        break;
++    case EVO_MAUSHOLD_THREE: StringCopy(sText, gText_M5DexMausholdThree); break;
++    case EVO_MAUSHOLD_FOUR: StringCopy(sText, gText_M5DexMausholdFour); break;
+     default: StringCopy(sText, gText_M5DexSpecial); break;
+     }
+ }
+ 
++// Insert at most one line break, keeping each condition inside the 216-pixel
++// content region. The 128-byte buffer and bounded Append calls remain the hard
++// safety boundary even for unusually long item or move names.
++static void WrapCondition(void)
++{
++    u32 i, lastSpace = 0;
++    for (i = 0; sText[i] != EOS; ++i)
++    {
++        u8 saved;
++        if (sText[i] == CHAR_SPACE)
++            lastSpace = i;
++        saved = sText[i + 1];
++        sText[i + 1] = EOS;
++        if (lastSpace && GetStringWidth(0, sText, 0) > 216)
++        {
++            sText[i + 1] = saved;
++            sText[lastSpace] = CHAR_NEWLINE;
++            return;
++        }
++        sText[i + 1] = saved;
++    }
++}
++
+ static void DestroyIcons(void)
+ {
+     u8 i;
+@@ -189,6 +245,7 @@ static void Render(void)
+         Append(sText, gSpeciesNames[route->target], sizeof(sText));
+         AddTextPrinterParameterized(sWindow, 2, sText, 68, 18 + i * 34, 0, NULL);
+         FormatCondition(&route->evolution);
++        WrapCondition();
+         AddTextPrinterParameterized(sWindow, 0, sText, 12, 30 + i * 34, 0, NULL);
+     }
+     if (pages > 1)
+diff --git a/strings/Scripts/M5_Evolution_Guide.string b/strings/Scripts/M5_Evolution_Guide.string
+index 4601259..69749d1 100644
+--- a/strings/Scripts/M5_Evolution_Guide.string
++++ b/strings/Scripts/M5_Evolution_Guide.string
+@@ -23,7 +23,7 @@ Level
+ #org @gText_M5DexAtkLt
+ , Attack < Defense
+ #org @gText_M5DexLinkCable
+-Use Link Cable (consumed)
++Use Link Cable (reusable)
+ #org @gText_M5DexLinkCableHolding
+ Link Cable while holding
+ #org @gText_M5DexConsumed
+@@ -44,6 +44,40 @@ Level up with required party Pok\emon
+ Use the required special location
+ #org @gText_M5DexSpecial
+ Special evolution-ledger condition
++#org @gText_M5DexBeauty
++Level up with high Beauty
++#org @gText_M5DexRain
++Reach required level in rain or fog
++#org @gText_M5DexMoveType
++Level up knowing required move type
++#org @gText_M5DexPartyType
++Reach level with required party type
++#org @gText_M5DexTimeRange
++Reach level during required time range
++#org @gText_M5DexFlag
++Level up after special world event
++#org @gText_M5DexNatureHigh
++Reach level with an Amped nature
++#org @gText_M5DexNatureLow
++Reach level with a Low Key nature
++#org @gText_M5DexDamage
++Take 49+ damage, then visit location
++#org @gText_M5DexItemLocation
++Use required item at special location
++#org @gText_M5DexSilcoon
++Reach level; personality selects Silcoon
++#org @gText_M5DexCascoon
++Reach level; personality selects Cascoon
++#org @gText_M5DexNinjask
++Reach level to evolve into Ninjask
++#org @gText_M5DexShedinja
++Evolve Nincada with party and Ball space
++#org @gText_M5DexMausholdThree
++Reach level; rare personality gives Family of Three
++#org @gText_M5DexMausholdFour
++Reach level; personality gives Family of Four
++#org @gText_M5DexItemHold
++Use required item while holding
+ #org @gText_M5DexHeader
+  - EVOLUTION
+ #org @gText_M5DexNone

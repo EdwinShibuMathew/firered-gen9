@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Validate form categories and resolve every claimed runtime binding to source."""
 import csv
+import re
 from collections import Counter
 from pathlib import Path
 
@@ -23,12 +24,25 @@ source = '\n'.join(
 )
 
 bad = []
+ids = set()
+targets = set()
 for row in rows:
     category = row['route_category']
     status = row['implementation_status']
     if category not in categories or not row['target_form']:
         bad.append((row, 'invalid category or target'))
         continue
+    try:
+        internal_id = int(row['internal_id'])
+    except (KeyError, ValueError):
+        bad.append((row, 'invalid internal ID'))
+        continue
+    if internal_id in ids or row['target_form'] in targets:
+        bad.append((row, 'duplicate internal ID or target'))
+    ids.add(internal_id)
+    targets.add(row['target_form'])
+    if row['base_species'] == 'derived_from_species_constant':
+        bad.append((row, 'base species was not resolved'))
     if (category == 'BATTLE_ONLY') != (row['battle_only'] == 'true'):
         bad.append((row, 'battle-only marker mismatch'))
     if status == 'IMPLEMENTED_UNVERIFIED':
@@ -40,6 +54,18 @@ for row in rows:
             bad.append((row, f'unresolved script {script!r}'))
     if category in {'BATTLE_ONLY', 'REGIONAL_DISTINCT', 'ENCOUNTER_OR_EVOLUTION_LOCKED', 'UNSUPPORTED_PLACEHOLDER'} and row['acquisition_method'] == 'cinnabar_form_lab':
         bad.append((row, 'unsafe Form Lab exposure'))
+
+mapped = re.findall(
+    r'\[(SPECIES_[A-Z0-9_]+)\s*-\s*1\]\s*=\s*(NATIONAL_DEX_[A-Z0-9_]+)',
+    (ROOT / '.upstream/dpe/src/Species_To_Pokdex_Table.c').read_text(encoding='utf-8'),
+)
+expected_count = sum(
+    species != 'SPECIES_EGG'
+    and species.removeprefix('SPECIES_') != national.removeprefix('NATIONAL_DEX_')
+    for species, national in mapped
+)
+if len(rows) != expected_count:
+    bad.append(({'target_form': '<inventory>'}, f'expected {expected_count} canonical alternate-form rows'))
 
 counts = Counter(row['implementation_status'] for row in rows)
 category_counts = Counter(row['route_category'] for row in rows)
