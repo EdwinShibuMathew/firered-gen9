@@ -1,0 +1,14 @@
+diff --git a/src/party_menu.c b/src/party_menu.c
+index c80d1719..1ae34d6c 100644
+--- a/src/party_menu.c
++++ b/src/party_menu.c
+@@ -1865,7 +1865,8 @@ void ItemUseCB_EvolutionStone(u8 taskId, TaskFunc func)
+                 gCB2_AfterEvolution = gPartyMenu.exitCallback;
+                 BeginEvolutionScene(&gPlayerParty[gPartyMenu.slotId], targetSpecies, FALSE, gPartyMenu.slotId);
+                 DestroyTask(taskId);
+-                RemoveBagItem(gSpecialVar_ItemId, 1);
++                if (gSpecialVar_ItemId != ITEM_LINK_CABLE)
++                        RemoveBagItem(gSpecialVar_ItemId, 1);
+         }
+ }
+ 

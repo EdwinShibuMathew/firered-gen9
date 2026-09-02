@@ -206,10 +206,10 @@ From analysis of CFRU source code:
 This M2 completion will gate:
 - ✓ M3: Make every evolution possible offline
 - ✓ M4: Deterministic 1,025/1,025 availability
-- ✓ M5: Forms, quests, and content polish
-- ✓ M6: Port existing custom starter work
-- ✓ M7: Optional Habitat Scanner
-- ✓ M8: Release patch and final testing
+- ~ M5: Forms, quests, and content polish (automated form audit passes; content/UI work remains)
+- ~ M6: Port existing custom starter work (source port complete; runtime QA remains)
+- ~ M7: Optional Habitat Scanner (DexNav foundation audited; migration groups/QA pending)
+- ~ M8: Release patch and final testing (release hygiene and matrix documented; patch/manual QA pending)
 
 ---
 

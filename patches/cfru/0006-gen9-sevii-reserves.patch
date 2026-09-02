@@ -1,0 +1,57 @@
+diff --git a/src/Tables/wild_encounter_tables.c b/src/Tables/wild_encounter_tables.c
+index dabde89d..62cc48a7 100644
+--- a/src/Tables/wild_encounter_tables.c
++++ b/src/Tables/wild_encounter_tables.c
+@@ -90,6 +90,7 @@ const struct WildPokemon gRoute1_LandMonsNight[] =
+ 
+ const struct WildPokemonInfo gRoute1_LandMonsInfoNight = {15, gRoute1_LandMonsNight};
+ 
++#include "../../../../data/gen9_reserve_tables.inc"
+ 
+ const struct WildPokemonHeader gWildMonMorningHeaders[] =
+ {
+@@ -101,6 +102,7 @@ const struct WildPokemonHeader gWildMonMorningHeaders[] =
+ 		.rockSmashMonsInfo = NULL,
+ 		.fishingMonsInfo = NULL,
+ 	},
++	GEN9_RESERVE_MORNING_HEADERS
+ 	{
+ 		.mapGroup = 0xFF,
+ 		.mapNum = 0xFF,
+@@ -121,6 +123,7 @@ const struct WildPokemonHeader gWildMonDayHeaders[] =
+ 		.rockSmashMonsInfo = NULL,
+ 		.fishingMonsInfo = NULL,
+ 	},
++	GEN9_RESERVE_DAY_HEADERS
+ 	{
+ 		.mapGroup = 0xFF,
+ 		.mapNum = 0xFF,
+@@ -141,6 +144,7 @@ const struct WildPokemonHeader gWildMonEveningHeaders[] =
+ 		.rockSmashMonsInfo = NULL,
+ 		.fishingMonsInfo = NULL,
+ 	},
++	GEN9_RESERVE_EVENING_HEADERS
+ 	{
+ 		.mapGroup = 0xFF,
+ 		.mapNum = 0xFF,
+@@ -161,6 +165,7 @@ const struct WildPokemonHeader gWildMonNightHeaders[] =
+ 		.rockSmashMonsInfo = NULL,
+ 		.fishingMonsInfo = NULL,
+ 	},
++	GEN9_RESERVE_NIGHT_HEADERS
+ 	{
+ 		.mapGroup = 0xFF,
+ 		.mapNum = 0xFF,
+diff --git a/src/wild_encounter.c b/src/wild_encounter.c
+index 2565bba5..d38b0506 100644
+--- a/src/wild_encounter.c
++++ b/src/wild_encounter.c
+@@ -234,6 +234,8 @@ static const struct WildPokemonHeader* GetCurrentMapWildMonHeader(void)
+ 		{
+ 			for (i = 0; headerTable[i].mapGroup != 0xFF; ++i)
+ 			{
++				if (i != 0 && !FlagGet(FLAG_SYS_GAME_CLEAR))
++					continue; // Generated Sevii reserve headers are postgame-only.
+ 				if (headerTable[i].mapGroup == gSaveBlock1->location.mapGroup
+ 				&&  headerTable[i].mapNum == gSaveBlock1->location.mapNum)
+ 					return &headerTable[i];

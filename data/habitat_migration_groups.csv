@@ -1,0 +1,10 @@
+generation,region,group,implementation_status
+1,Kanto,kanto,PENDING_UI_INTEGRATION
+2,Johto,johto,PENDING_UI_INTEGRATION
+3,Hoenn,hoenn,PENDING_UI_INTEGRATION
+4,Sinnoh,sinnoh,PENDING_UI_INTEGRATION
+5,Unova,unova,PENDING_UI_INTEGRATION
+6,Kalos,kalos,PENDING_UI_INTEGRATION
+7,Alola,alola,PENDING_UI_INTEGRATION
+8,Galar/Hisui,galar_hisui,PENDING_UI_INTEGRATION
+9,Paldea,paldea,PENDING_UI_INTEGRATION

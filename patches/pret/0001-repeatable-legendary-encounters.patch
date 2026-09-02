@@ -1,0 +1,118 @@
+diff --git a/data/maps/BirthIsland_Exterior/scripts.inc b/data/maps/BirthIsland_Exterior/scripts.inc
+index 5bef2d0e9..2246e9cd7 100644
+--- a/data/maps/BirthIsland_Exterior/scripts.inc
++++ b/data/maps/BirthIsland_Exterior/scripts.inc
+@@ -10,6 +10,9 @@ BirthIsland_Exterior_OnReturnToField::
+ 
+ BirthIsland_Exterior_OnTransition::
+ 	setworldmapflag FLAG_WORLD_MAP_BIRTH_ISLAND_EXTERIOR
++	@ Reset only the temporary defeat lock and puzzle state. FLAG_FOUGHT_DEOXYS
++	@ remains permanent once Deoxys has been captured.
++	clearflag FLAG_DEOXYS_FLEW_AWAY
+ 	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_DEOXYS_N
+ 	setvar VAR_DEOXYS_INTERACTION_STEP_COUNTER, 0
+ 	setvar VAR_DEOXYS_INTERACTION_NUM, 0
+diff --git a/data/maps/CeruleanCave_B1F/scripts.inc b/data/maps/CeruleanCave_B1F/scripts.inc
+index 63a110bb4..86da07f21 100644
+--- a/data/maps/CeruleanCave_B1F/scripts.inc
++++ b/data/maps/CeruleanCave_B1F/scripts.inc
+@@ -14,5 +14,7 @@ CeruleanCave_B1F_EventScript_TryRemoveMewtwo::
+ 	return
+ 
+ CeruleanCave_B1F_OnTransition::
++	@ FLAG_FOUGHT_MEWTWO is permanent capture completion. Defeat and flee
++	@ leave it unset, so the encounter returns on the next entry.
+ 	call_if_unset FLAG_FOUGHT_MEWTWO, CeruleanCave_B1F_EventScript_ShowMewtwo
+ 	end
+@@ -48,6 +50,5 @@ CeruleanCave_B1F_EventScript_Mewtwo::
+ 	end
+ 
+ CeruleanCave_B1F_EventScript_DefeatedMewtwo::
+-	setflag FLAG_FOUGHT_MEWTWO
+ 	goto EventScript_RemoveStaticMon
+ 	end
+diff --git a/data/maps/MtEmber_Summit/scripts.inc b/data/maps/MtEmber_Summit/scripts.inc
+index 5cc41d7ad..b79a6e41b 100644
+--- a/data/maps/MtEmber_Summit/scripts.inc
++++ b/data/maps/MtEmber_Summit/scripts.inc
+@@ -14,5 +14,7 @@ MtEmber_Summit_EventScript_TryRemoveMoltres::
+ 	return
+ 
+ MtEmber_Summit_OnTransition::
++	@ FLAG_FOUGHT_MOLTRES is permanent capture completion. Defeat and flee
++	@ leave it unset, so the encounter returns on the next entry.
+ 	call_if_unset FLAG_FOUGHT_MOLTRES, MtEmber_Summit_EventScript_ShowMoltres
+ 	end
+@@ -48,6 +50,5 @@ MtEmber_Summit_EventScript_Moltres::
+ 	end
+ 
+ MtEmber_Summit_EventScript_DefeatedMoltres::
+-	setflag FLAG_FOUGHT_MOLTRES
+ 	goto EventScript_RemoveStaticMon
+ 	end
+diff --git a/data/maps/NavelRock_Summit/scripts.inc b/data/maps/NavelRock_Summit/scripts.inc
+index 7dd3f0e94..baa5f1452 100644
+--- a/data/maps/NavelRock_Summit/scripts.inc
++++ b/data/maps/NavelRock_Summit/scripts.inc
+@@ -4,6 +4,9 @@ NavelRock_Summit_MapScripts::
+ 	.byte 0
+ 
+ NavelRock_Summit_OnTransition::
++	@ Reset only the temporary defeat lock. The fought flag remains permanent
++	@ once Ho-Oh has been captured.
++	clearflag FLAG_HO_OH_FLEW_AWAY
+ 	call_if_set FLAG_FOUGHT_HO_OH, NavelRock_Summit_EventScript_HideHoOh
+ 	call_if_unset FLAG_FOUGHT_HO_OH, NavelRock_Summit_EventScript_TryShowHoOh
+ 	end
+diff --git a/data/maps/NavelRock_Base/scripts.inc b/data/maps/NavelRock_Base/scripts.inc
+index 9984658a7..bfc35600a 100644
+--- a/data/maps/NavelRock_Base/scripts.inc
++++ b/data/maps/NavelRock_Base/scripts.inc
+@@ -4,6 +4,8 @@ NavelRock_Base_MapScripts::
+ 	.byte 0
+ 
+ NavelRock_Base_OnTransition::
++	@ Reset only the temporary defeat lock; capture completion is permanent.
++	clearflag FLAG_LUGIA_FLEW_AWAY
+ 	call_if_set FLAG_FOUGHT_LUGIA, NavelRock_Base_EventScript_HideLugia
+ 	call_if_unset FLAG_FOUGHT_LUGIA, NavelRock_Base_EventScript_TryShowLugia
+ 	end
+diff --git a/data/maps/PowerPlant/scripts.inc b/data/maps/PowerPlant/scripts.inc
+index ec48a3778..8922d0162 100644
+--- a/data/maps/PowerPlant/scripts.inc
++++ b/data/maps/PowerPlant/scripts.inc
+@@ -15,5 +15,7 @@ PowerPlant_EventScript_TryRemoveStaticMon::
+ PowerPlant_OnTransition::
+ 	setworldmapflag FLAG_WORLD_MAP_POWER_PLANT
++	@ The completion flag is set only after capture. Defeated/fled encounters
++	@ return because their completion flag remains unset.
+ 	call_if_unset FLAG_FOUGHT_ZAPDOS, PowerPlant_EventScript_ShowZapdos
+ 	call_if_unset FLAG_FOUGHT_POWER_PLANT_ELECTRODE_1, PowerPlant_EventScript_ShowElectrode1
+ 	call_if_unset FLAG_FOUGHT_POWER_PLANT_ELECTRODE_2, PowerPlant_EventScript_ShowElectrode2
+@@ -59,6 +61,5 @@ PowerPlant_EventScript_Zapdos::
+ 	end
+ 
+ PowerPlant_EventScript_DefeatedZapdos::
+-	setflag FLAG_FOUGHT_ZAPDOS
+ 	goto EventScript_RemoveStaticMon
+ 	end
+diff --git a/data/maps/SeafoamIslands_B4F/scripts.inc b/data/maps/SeafoamIslands_B4F/scripts.inc
+index d6a905778..b1a66e407 100644
+--- a/data/maps/SeafoamIslands_B4F/scripts.inc
++++ b/data/maps/SeafoamIslands_B4F/scripts.inc
+@@ -19,6 +19,8 @@ SeafoamIslands_B4F_EventScript_TryRemoveArticuno::
+ 	return
+ 
+ SeafoamIslands_B4F_OnTransition::
++	@ FLAG_FOUGHT_ARTICUNO is permanent capture completion. Defeat and flee
++	@ leave it unset, so the encounter returns on the next entry.
+ 	call_if_unset FLAG_FOUGHT_ARTICUNO, SeafoamIslands_B4F_EventScript_ShowArticuno
+ 	call_if_unset FLAG_STOPPED_SEAFOAM_B4F_CURRENT, SeafoamIslands_B4F_EventScript_CheckStoppedCurrent
+ 	call_if_set FLAG_STOPPED_SEAFOAM_B4F_CURRENT, SeafoamIslands_B4F_EventScript_SetNoCurrentLayout
+@@ -178,6 +180,5 @@ SeafoamIslands_B4F_EventScript_Articuno::
+ 	end
+ 
+ SeafoamIslands_B4F_EventScript_DefeatedArticuno::
+-	setflag FLAG_FOUGHT_ARTICUNO
+ 	goto EventScript_RemoveStaticMon
+ 	end

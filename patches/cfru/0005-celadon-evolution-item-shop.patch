@@ -1,0 +1,50 @@
+diff --git a/assembly/hooks/general_hooks.s b/assembly/hooks/general_hooks.s
+index 8366acbb..5ff1d989 100644
+--- a/assembly/hooks/general_hooks.s
++++ b/assembly/hooks/general_hooks.s
+@@ -1120,6 +1120,7 @@ InitPlayerAvatarHook:
+ .pool
+ @0x809AC84 with r0
+ DNSCreateBuyMenuHook:
++	bl TryLoadM3EvolutionItemShop
+ 	ldr r0, =gInShop
+ 	mov r1, #0x1
+ 	strb r1, [r0]
+diff --git a/src/item.c b/src/item.c
+index 9806d2fb..9d8e8c81 100644
+--- a/src/item.c
++++ b/src/item.c
+@@ -65,6 +65,33 @@ extern const u8* sBagContextMenuItemsPtr; //0x203AD24
+ extern u8 sBagContextMenuNumItems; //0x203AD28
+ extern u8 sItemDescriptionPocket; //0x203E053
+ 
++static const u16 sM3EvolutionItemShop[] =
++{
++	ITEM_LINK_CABLE, ITEM_SUN_STONE, ITEM_MOON_STONE, ITEM_FIRE_STONE,
++	ITEM_THUNDER_STONE, ITEM_WATER_STONE, ITEM_LEAF_STONE, ITEM_KINGS_ROCK,
++	ITEM_METAL_COAT, ITEM_DRAGON_SCALE, ITEM_UP_GRADE, ITEM_PROTECTOR,
++	ITEM_ELECTIRIZER, ITEM_MAGMARIZER, ITEM_DUBIOUS_DISC, ITEM_REAPER_CLOTH,
++	ITEM_SHINY_STONE, ITEM_DUSK_STONE, ITEM_DAWN_STONE, ITEM_ICE_STONE,
++	ITEM_OVAL_STONE, ITEM_RAZOR_CLAW, ITEM_RAZOR_FANG, ITEM_PRISM_SCALE,
++	ITEM_SACHET, ITEM_WHIPPED_DREAM, ITEM_DEEP_SEA_TOOTH, ITEM_DEEP_SEA_SCALE,
++	ITEM_METAL_POWDER, ITEM_STRAWBERRY_SWEET, ITEM_BERRY_SWEET, ITEM_LOVE_SWEET,
++	ITEM_CLOVER_SWEET, ITEM_FLOWER_SWEET, ITEM_RIBBON_SWEET, ITEM_STAR_SWEET,
++	ITEM_SWEET_APPLE, ITEM_TART_APPLE, ITEM_CRACKED_POT, ITEM_CHIPPED_POT,
++	ITEM_GALARICA_CUFF, ITEM_GALARICA_WREATH, ITEM_AUSPICIOUS_ARMOR,
++	ITEM_MALICIOUS_ARMOR, ITEM_BLACK_AUGURITE, ITEM_METAL_ALLOY, ITEM_PEAT_BLOCK,
++	ITEM_LEADERS_CREST, ITEM_SYRUPY_APPLE, ITEM_HISUI_ROCK,
++	ITEM_UNREMARKABLE_TEACUP, ITEM_MASTERPIECE_TEACUP, ITEM_NONE,
++};
++
++void TryLoadM3EvolutionItemShop(void)
++{
++	if (gSaveBlock1->location.mapGroup == 10 && gSaveBlock1->location.mapNum == 3)
++	{
++		gShopData.itemList = sM3EvolutionItemShop;
++		gShopData.itemCount = ARRAY_COUNT(sM3EvolutionItemShop) - 1;
++	}
++}
++
+ //This file's functions:
+ static void StringAppendFullMoveName(u8* dst, const u8* src);
+ 

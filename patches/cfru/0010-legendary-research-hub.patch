@@ -1,0 +1,235 @@
+diff --git a/assembly/overworld_scripts/system_scripts.s b/assembly/overworld_scripts/system_scripts.s
+index 5180e96..d946b54 100644
+--- a/assembly/overworld_scripts/system_scripts.s
++++ b/assembly/overworld_scripts/system_scripts.s
+@@ -55,6 +55,178 @@ EventScript_SecondBagItemCanBeRegisteredToL:
+ 	lockall
+ 	msgbox gText_SecondBagItemCanBeRegisteredToL MSG_SIGN
+ 	releaseall
+ 	end
+ 
++.equ FLAG_M5_GAME_CLEAR, 0x82C
++.equ FLAG_M5_GOT_AURORA_TICKET, 0x2A7
++.equ FLAG_M5_GOT_MYSTIC_TICKET, 0x2A8
++.equ FLAG_M5_FOUGHT_MEWTWO, 0x2BC
++.equ FLAG_M5_FOUGHT_MOLTRES, 0x2BD
++.equ FLAG_M5_FOUGHT_ARTICUNO, 0x2BE
++.equ FLAG_M5_FOUGHT_ZAPDOS, 0x2BF
++.equ FLAG_M5_FOUGHT_DEOXYS, 0x2E4
++.equ FLAG_M5_FOUGHT_LUGIA, 0x2F2
++.equ FLAG_M5_FOUGHT_HO_OH, 0x2F3
++
++@ Seven Island Pokemon Center 1F, object slot 2.
++.global EventScript_M5LegendaryCoordinator
++EventScript_M5LegendaryCoordinator:
++	lockall
++	faceplayer
++	checkflag FLAG_M5_GAME_CLEAR
++	compare LASTRESULT FALSE
++	if equal _goto EventScript_M5LegendaryLockedPostgame
++	msgbox gText_M5LegendaryHubIntro MSG_KEEPOPEN
++	multichoiceoption gText_M5LegendaryGen1 0
++	multichoiceoption gText_M5LegendaryGen2 1
++	multichoiceoption gText_M5LegendaryGen3 2
++	multichoiceoption gText_M5LegendaryCancel 3
++	multichoice 0, 0, FOUR_MULTICHOICE_OPTIONS, 0
++	switch LASTRESULT
++	case 0, EventScript_M5LegendaryGen1
++	case 1, EventScript_M5LegendaryGen2
++	case 2, EventScript_M5LegendaryGen3
++	goto EventScript_M5LegendaryEnd
++
++EventScript_M5LegendaryGen1:
++	multichoiceoption gText_M5LegendaryArticuno 0
++	multichoiceoption gText_M5LegendaryZapdos 1
++	multichoiceoption gText_M5LegendaryMoltres 2
++	multichoiceoption gText_M5LegendaryMewtwo 3
++	multichoiceoption gText_M5LegendaryBack 4
++	multichoice 0, 0, FIVE_MULTICHOICE_OPTIONS, 0
++	switch LASTRESULT
++	case 0, EventScript_M5LegendaryArticuno
++	case 1, EventScript_M5LegendaryZapdos
++	case 2, EventScript_M5LegendaryMoltres
++	case 3, EventScript_M5LegendaryMewtwo
++	goto EventScript_M5LegendaryCoordinator
++
++EventScript_M5LegendaryGen2:
++	multichoiceoption gText_M5LegendaryLugia 0
++	multichoiceoption gText_M5LegendaryHoOh 1
++	multichoiceoption gText_M5LegendaryBack 2
++	multichoice 0, 0, THREE_MULTICHOICE_OPTIONS, 0
++	switch LASTRESULT
++	case 0, EventScript_M5LegendaryLugia
++	case 1, EventScript_M5LegendaryHoOh
++	goto EventScript_M5LegendaryCoordinator
++
++EventScript_M5LegendaryGen3:
++	multichoiceoption gText_M5LegendaryDeoxys 0
++	multichoiceoption gText_M5LegendaryBack 1
++	multichoice 0, 0, TWO_MULTICHOICE_OPTIONS, 0
++	compare LASTRESULT 0
++	if equal _goto EventScript_M5LegendaryDeoxys
++	goto EventScript_M5LegendaryCoordinator
++
++EventScript_M5LegendaryArticuno:
++	checkflag FLAG_M5_FOUGHT_ARTICUNO
++	compare LASTRESULT TRUE
++	if equal _goto EventScript_M5LegendaryCompleted
++	msgbox gText_M5LegendaryAvailable MSG_YESNO
++	compare LASTRESULT NO
++	if equal _goto EventScript_M5LegendaryCoordinator
++	warp 1, 87, 0xFF, 9, 3
++	waitstate
++	releaseall
++	end
++
++EventScript_M5LegendaryZapdos:
++	checkflag FLAG_M5_FOUGHT_ZAPDOS
++	compare LASTRESULT TRUE
++	if equal _goto EventScript_M5LegendaryCompleted
++	msgbox gText_M5LegendaryAvailable MSG_YESNO
++	compare LASTRESULT NO
++	if equal _goto EventScript_M5LegendaryCoordinator
++	warp 1, 95, 0xFF, 5, 12
++	waitstate
++	releaseall
++	end
++
++EventScript_M5LegendaryMoltres:
++	checkflag FLAG_M5_FOUGHT_MOLTRES
++	compare LASTRESULT TRUE
++	if equal _goto EventScript_M5LegendaryCompleted
++	msgbox gText_M5LegendaryAvailable MSG_YESNO
++	compare LASTRESULT NO
++	if equal _goto EventScript_M5LegendaryCoordinator
++	warp 1, 101, 0xFF, 9, 7
++	waitstate
++	releaseall
++	end
++
++EventScript_M5LegendaryMewtwo:
++	checkflag FLAG_M5_FOUGHT_MEWTWO
++	compare LASTRESULT TRUE
++	if equal _goto EventScript_M5LegendaryCompleted
++	msgbox gText_M5LegendaryAvailable MSG_YESNO
++	compare LASTRESULT NO
++	if equal _goto EventScript_M5LegendaryCoordinator
++	warp 1, 74, 0xFF, 7, 13
++	waitstate
++	releaseall
++	end
++
++EventScript_M5LegendaryLugia:
++	checkflag FLAG_M5_FOUGHT_LUGIA
++	compare LASTRESULT TRUE
++	if equal _goto EventScript_M5LegendaryCompleted
++	checkflag FLAG_M5_GOT_MYSTIC_TICKET
++	compare LASTRESULT FALSE
++	if equal _goto EventScript_M5LegendaryLockedTicket
++	msgbox gText_M5LegendaryAvailable MSG_YESNO
++	compare LASTRESULT NO
++	if equal _goto EventScript_M5LegendaryCoordinator
++	warp 2, 38, 0xFF, 10, 16
++	waitstate
++	releaseall
++	end
++
++EventScript_M5LegendaryHoOh:
++	checkflag FLAG_M5_FOUGHT_HO_OH
++	compare LASTRESULT TRUE
++	if equal _goto EventScript_M5LegendaryCompleted
++	checkflag FLAG_M5_GOT_MYSTIC_TICKET
++	compare LASTRESULT FALSE
++	if equal _goto EventScript_M5LegendaryLockedTicket
++	msgbox gText_M5LegendaryAvailable MSG_YESNO
++	compare LASTRESULT NO
++	if equal _goto EventScript_M5LegendaryCoordinator
++	warp 2, 37, 0xFF, 9, 7
++	waitstate
++	releaseall
++	end
++
++EventScript_M5LegendaryDeoxys:
++	checkflag FLAG_M5_FOUGHT_DEOXYS
++	compare LASTRESULT TRUE
++	if equal _goto EventScript_M5LegendaryCompleted
++	checkflag FLAG_M5_GOT_AURORA_TICKET
++	compare LASTRESULT FALSE
++	if equal _goto EventScript_M5LegendaryLockedTicket
++	msgbox gText_M5LegendaryAvailable MSG_YESNO
++	compare LASTRESULT NO
++	if equal _goto EventScript_M5LegendaryCoordinator
++	warp 2, 56, 0xFF, 15, 12
++	waitstate
++	releaseall
++	end
++
++EventScript_M5LegendaryCompleted:
++	msgbox gText_M5LegendaryCompleted MSG_NORMAL
++	goto EventScript_M5LegendaryCoordinator
++
++EventScript_M5LegendaryLockedPostgame:
++	msgbox gText_M5LegendaryLockedPostgame MSG_NORMAL
++	goto EventScript_M5LegendaryEnd
++
++EventScript_M5LegendaryLockedTicket:
++	msgbox gText_M5LegendaryLockedTicket MSG_NORMAL
++	goto EventScript_M5LegendaryCoordinator
++
++EventScript_M5LegendaryEnd:
++	releaseall
++	end
++
+ .global SystemScript_EnableAutoRun
+diff --git a/eventscripts b/eventscripts
+index baf8f7c..92db6bf 100644
+--- a/eventscripts
++++ b/eventscripts
+@@ -8,3 +8,4 @@ npc 12 3 1 EventScript_M5FormResearcher
+ npc 3 1 3 EventScript_ChangeTeraTypeNPC
+ npc 3 1 5 EventScript_ViridianCity_Youngster
+ npc 3 1 6 EventScript_ViridianCity_YoungMan
++npc 31 3 2 EventScript_M5LegendaryCoordinator
+diff --git a/.upstream/cfru/strings/Scripts/M5_Legendary_Hub.string b/strings/Scripts/M5_Legendary_Hub.string
+new file mode 100644
+index 0000000..9838d37
+--- /dev/null
++++ b/strings/Scripts/M5_Legendary_Hub.string
+@@ -0,0 +1,37 @@
++#org @gText_M5LegendaryHubIntro
++LEGENDARY RESEARCH HUB\nChoose an encounter generation.\pStatus is checked from its permanent\ncapture record.
++
++#org @gText_M5LegendaryGen1
++GENERATION I
++#org @gText_M5LegendaryGen2
++GENERATION II
++#org @gText_M5LegendaryGen3
++GENERATION III
++#org @gText_M5LegendaryCancel
++CANCEL
++#org @gText_M5LegendaryBack
++BACK
++
++#org @gText_M5LegendaryArticuno
++ARTICUNO
++#org @gText_M5LegendaryZapdos
++ZAPDOS
++#org @gText_M5LegendaryMoltres
++MOLTRES
++#org @gText_M5LegendaryMewtwo
++MEWTWO
++#org @gText_M5LegendaryLugia
++LUGIA
++#org @gText_M5LegendaryHoOh
++HO-OH
++#org @gText_M5LegendaryDeoxys
++DEOXYS
++
++#org @gText_M5LegendaryAvailable
++Status: AVAILABLE.\pTravel to the encounter site now?
++#org @gText_M5LegendaryCompleted
++Status: COMPLETED.\pThis Pok\emon was already captured\non this save and will not respawn.
++#org @gText_M5LegendaryLockedPostgame
++Status: LOCKED.\pDefeat the POK\eMON LEAGUE first.
++#org @gText_M5LegendaryLockedTicket
++Status: LOCKED.\pThe corresponding event ticket must\nfirst be registered by research staff.

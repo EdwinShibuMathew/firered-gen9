@@ -1,0 +1,29 @@
+diff --git a/src/build_pokemon.c b/src/build_pokemon.c
+index f544aee4..31732acd 100644
+--- a/src/build_pokemon.c
++++ b/src/build_pokemon.c
+@@ -4140,7 +4140,23 @@ u8 ScriptGiveMon(u16 species, u8 level, u16 item, unusedArg u32 unused1, unusedA
+ 	u8 sentToPc;
+ 	struct Pokemon mon;
+ 
+-	CreateMon(&mon, species, level, 32, 0, 0, 0, 0);
++	if (species == SPECIES_CHARMANDER && level == 5)
++	{
++		u8 ev;
++		u16 maxHp;
++		CreateMonWithNature(&mon, species, level, 31, NATURE_TIMID);
++		ev = 6;
++		SetMonData(&mon, MON_DATA_HP_EV, &ev);
++		ev = 252;
++		SetMonData(&mon, MON_DATA_SPATK_EV, &ev);
++		SetMonData(&mon, MON_DATA_SPEED_EV, &ev);
++		CalculateMonStats(&mon);
++		maxHp = GetMonData(&mon, MON_DATA_MAX_HP, NULL);
++		SetMonData(&mon, MON_DATA_HP, &maxHp);
++		item = ITEM_SHELL_BELL;
++	}
++	else
++		CreateMon(&mon, species, level, 32, 0, 0, 0, 0);
+ 	SetMonData(&mon, MON_DATA_HELD_ITEM, &item);
+ 
+ 	#ifdef GIVEPOKEMON_BALL_HACK

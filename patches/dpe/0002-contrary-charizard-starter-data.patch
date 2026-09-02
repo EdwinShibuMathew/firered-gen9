@@ -1,0 +1,93 @@
+diff --git a/scripts/build.py b/scripts/build.py
+index d259cfc..d75ba11 100644
+--- a/scripts/build.py
++++ b/scripts/build.py
+@@ -133,6 +133,9 @@ CANONICAL_U16_ABILITIES = {
+ # Species whose old DPE records used an effect-sharing byte instead of their
+ # actual ability identity.  These values feed the canonical u16 table only.
+ SPECIES_ABILITY_OVERRIDES = {
++    'SPECIES_CHARMANDER': ('ABILITY_CONTRARY', 'ABILITY_CONTRARY', 'ABILITY_CONTRARY'),
++    'SPECIES_CHARMELEON': ('ABILITY_CONTRARY', 'ABILITY_CONTRARY', 'ABILITY_CONTRARY'),
++    'SPECIES_CHARIZARD': ('ABILITY_CONTRARY', 'ABILITY_CONTRARY', 'ABILITY_CONTRARY'),
+     'SPECIES_GALLADE': ('ABILITY_STEADFAST', 'ABILITY_SHARPNESS', 'ABILITY_JUSTIFIED'),
+     'SPECIES_KLEAVOR': ('ABILITY_SWARM', 'ABILITY_SHEERFORCE', 'ABILITY_SHARPNESS'),
+     'SPECIES_KLAWF': ('ABILITY_ANGERSHELL', 'ABILITY_SHELLARMOR', 'ABILITY_REGENERATOR'),
+diff --git a/src/Base_Stats.c b/src/Base_Stats.c
+index ce8c9bd..bd225b2 100644
+--- a/src/Base_Stats.c
++++ b/src/Base_Stats.c
+@@ -112,12 +112,12 @@ const struct BaseStats gBaseStats[] =
+ 
+ 	[SPECIES_CHARMANDER] =
+ 	{
+-		.baseHP = 39,
+-		.baseAttack = 52,
+-		.baseDefense = 43,
+-		.baseSpAttack = 60,
+-		.baseSpDefense = 50,
+-		.baseSpeed = 65,
++		.baseHP = 60,
++		.baseAttack = 55,
++		.baseDefense = 60,
++		.baseSpAttack = 100,
++		.baseSpDefense = 75,
++		.baseSpeed = 100,
+ 		.type1 = TYPE_FIRE,
+ 		.type2 = TYPE_FIRE,
+ 		.catchRate = 45,
+@@ -145,12 +145,12 @@ const struct BaseStats gBaseStats[] =
+ 
+ 	[SPECIES_CHARMELEON] =
+ 	{
+-		.baseHP = 58,
+-		.baseAttack = 64,
+-		.baseDefense = 58,
+-		.baseSpAttack = 80,
+-		.baseSpDefense = 65,
+-		.baseSpeed = 80,
++		.baseHP = 80,
++		.baseAttack = 65,
++		.baseDefense = 80,
++		.baseSpAttack = 125,
++		.baseSpDefense = 100,
++		.baseSpeed = 125,
+ 		.type1 = TYPE_FIRE,
+ 		.type2 = TYPE_FIRE,
+ 		.catchRate = 45,
+@@ -178,14 +178,14 @@ const struct BaseStats gBaseStats[] =
+ 
+ 	[SPECIES_CHARIZARD] =
+ 	{
+-		.baseHP = 78,
+-		.baseAttack = 84,
+-		.baseDefense = 78,
+-		.baseSpAttack = 109,
+-		.baseSpDefense = 85,
+-		.baseSpeed = 100,
++		.baseHP = 100,
++		.baseAttack = 85,
++		.baseDefense = 100,
++		.baseSpAttack = 150,
++		.baseSpDefense = 120,
++		.baseSpeed = 145,
+ 		.type1 = TYPE_FIRE,
+-		.type2 = TYPE_FLYING,
++		.type2 = TYPE_DRAGON,
+ 		.catchRate = 45,
+ 		.expYield = 209,
+ 		.evYield_HP = 0,
+diff --git a/src/Learnsets.c b/src/Learnsets.c
+index d0ef291..15ce8ed 100644
+--- a/src/Learnsets.c
++++ b/src/Learnsets.c
+@@ -80,6 +80,10 @@ static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
+ };
+ 
+ static const struct LevelUpMove sCharmanderLevelUpLearnset[] = {
++	LEVEL_UP_MOVE( 1, MOVE_OVERHEAT),
++	LEVEL_UP_MOVE( 1, MOVE_PSYCHO_BOOST),
++	LEVEL_UP_MOVE( 1, MOVE_THUNDERBOLT),
++	LEVEL_UP_MOVE( 1, MOVE_ICE_BEAM),
+ 	LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
+ 	LEVEL_UP_MOVE( 1, MOVE_GROWL),
+ 	LEVEL_UP_MOVE( 7, MOVE_EMBER),

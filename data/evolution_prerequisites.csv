@@ -1,0 +1,165 @@
+kind,value,source,target,method,available,evidence
+item,ITEM_THUNDER_STONE,SPECIES_PIKACHU,SPECIES_RAICHU,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_SHINY_STONE,SPECIES_PIKACHU,SPECIES_RAICHU_A,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_MOON_STONE,SPECIES_NIDORINA,SPECIES_NIDOQUEEN,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_MOON_STONE,SPECIES_NIDORINO,SPECIES_NIDOKING,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_MOON_STONE,SPECIES_CLEFAIRY,SPECIES_CLEFABLE,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_FIRE_STONE,SPECIES_VULPIX,SPECIES_NINETALES,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_MOON_STONE,SPECIES_JIGGLYPUFF,SPECIES_WIGGLYTUFF,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_LEAF_STONE,SPECIES_GLOOM,SPECIES_VILEPLUME,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_SUN_STONE,SPECIES_GLOOM,SPECIES_BELLOSSOM,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+move,MOVE_RAGEFIST,SPECIES_PRIMEAPE,SPECIES_ANNIHILAPE,EVO_MOVE,true,source species level-up learnset
+item,ITEM_FIRE_STONE,SPECIES_GROWLITHE,SPECIES_ARCANINE,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_WATER_STONE,SPECIES_POLIWHIRL,SPECIES_POLIWRATH,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_KINGS_ROCK,SPECIES_POLIWHIRL,SPECIES_POLITOED,EVO_TRADE_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_KINGS_ROCK,SPECIES_POLIWHIRL,SPECIES_POLITOED,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_LINK_CABLE,SPECIES_KADABRA,SPECIES_ALAKAZAM,EVO_ITEM,true,tracked Celadon shop overlay
+item,ITEM_LINK_CABLE,SPECIES_MACHOKE,SPECIES_MACHAMP,EVO_ITEM,true,tracked Celadon shop overlay
+item,ITEM_LEAF_STONE,SPECIES_WEEPINBELL,SPECIES_VICTREEBEL,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_LINK_CABLE,SPECIES_GRAVELER,SPECIES_GOLEM,EVO_ITEM,true,tracked Celadon shop overlay
+item,ITEM_KINGS_ROCK,SPECIES_SLOWPOKE,SPECIES_SLOWKING,EVO_TRADE_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_KINGS_ROCK,SPECIES_SLOWPOKE,SPECIES_SLOWKING,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_THUNDER_STONE,SPECIES_MAGNETON,SPECIES_MAGNEZONE,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_WATER_STONE,SPECIES_SHELLDER,SPECIES_CLOYSTER,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_LINK_CABLE,SPECIES_HAUNTER,SPECIES_GENGAR,EVO_ITEM,true,tracked Celadon shop overlay
+item,ITEM_METAL_COAT,SPECIES_ONIX,SPECIES_STEELIX,EVO_TRADE_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_METAL_COAT,SPECIES_ONIX,SPECIES_STEELIX,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_LEAF_STONE,SPECIES_EXEGGCUTE,SPECIES_EXEGGUTOR,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+move,MOVE_ROLLOUT,SPECIES_LICKITUNG,SPECIES_LICKILICKY,EVO_MOVE,true,source species level-up learnset
+item,ITEM_PROTECTOR,SPECIES_RHYDON,SPECIES_RHYPERIOR,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_PROTECTOR,SPECIES_RHYDON,SPECIES_RHYPERIOR,EVO_TRADE_ITEM,true,data/evolution_item_shop.csv
+move,MOVE_ANCIENTPOWER,SPECIES_TANGELA,SPECIES_TANGROWTH,EVO_MOVE,true,source species level-up learnset
+item,ITEM_DRAGON_SCALE,SPECIES_SEADRA,SPECIES_KINGDRA,EVO_TRADE_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_DRAGON_SCALE,SPECIES_SEADRA,SPECIES_KINGDRA,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_WATER_STONE,SPECIES_STARYU,SPECIES_STARMIE,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_METAL_COAT,SPECIES_SCYTHER,SPECIES_SCIZOR,EVO_TRADE_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_METAL_COAT,SPECIES_SCYTHER,SPECIES_SCIZOR,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_BLACK_AUGURITE,SPECIES_SCYTHER,SPECIES_KLEAVOR,EVO_TRADE_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_BLACK_AUGURITE,SPECIES_SCYTHER,SPECIES_KLEAVOR,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_ELECTIRIZER,SPECIES_ELECTABUZZ,SPECIES_ELECTIVIRE,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_ELECTIRIZER,SPECIES_ELECTABUZZ,SPECIES_ELECTIVIRE,EVO_TRADE_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_MAGMARIZER,SPECIES_MAGMAR,SPECIES_MAGMORTAR,EVO_TRADE_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_MAGMARIZER,SPECIES_MAGMAR,SPECIES_MAGMORTAR,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_FIRE_STONE,SPECIES_EEVEE,SPECIES_FLAREON,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_THUNDER_STONE,SPECIES_EEVEE,SPECIES_JOLTEON,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_WATER_STONE,SPECIES_EEVEE,SPECIES_VAPOREON,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_LEAF_STONE,SPECIES_EEVEE,SPECIES_LEAFEON,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_ICE_STONE,SPECIES_EEVEE,SPECIES_GLACEON,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_UP_GRADE,SPECIES_PORYGON,SPECIES_PORYGON2,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_UP_GRADE,SPECIES_PORYGON,SPECIES_PORYGON2,EVO_TRADE_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_HISUI_ROCK,SPECIES_QUILAVA,SPECIES_TYPHLOSION_H,EVO_LEVEL_HOLD_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_SHINY_STONE,SPECIES_TOGETIC,SPECIES_TOGEKISS,EVO_ITEM,true,data/evolution_item_shop.csv
+move,MOVE_DOUBLEHIT,SPECIES_AIPOM,SPECIES_AMBIPOM,EVO_MOVE,true,source species level-up learnset
+item,ITEM_SUN_STONE,SPECIES_SUNKERN,SPECIES_SUNFLORA,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+move,MOVE_ANCIENTPOWER,SPECIES_YANMA,SPECIES_YANMEGA,EVO_MOVE,true,source species level-up learnset
+item,ITEM_DUSK_STONE,SPECIES_MURKROW,SPECIES_HONCHKROW,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_DUSK_STONE,SPECIES_MISDREAVUS,SPECIES_MISMAGIUS,EVO_ITEM,true,data/evolution_item_shop.csv
+move,MOVE_TWINBEAM,SPECIES_GIRAFARIG,SPECIES_FARIGIRAF,EVO_MOVE,true,source species level-up learnset
+move,MOVE_HYPERDRILL,SPECIES_DUNSPARCE,SPECIES_DUDUNSPARCE,EVO_MOVE,true,source species level-up learnset
+move,MOVE_HYPERDRILL,SPECIES_DUNSPARCE,SPECIES_DUDUNSPARCE_THREE,EVO_MOVE,true,source species level-up learnset
+item,ITEM_RAZOR_FANG,SPECIES_GLIGAR,SPECIES_GLISCOR,EVO_HOLD_ITEM_NIGHT,true,data/evolution_item_shop.csv
+item,ITEM_RAZOR_CLAW,SPECIES_SNEASEL,SPECIES_WEAVILE,EVO_HOLD_ITEM_NIGHT,true,data/evolution_item_shop.csv
+item,ITEM_PEAT_BLOCK,SPECIES_URSARING,SPECIES_URSALUNA,EVO_ITEM_NIGHT,true,data/evolution_item_shop.csv
+move,MOVE_ANCIENTPOWER,SPECIES_PILOSWINE,SPECIES_MAMOSWINE,EVO_MOVE,true,source species level-up learnset
+item,ITEM_DUBIOUS_DISC,SPECIES_PORYGON2,SPECIES_PORYGON_Z,EVO_TRADE_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_DUBIOUS_DISC,SPECIES_PORYGON2,SPECIES_PORYGON_Z,EVO_ITEM,true,data/evolution_item_shop.csv
+move,MOVE_PSYSHIELDBASH,SPECIES_STANTLER,SPECIES_WYRDEER,EVO_MOVE,true,source species level-up learnset
+item,ITEM_WATER_STONE,SPECIES_LOMBRE,SPECIES_LUDICOLO,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_LEAF_STONE,SPECIES_NUZLEAF,SPECIES_SHIFTRY,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_MOON_STONE,SPECIES_SKITTY,SPECIES_DELCATTY,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_THUNDER_STONE,SPECIES_NOSEPASS,SPECIES_PROBOPASS,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_PRISM_SCALE,SPECIES_FEEBAS,SPECIES_MILOTIC,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_PRISM_SCALE,SPECIES_FEEBAS,SPECIES_MILOTIC,EVO_TRADE_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_DAWN_STONE,SPECIES_SNORUNT,SPECIES_FROSLASS,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_REAPER_CLOTH,SPECIES_DUSCLOPS,SPECIES_DUSKNOIR,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_REAPER_CLOTH,SPECIES_DUSCLOPS,SPECIES_DUSKNOIR,EVO_TRADE_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_SHINY_STONE,SPECIES_ROSELIA,SPECIES_ROSERADE,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_DEEP_SEA_TOOTH,SPECIES_CLAMPERL,SPECIES_HUNTAIL,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_DEEP_SEA_SCALE,SPECIES_CLAMPERL,SPECIES_GOREBYSS,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_DEEP_SEA_TOOTH,SPECIES_CLAMPERL,SPECIES_HUNTAIL,EVO_TRADE_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_DEEP_SEA_SCALE,SPECIES_CLAMPERL,SPECIES_GOREBYSS,EVO_TRADE_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_DAWN_STONE,SPECIES_KIRLIA,SPECIES_GALLADE,EVO_ITEM,true,data/evolution_item_shop.csv
+move,MOVE_MIMIC,SPECIES_BONSLY,SPECIES_SUDOWOODO,EVO_MOVE,true,source species level-up learnset
+move,MOVE_MIMIC,SPECIES_MIME_JR,SPECIES_MR_MIME,EVO_MOVE,true,source species level-up learnset
+item,ITEM_OVAL_STONE,SPECIES_HAPPINY,SPECIES_CHANSEY,EVO_HOLD_ITEM_DAY,true,data/evolution_item_shop.csv
+item,ITEM_HISUI_ROCK,SPECIES_DEWOTT,SPECIES_SAMUROTT_H,EVO_LEVEL_HOLD_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_LEAF_STONE,SPECIES_PANSAGE,SPECIES_SIMISAGE,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_FIRE_STONE,SPECIES_PANSEAR,SPECIES_SIMISEAR,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_WATER_STONE,SPECIES_PANPOUR,SPECIES_SIMIPOUR,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_MOON_STONE,SPECIES_MUNNA,SPECIES_MUSHARNA,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_LINK_CABLE,SPECIES_BOLDORE,SPECIES_GIGALITH,EVO_ITEM,true,tracked Celadon shop overlay
+item,ITEM_LINK_CABLE,SPECIES_GURDURR,SPECIES_CONKELDURR,EVO_ITEM,true,tracked Celadon shop overlay
+item,ITEM_SUN_STONE,SPECIES_COTTONEE,SPECIES_WHIMSICOTT,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_SUN_STONE,SPECIES_PETILIL,SPECIES_LILLIGANT,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_SUN_STONE,SPECIES_PETILIL,SPECIES_LILLIGANT_H,EVO_ITEM_HOLD_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_HISUI_ROCK,SPECIES_PETILIL,SPECIES_LILLIGANT_H,EVO_ITEM_HOLD_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_SHINY_STONE,SPECIES_MINCCINO,SPECIES_CINCCINO,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_LINK_CABLE,SPECIES_KARRABLAST,SPECIES_ESCAVALIER,EVO_ITEM,true,tracked Celadon shop overlay
+item,ITEM_THUNDER_STONE,SPECIES_EELEKTRIK,SPECIES_EELEKTROSS,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_DUSK_STONE,SPECIES_LAMPENT,SPECIES_CHANDELURE,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_LINK_CABLE,SPECIES_SHELMET,SPECIES_ACCELGOR,EVO_ITEM,true,tracked Celadon shop overlay
+item,ITEM_LEADERS_CREST,SPECIES_BISHARP,SPECIES_KINGAMBIT,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_HISUI_ROCK,SPECIES_RUFFLET,SPECIES_BRAVIARY_H,EVO_LEVEL_HOLD_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_SHINY_STONE,SPECIES_FLOETTE,SPECIES_FLORGES,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_DUSK_STONE,SPECIES_DOUBLADE,SPECIES_AEGISLASH,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_SACHET,SPECIES_SPRITZEE,SPECIES_AROMATISSE,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_SACHET,SPECIES_SPRITZEE,SPECIES_AROMATISSE,EVO_TRADE_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_WHIPPED_DREAM,SPECIES_SWIRLIX,SPECIES_SLURPUFF,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_WHIPPED_DREAM,SPECIES_SWIRLIX,SPECIES_SLURPUFF,EVO_TRADE_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_SUN_STONE,SPECIES_HELIOPTILE,SPECIES_HELIOLISK,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_HISUI_ROCK,SPECIES_GOOMY,SPECIES_SLIGGOO_H,EVO_LEVEL_HOLD_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_LINK_CABLE,SPECIES_PHANTUMP,SPECIES_TREVENANT,EVO_ITEM,true,tracked Celadon shop overlay
+item,ITEM_LINK_CABLE,SPECIES_PUMPKABOO,SPECIES_GOURGEIST,EVO_ITEM,true,tracked Celadon shop overlay
+item,ITEM_HISUI_ROCK,SPECIES_BERGMITE,SPECIES_AVALUGG_H,EVO_LEVEL_HOLD_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_SHINY_STONE,SPECIES_FLOETTE_BLUE,SPECIES_FLORGES_BLUE,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_SHINY_STONE,SPECIES_FLOETTE_ORANGE,SPECIES_FLORGES_ORANGE,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_SHINY_STONE,SPECIES_FLOETTE_YELLOW,SPECIES_FLORGES_YELLOW,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_SHINY_STONE,SPECIES_FLOETTE_WHITE,SPECIES_FLORGES_WHITE,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_LINK_CABLE,SPECIES_PUMPKABOO_XL,SPECIES_GOURGEIST_XL,EVO_ITEM,true,tracked Celadon shop overlay
+item,ITEM_LINK_CABLE,SPECIES_PUMPKABOO_L,SPECIES_GOURGEIST_L,EVO_ITEM,true,tracked Celadon shop overlay
+item,ITEM_LINK_CABLE,SPECIES_PUMPKABOO_M,SPECIES_GOURGEIST_M,EVO_ITEM,true,tracked Celadon shop overlay
+item,ITEM_HISUI_ROCK,SPECIES_DARTRIX,SPECIES_DECIDUEYE_H,EVO_LEVEL_HOLD_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_THUNDER_STONE,SPECIES_CHARJABUG,SPECIES_VIKAVOLT,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_ICE_STONE,SPECIES_CRABRAWLER,SPECIES_CRABOMINABLE,EVO_ITEM,true,data/evolution_item_shop.csv
+move,MOVE_STOMP,SPECIES_STEENEE,SPECIES_TSAREENA,EVO_MOVE,true,source species level-up learnset
+item,ITEM_ICE_STONE,SPECIES_SANDSHREW_A,SPECIES_SANDSLASH_A,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_ICE_STONE,SPECIES_VULPIX_A,SPECIES_NINETALES_A,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_LINK_CABLE,SPECIES_GRAVELER_A,SPECIES_GOLEM_A,EVO_ITEM,true,tracked Celadon shop overlay
+item,ITEM_LEAF_STONE,SPECIES_EXEGGCUTE_A,SPECIES_EXEGGUTOR_A,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+move,MOVE_DRAGONPULSE,SPECIES_POIPOLE,SPECIES_NAGANADEL,EVO_MOVE,true,source species level-up learnset
+item,ITEM_METAL_COAT,SPECIES_MELTAN,SPECIES_MELMETAL,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_METAL_POWDER,SPECIES_MELTAN,SPECIES_MELMETAL,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_TART_APPLE,SPECIES_APPLIN,SPECIES_FLAPPLE,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_SWEET_APPLE,SPECIES_APPLIN,SPECIES_APPLETUN,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_SYRUPY_APPLE,SPECIES_APPLIN,SPECIES_DIPPLIN,EVO_ITEM,true,data/evolution_item_shop.csv
+move,MOVE_TAUNT,SPECIES_CLOBBOPUS,SPECIES_GRAPPLOCT,EVO_MOVE,true,source species level-up learnset
+item,ITEM_CRACKED_POT,SPECIES_SINISTEA,SPECIES_POLTEAGEIST,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_CHIPPED_POT,SPECIES_SINISTEA_CHIPPED,SPECIES_POLTEAGEIST_CHIPPED,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_STRAWBERRY_SWEET,SPECIES_MILCERY,SPECIES_ALCREMIE_STRAWBERRY,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_BERRY_SWEET,SPECIES_MILCERY,SPECIES_ALCREMIE_BERRY,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_LOVE_SWEET,SPECIES_MILCERY,SPECIES_ALCREMIE_LOVE,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_CLOVER_SWEET,SPECIES_MILCERY,SPECIES_ALCREMIE_CLOVER,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_FLOWER_SWEET,SPECIES_MILCERY,SPECIES_ALCREMIE_FLOWER,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_RIBBON_SWEET,SPECIES_MILCERY,SPECIES_ALCREMIE_RIBBON,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_STAR_SWEET,SPECIES_MILCERY,SPECIES_ALCREMIE_STAR,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_METAL_ALLOY,SPECIES_DURALUDON,SPECIES_ARCHALUDON,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_DUSK_STONE,SPECIES_KUBFU,SPECIES_URSHIFU_SINGLE,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_WATER_STONE,SPECIES_KUBFU,SPECIES_URSHIFU_RAPID,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_GALARICA_CUFF,SPECIES_SLOWPOKE_G,SPECIES_SLOWBRO_G,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_GALARICA_WREATH,SPECIES_SLOWPOKE_G,SPECIES_SLOWKING_G,EVO_ITEM,true,data/evolution_item_shop.csv
+move,MOVE_MIMIC,SPECIES_MIME_JR_G,SPECIES_MR_MIME_G,EVO_MOVE,true,source species level-up learnset
+item,ITEM_ICE_STONE,SPECIES_DARUMAKA_G,SPECIES_DARMANITAN_G,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_FIRE_STONE,SPECIES_GROWLITHE_H,SPECIES_ARCANINE_H,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_LEAF_STONE,SPECIES_VOLTORB_H,SPECIES_ELECTRODE_H,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+move,MOVE_BARBBARRAGE,SPECIES_QWILFISH_H,SPECIES_OVERQWIL,EVO_MOVE,true,source species level-up learnset
+item,ITEM_RAZOR_CLAW,SPECIES_SNEASEL_H,SPECIES_SNEASLER,EVO_HOLD_ITEM_DAY,true,data/evolution_item_shop.csv
+move,MOVE_WAVECRASH,SPECIES_BASCULIN_H,SPECIES_BASCULEGION_M,EVO_MOVE_MALE,true,source species level-up learnset
+move,MOVE_WAVECRASH,SPECIES_BASCULIN_H,SPECIES_BASCULEGION_F,EVO_MOVE_FEMALE,true,source species level-up learnset
+item,ITEM_FIRE_STONE,SPECIES_CAPSAKID,SPECIES_SCOVILLAIN,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_THUNDER_STONE,SPECIES_TADBULB,SPECIES_BELLIBOLT,EVO_ITEM,true,.upstream/pret/data/scripts/item_ball_scripts.inc
+item,ITEM_ICE_STONE,SPECIES_CETODDLE,SPECIES_CETITAN,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_AUSPICIOUS_ARMOR,SPECIES_CHARCADET,SPECIES_ARMAROUGE,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_MALICIOUS_ARMOR,SPECIES_CHARCADET,SPECIES_CERULEDGE,EVO_ITEM,true,data/evolution_item_shop.csv
+move,MOVE_DRAGONCHEER,SPECIES_DIPPLIN,SPECIES_HYDRAPPLE,EVO_MOVE,true,source species level-up learnset
+item,ITEM_UNREMARKABLE_TEACUP,SPECIES_POLTCHAGEIST,SPECIES_SINISTCHA,EVO_ITEM,true,data/evolution_item_shop.csv
+item,ITEM_MASTERPIECE_TEACUP,SPECIES_POLTCHAGEIST_ARTISAN,SPECIES_SINISTCHA_MASTERPIECE,EVO_ITEM,true,data/evolution_item_shop.csv

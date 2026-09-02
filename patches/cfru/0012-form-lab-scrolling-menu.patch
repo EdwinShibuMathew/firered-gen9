@@ -1,0 +1,197 @@
+diff --git a/src/scripting.c b/src/scripting.c
+index 6b9292d..1a0b16b 100644
+--- a/src/scripting.c
++++ b/src/scripting.c
+@@ -112,9 +112,8 @@ static const struct M5FormLabFamily sM5FormLabFamilies[] = {
+     {sM5FormLabFurfrou, ARRAY_COUNT(sM5FormLabFurfrou)},
+ };
+ 
+-// Called by the Cinnabar Form Researcher after ChoosePartyMon.  It chooses
+-// the next safe, reversible form in the selected mon's family and exposes it
+-// through Var8005 for confirmation by the injected event script.
++// Called after ChoosePartyMon. Selects the matching generated scrolling-list
++// binding; no Pokemon data is touched until the separate apply call.
+ void M5FormLabPrepareNextForm(void)
+ {
+     u16 current;
+@@ -133,8 +132,9 @@ void M5FormLabPrepareNextForm(void)
+         {
+             if (sM5FormLabFamilies[family].forms[form] == current)
+             {
+-                Var8005 = sM5FormLabFamilies[family].forms[(form + 1) % sM5FormLabFamilies[family].count];
+-                GetSpeciesName(gStringVar1, Var8005);
++                Var8000 = family + 1; // gScrollingSets[0] is the Tera-type list.
++                Var8001 = 6;
++                Var8006 = family;
+                 gSpecialVar_LastResult = TRUE;
+                 return;
+             }
+@@ -142,6 +142,23 @@ void M5FormLabPrepareNextForm(void)
+     }
+ }
+ 
++void M5FormLabPrepareSelectedForm(void)
++{
++    u16 current;
++    u16 selected = gSpecialVar_LastResult;
++    u16 family = Var8006;
++    gSpecialVar_LastResult = FALSE;
++    if (Var8004 >= PARTY_SIZE || family >= ARRAY_COUNT(sM5FormLabFamilies)
++     || selected >= sM5FormLabFamilies[family].count)
++        return;
++    current = GetMonData(&gPlayerParty[Var8004], MON_DATA_SPECIES2, NULL);
++    Var8005 = sM5FormLabFamilies[family].forms[selected];
++    if (current == Var8005)
++        return;
++    GetSpeciesName(gStringVar1, Var8005);
++    gSpecialVar_LastResult = TRUE;
++}
++
+ void M5FormLabApplyPreparedForm(void)
+ {
+     gSpecialVar_LastResult = FALSE;
+@@ -3046,6 +3063,13 @@ extern const u8 sText_Dragon[];
+ extern const u8 sText_Dark[];
+ extern const u8 sText_Fairy[];
+ extern const u8 sText_Stellar[];
++extern const u8 gText_M5FormRotom[], gText_M5FormRotomHeat[], gText_M5FormRotomWash[];
++extern const u8 gText_M5FormRotomFrost[], gText_M5FormRotomFan[], gText_M5FormRotomMow[];
++extern const u8 gText_M5FormDeoxys[], gText_M5FormDeoxysAttack[], gText_M5FormDeoxysDefense[], gText_M5FormDeoxysSpeed[];
++extern const u8 gText_M5FormShaymin[], gText_M5FormShayminSky[], gText_M5FormHoopa[], gText_M5FormHoopaUnbound[];
++extern const u8 gText_M5FormFurfrou[], gText_M5FormFurfrouHeart[], gText_M5FormFurfrouDiamond[], gText_M5FormFurfrouStar[];
++extern const u8 gText_M5FormFurfrouPharaoh[], gText_M5FormFurfrouKabuki[], gText_M5FormFurfrouLaReine[];
++extern const u8 gText_M5FormFurfrouMatron[], gText_M5FormFurfrouDandy[], gText_M5FormFurfrouDebutante[];
+ 
+ // Scrolling Lists
+ static const u8* sMultichoiceSet1[] =
+@@ -3071,10 +3095,21 @@ static const u8* sMultichoiceSet1[] =
+ 	sText_Stellar,
+ };
+ 
++static const u8 *const sM5FormLabRotomNames[] = {gText_M5FormRotom, gText_M5FormRotomHeat, gText_M5FormRotomWash, gText_M5FormRotomFrost, gText_M5FormRotomFan, gText_M5FormRotomMow};
++static const u8 *const sM5FormLabDeoxysNames[] = {gText_M5FormDeoxys, gText_M5FormDeoxysAttack, gText_M5FormDeoxysDefense, gText_M5FormDeoxysSpeed};
++static const u8 *const sM5FormLabShayminNames[] = {gText_M5FormShaymin, gText_M5FormShayminSky};
++static const u8 *const sM5FormLabHoopaNames[] = {gText_M5FormHoopa, gText_M5FormHoopaUnbound};
++static const u8 *const sM5FormLabFurfrouNames[] = {gText_M5FormFurfrou, gText_M5FormFurfrouHeart, gText_M5FormFurfrouDiamond, gText_M5FormFurfrouStar, gText_M5FormFurfrouPharaoh, gText_M5FormFurfrouKabuki, gText_M5FormFurfrouLaReine, gText_M5FormFurfrouMatron, gText_M5FormFurfrouDandy, gText_M5FormFurfrouDebutante};
++
+ // Multichoice Lists
+ const struct ScrollingMulti gScrollingSets[] =
+ {
+ 	{sMultichoiceSet1, ARRAY_COUNT(sMultichoiceSet1)},
++	{sM5FormLabRotomNames, ARRAY_COUNT(sM5FormLabRotomNames)},
++	{sM5FormLabDeoxysNames, ARRAY_COUNT(sM5FormLabDeoxysNames)},
++	{sM5FormLabShayminNames, ARRAY_COUNT(sM5FormLabShayminNames)},
++	{sM5FormLabHoopaNames, ARRAY_COUNT(sM5FormLabHoopaNames)},
++	{sM5FormLabFurfrouNames, ARRAY_COUNT(sM5FormLabFurfrouNames)},
+ };
+ 
+ //Link number of opts shown at once to the box height
+diff --git a/assembly/overworld_scripts/system_scripts.s b/assembly/overworld_scripts/system_scripts.s
+index 5c28a19..8262c6e 100644
+--- a/assembly/overworld_scripts/system_scripts.s
++++ b/assembly/overworld_scripts/system_scripts.s
+@@ -23,6 +23,17 @@ EventScript_M5FormResearcher:
+ 	callasm M5FormLabPrepareNextForm
+ 	compare LASTRESULT FALSE
+ 	if equal _goto EventScript_M5FormResearcherUnsupported
++	copyvar 0x8007 0x8004
++	resetvar 0x8004
++	resetvar 0x800D
++	special 0x158
++	waitstate
++	copyvar 0x8004 0x8007
++	compare LASTRESULT 0x7F
++	if equal _goto EventScript_M5FormResearcherCancel
++	callasm M5FormLabPrepareSelectedForm
++	compare LASTRESULT FALSE
++	if equal _goto EventScript_M5FormResearcherNoChange
+ 	msgbox gText_M5FormLabConfirm MSG_YESNO
+ 	compare LASTRESULT NO
+ 	if equal _goto EventScript_M5FormResearcherCancel
+@@ -43,6 +54,11 @@ EventScript_M5FormResearcherFailed:
+ 	releaseall
+ 	end
+ 
++EventScript_M5FormResearcherNoChange:
++	msgbox gText_M5FormLabNoChange MSG_NORMAL
++	releaseall
++	end
++
+ EventScript_M5FormResearcherCancel:
+ 	msgbox gText_M5FormLabCancel MSG_NORMAL
+ 	releaseall
+diff --git a/.upstream/cfru/strings/Scripts/M5_Form_Lab.string b/strings/Scripts/M5_Form_Lab.string
+new file mode 100644
+index 0000000..5517b6f
+--- /dev/null
++++ b/strings/Scripts/M5_Form_Lab.string
+@@ -0,0 +1,69 @@
++#org @gText_M5FormLabIntro
++I study safe, stable Pok\emon forms.\pChoose a Pok\emon, then select one\nof its compatible forms.
++
++#org @gText_M5FormLabConfirm
++Change it into [BUFFER1]?\pThe procedure is free and reversible.
++
++#org @gText_M5FormLabSuccess
++The form change was successful!\pVisit again to cycle or reverse it.
++
++#org @gText_M5FormLabUnsupported
++That Pok\emon has no safe laboratory\nform route available.
++
++#org @gText_M5FormLabFailed
++The procedure was refused before\nany Pok\emon data was changed.
++
++#org @gText_M5FormLabCancel
++No changes were made. Come back\nwhenever you are ready.
++
++#org @gText_M5FormLabNoChange
++That is already its active form.\pNo changes were made.
++
++#org @gText_M5FormRotom
++ROTOM
++#org @gText_M5FormRotomHeat
++HEAT ROTOM
++#org @gText_M5FormRotomWash
++WASH ROTOM
++#org @gText_M5FormRotomFrost
++FROST ROTOM
++#org @gText_M5FormRotomFan
++FAN ROTOM
++#org @gText_M5FormRotomMow
++MOW ROTOM
++#org @gText_M5FormDeoxys
++DEOXYS NORMAL
++#org @gText_M5FormDeoxysAttack
++DEOXYS ATTACK
++#org @gText_M5FormDeoxysDefense
++DEOXYS DEFENSE
++#org @gText_M5FormDeoxysSpeed
++DEOXYS SPEED
++#org @gText_M5FormShaymin
++SHAYMIN LAND
++#org @gText_M5FormShayminSky
++SHAYMIN SKY
++#org @gText_M5FormHoopa
++HOOPA CONFINED
++#org @gText_M5FormHoopaUnbound
++HOOPA UNBOUND
++#org @gText_M5FormFurfrou
++FURFROU NATURAL
++#org @gText_M5FormFurfrouHeart
++HEART TRIM
++#org @gText_M5FormFurfrouDiamond
++DIAMOND TRIM
++#org @gText_M5FormFurfrouStar
++STAR TRIM
++#org @gText_M5FormFurfrouPharaoh
++PHARAOH TRIM
++#org @gText_M5FormFurfrouKabuki
++KABUKI TRIM
++#org @gText_M5FormFurfrouLaReine
++LA REINE TRIM
++#org @gText_M5FormFurfrouMatron
++MATRON TRIM
++#org @gText_M5FormFurfrouDandy
++DANDY TRIM
++#org @gText_M5FormFurfrouDebutante
++DEBUTANTE TRIM

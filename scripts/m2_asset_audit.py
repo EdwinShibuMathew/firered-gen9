@@ -19,11 +19,12 @@ from pathlib import Path
 
 SRC_ROOT = Path(__file__).resolve().parents[1]
 UPSTREAM = SRC_ROOT / ".upstream/cfru"
+DPE = SRC_ROOT / ".upstream/dpe"
 SPECIES_HEADER = UPSTREAM / "include/constants/species.h"
 LEARNSETS_FILE = UPSTREAM / "src/Tables/level_up_learnsets.c"
 ABILITY_NAMES = UPSTREAM / "strings/ability_name_table.string"
-EVOLUTION_FILE = UPSTREAM / "src/evolution.c"
-POKEDEX_STRINGS = UPSTREAM / "strings/pokedex_entries.string"
+EVOLUTION_FILE = DPE / "src/Evolution_Table.c"
+POKEDEX_STRINGS = DPE / "strings/Pokedex_Data.string"
 
 
 class M2AssetAudit:
@@ -73,13 +74,17 @@ class M2AssetAudit:
         if not EVOLUTION_FILE.exists():
             return {}
         text = EVOLUTION_FILE.read_text(encoding="utf-8", errors="ignore")
-        # Count evolution definitions with more reliable pattern
-        evo_methods = re.findall(r"case\s+EVO_\w+:", text)
-        evo_entries = re.findall(r"targetSpecies\s*=\s*(SPECIES_[A-Z0-9_]+)", text)
-        evolution_chains = re.findall(r"gEvolutionTable\s*\[\s*(SPECIES_[A-Z0-9_]+)\s*\]", text)
+        # Parse the data table, not CFRU's runtime switch implementation.
+        text = re.sub(r"/\*.*?\*/|//[^\n]*", "", text, flags=re.S)
+        evo_methods = re.findall(r"\{\s*(EVO_[A-Z0-9_]+)\s*,", text)
+        evo_entries = re.findall(
+            r"\{\s*EVO_[A-Z0-9_]+\s*,\s*[^,{}]+,\s*(SPECIES_[A-Z0-9_]+)\s*,",
+            text,
+        )
+        evolution_chains = re.findall(r"\[\s*(SPECIES_[A-Z0-9_]+)\s*\]\s*=", text)
         return {
             "evolution_methods": len(set(evo_methods)),
-            "evolution_entries": len(set(evo_entries)),
+            "evolution_entries": len(evo_entries),
             "species_with_evolution": len(set(evolution_chains)),
         }
 
@@ -112,9 +117,8 @@ class M2AssetAudit:
                     return {"entries": len(non_empty), "source": str(alt_path)}
             return {}
         text = POKEDEX_STRINGS.read_text(encoding="utf-8", errors="ignore")
-        # Count Pokédex entries (basic line count)
-        non_empty = [line.strip() for line in text.split("\n") if line.strip() and not line.startswith("#")]
-        return {"entries": len(non_empty), "source": "pokedex_entries.string"}
+        entries = re.findall(r"^#org\s+@DEX_ENTRY_[A-Z0-9_]+", text, re.M)
+        return {"entries": len(entries), "source": str(POKEDEX_STRINGS)}
 
     def audit_species_completeness(self):
         """Audit completeness of all species data."""

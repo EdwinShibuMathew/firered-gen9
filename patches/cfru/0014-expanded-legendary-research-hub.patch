@@ -1,0 +1,350 @@
+--- a/assembly/overworld_scripts/system_scripts.s
++++ b/assembly/overworld_scripts/system_scripts.s
+@@ -83,6 +83,25 @@
+ .equ FLAG_M5_FOUGHT_DEOXYS, 0x2E4
+ .equ FLAG_M5_FOUGHT_LUGIA, 0x2F2
+ .equ FLAG_M5_FOUGHT_HO_OH, 0x2F3
++.equ FLAG_M5_FOUGHT_CELEBI, 0xA20
++.equ FLAG_M5_FOUGHT_REGIROCK, 0xA21
++.equ FLAG_M5_FOUGHT_REGICE, 0xA22
++.equ FLAG_M5_FOUGHT_REGISTEEL, 0xA23
++.equ FLAG_M5_FOUGHT_RAYQUAZA, 0xA24
++.equ FLAG_M5_FOUGHT_DARKRAI, 0xA25
++.equ FLAG_M5_FOUGHT_ARCEUS, 0xA26
++.equ FLAG_M5_FOUGHT_VICTINI, 0xA27
++.equ FLAG_M5_FOUGHT_KELDEO, 0xA28
++.equ FLAG_M5_FOUGHT_ETERNATUS, 0xA29
++.equ FLAG_M5_FOUGHT_ENAMORUS, 0xA2A
++.equ FLAG_M5_FOUGHT_PECHARUNT, 0xA2B
++.equ FLAG_M5_FOUGHT_MELOETTA, 0xA2C
++.equ FLAG_M5_FOUGHT_DIANCIE, 0xA2D
++.equ FLAG_M5_FOUGHT_VOLCANION, 0xA2E
++.equ FLAG_M5_FOUGHT_MAGEARNA, 0xA2F
++.equ FLAG_M5_FOUGHT_MARSHADOW, 0xA30
++.equ FLAG_M5_FOUGHT_ZERAORA, 0xA31
++.equ FLAG_M5_FOUGHT_CELESTEELA, 0xA32
+ 
+ @ Seven Island Pokemon Center 1F, object slot 2.
+ .global EventScript_M5LegendaryCoordinator
+@@ -96,12 +115,14 @@
+ 	multichoiceoption gText_M5LegendaryGen1 0
+ 	multichoiceoption gText_M5LegendaryGen2 1
+ 	multichoiceoption gText_M5LegendaryGen3 2
+-	multichoiceoption gText_M5LegendaryCancel 3
+-	multichoice 0, 0, FOUR_MULTICHOICE_OPTIONS, 0
++	multichoiceoption gText_M5LegendaryMore 3
++	multichoiceoption gText_M5LegendaryCancel 4
++	multichoice 0, 0, FIVE_MULTICHOICE_OPTIONS, 0
+ 	switch LASTRESULT
+ 	case 0, EventScript_M5LegendaryGen1
+ 	case 1, EventScript_M5LegendaryGen2
+ 	case 2, EventScript_M5LegendaryGen3
++	case 3, EventScript_M5LegendaryMore
+ 	goto EventScript_M5LegendaryEnd
+ 
+ EventScript_M5LegendaryGen1:
+@@ -121,19 +142,119 @@
+ EventScript_M5LegendaryGen2:
+ 	multichoiceoption gText_M5LegendaryLugia 0
+ 	multichoiceoption gText_M5LegendaryHoOh 1
+-	multichoiceoption gText_M5LegendaryBack 2
+-	multichoice 0, 0, THREE_MULTICHOICE_OPTIONS, 0
++	multichoiceoption gText_M5LegendaryCelebi 2
++	multichoiceoption gText_M5LegendaryBack 3
++	multichoice 0, 0, FOUR_MULTICHOICE_OPTIONS, 0
+ 	switch LASTRESULT
+ 	case 0, EventScript_M5LegendaryLugia
+ 	case 1, EventScript_M5LegendaryHoOh
++	case 2, EventScript_M5LegendaryCelebi
+ 	goto EventScript_M5LegendaryCoordinator
+ 
+ EventScript_M5LegendaryGen3:
+ 	multichoiceoption gText_M5LegendaryDeoxys 0
++	multichoiceoption gText_M5LegendaryRegirock 1
++	multichoiceoption gText_M5LegendaryRegice 2
++	multichoiceoption gText_M5LegendaryRegisteel 3
++	multichoiceoption gText_M5LegendaryRayquaza 4
++	multichoiceoption gText_M5LegendaryBack 5
++	multichoice 0, 0, SIX_MULTICHOICE_OPTIONS, 0
++	switch LASTRESULT
++	case 0, EventScript_M5LegendaryDeoxys
++	case 1, EventScript_M5LegendaryRegirock
++	case 2, EventScript_M5LegendaryRegice
++	case 3, EventScript_M5LegendaryRegisteel
++	case 4, EventScript_M5LegendaryRayquaza
++	goto EventScript_M5LegendaryCoordinator
++
++EventScript_M5LegendaryMore:
++	multichoiceoption gText_M5LegendaryGen4 0
++	multichoiceoption gText_M5LegendaryGen5 1
++	multichoiceoption gText_M5LegendaryMore 2
++	multichoiceoption gText_M5LegendaryBack 3
++	multichoice 0, 0, FOUR_MULTICHOICE_OPTIONS, 0
++	switch LASTRESULT
++	case 0, EventScript_M5LegendaryGen4
++	case 1, EventScript_M5LegendaryGen5
++	case 2, EventScript_M5LegendaryMore2
++	goto EventScript_M5LegendaryCoordinator
++
++EventScript_M5LegendaryMore2:
++	multichoiceoption gText_M5LegendaryGen6 0
++	multichoiceoption gText_M5LegendaryGen7 1
++	multichoiceoption gText_M5LegendaryGen8 2
++	multichoiceoption gText_M5LegendaryGen9 3
++	multichoiceoption gText_M5LegendaryBack 4
++	multichoice 0, 0, FIVE_MULTICHOICE_OPTIONS, 0
++	switch LASTRESULT
++	case 0, EventScript_M5LegendaryGen6
++	case 1, EventScript_M5LegendaryGen7
++	case 2, EventScript_M5LegendaryGen8
++	case 3, EventScript_M5LegendaryGen9
++	goto EventScript_M5LegendaryCoordinator
++
++EventScript_M5LegendaryGen4:
++	multichoiceoption gText_M5LegendaryDarkrai 0
++	multichoiceoption gText_M5LegendaryArceus 1
++	multichoiceoption gText_M5LegendaryBack 2
++	multichoice 0, 0, THREE_MULTICHOICE_OPTIONS, 0
++	switch LASTRESULT
++	case 0, EventScript_M5LegendaryDarkrai
++	case 1, EventScript_M5LegendaryArceus
++	goto EventScript_M5LegendaryCoordinator
++
++EventScript_M5LegendaryGen5:
++	multichoiceoption gText_M5LegendaryVictini 0
++	multichoiceoption gText_M5LegendaryKeldeo 1
++	multichoiceoption gText_M5LegendaryMeloetta 2
++	multichoiceoption gText_M5LegendaryBack 3
++	multichoice 0, 0, FOUR_MULTICHOICE_OPTIONS, 0
++	switch LASTRESULT
++	case 0, EventScript_M5LegendaryVictini
++	case 1, EventScript_M5LegendaryKeldeo
++	case 2, EventScript_M5LegendaryMeloetta
++	goto EventScript_M5LegendaryCoordinator
++
++EventScript_M5LegendaryGen6:
++	multichoiceoption gText_M5LegendaryDiancie 0
++	multichoiceoption gText_M5LegendaryVolcanion 1
++	multichoiceoption gText_M5LegendaryBack 2
++	multichoice 0, 0, THREE_MULTICHOICE_OPTIONS, 0
++	switch LASTRESULT
++	case 0, EventScript_M5LegendaryDiancie
++	case 1, EventScript_M5LegendaryVolcanion
++	goto EventScript_M5LegendaryCoordinator
++
++EventScript_M5LegendaryGen7:
++	multichoiceoption gText_M5LegendaryMagearna 0
++	multichoiceoption gText_M5LegendaryMarshadow 1
++	multichoiceoption gText_M5LegendaryZeraora 2
++	multichoiceoption gText_M5LegendaryCelesteela 3
++	multichoiceoption gText_M5LegendaryBack 4
++	multichoice 0, 0, FIVE_MULTICHOICE_OPTIONS, 0
++	switch LASTRESULT
++	case 0, EventScript_M5LegendaryMagearna
++	case 1, EventScript_M5LegendaryMarshadow
++	case 2, EventScript_M5LegendaryZeraora
++	case 3, EventScript_M5LegendaryCelesteela
++	goto EventScript_M5LegendaryCoordinator
++
++EventScript_M5LegendaryGen8:
++	multichoiceoption gText_M5LegendaryEternatus 0
++	multichoiceoption gText_M5LegendaryEnamorus 1
++	multichoiceoption gText_M5LegendaryBack 2
++	multichoice 0, 0, THREE_MULTICHOICE_OPTIONS, 0
++	switch LASTRESULT
++	case 0, EventScript_M5LegendaryEternatus
++	case 1, EventScript_M5LegendaryEnamorus
++	goto EventScript_M5LegendaryCoordinator
++
++EventScript_M5LegendaryGen9:
++	multichoiceoption gText_M5LegendaryPecharunt 0
+ 	multichoiceoption gText_M5LegendaryBack 1
+ 	multichoice 0, 0, TWO_MULTICHOICE_OPTIONS, 0
+ 	compare LASTRESULT 0
+-	if equal _goto EventScript_M5LegendaryDeoxys
++	if equal _goto EventScript_M5LegendaryPecharunt
+ 	goto EventScript_M5LegendaryCoordinator
+ 
+ EventScript_M5LegendaryArticuno:
+@@ -229,6 +350,103 @@
+ 	releaseall
+ 	end
+ 
++.macro m5_hub_encounter name, flag, species
++EventScript_M5Legendary\name:
++	checkflag \flag
++	compare LASTRESULT TRUE
++	if equal _goto EventScript_M5LegendaryCompleted
++	msgbox gText_M5LegendaryAvailable MSG_YESNO
++	compare LASTRESULT NO
++	if equal _goto EventScript_M5LegendaryCoordinator
++	setvar 0x8000 \species
++	setvar 0x8001 \flag
++	goto EventScript_M5LegendaryDirectBattle
++.endm
++
++	m5_hub_encounter Celebi, FLAG_M5_FOUGHT_CELEBI, SPECIES_CELEBI
++	m5_hub_encounter Regirock, FLAG_M5_FOUGHT_REGIROCK, SPECIES_REGIROCK
++	m5_hub_encounter Regice, FLAG_M5_FOUGHT_REGICE, SPECIES_REGICE
++	m5_hub_encounter Registeel, FLAG_M5_FOUGHT_REGISTEEL, SPECIES_REGISTEEL
++	m5_hub_encounter Rayquaza, FLAG_M5_FOUGHT_RAYQUAZA, SPECIES_RAYQUAZA
++	m5_hub_encounter Darkrai, FLAG_M5_FOUGHT_DARKRAI, SPECIES_DARKRAI
++	m5_hub_encounter Arceus, FLAG_M5_FOUGHT_ARCEUS, SPECIES_ARCEUS
++	m5_hub_encounter Victini, FLAG_M5_FOUGHT_VICTINI, SPECIES_VICTINI
++	m5_hub_encounter Keldeo, FLAG_M5_FOUGHT_KELDEO, SPECIES_KELDEO
++	m5_hub_encounter Eternatus, FLAG_M5_FOUGHT_ETERNATUS, SPECIES_ETERNATUS
++	m5_hub_encounter Enamorus, FLAG_M5_FOUGHT_ENAMORUS, SPECIES_ENAMORUS
++	m5_hub_encounter Pecharunt, FLAG_M5_FOUGHT_PECHARUNT, SPECIES_PECHARUNT
++	m5_hub_encounter Meloetta, FLAG_M5_FOUGHT_MELOETTA, SPECIES_MELOETTA
++	m5_hub_encounter Diancie, FLAG_M5_FOUGHT_DIANCIE, SPECIES_DIANCIE
++	m5_hub_encounter Volcanion, FLAG_M5_FOUGHT_VOLCANION, SPECIES_VOLCANION
++	m5_hub_encounter Magearna, FLAG_M5_FOUGHT_MAGEARNA, SPECIES_MAGEARNA
++	m5_hub_encounter Marshadow, FLAG_M5_FOUGHT_MARSHADOW, SPECIES_MARSHADOW
++	m5_hub_encounter Zeraora, FLAG_M5_FOUGHT_ZERAORA, SPECIES_ZERAORA
++	m5_hub_encounter Celesteela, FLAG_M5_FOUGHT_CELESTEELA, SPECIES_CELESTEELA
++
++EventScript_M5LegendaryDirectBattle:
++	bufferpokemon 0x0 0x8000
++	msgbox gText_M5LegendaryDirectBattle MSG_NORMAL
++	setwildbattle 0x8000 70 0
++	dowildbattle
++	special2 LASTRESULT 0xB4
++	compare LASTRESULT 0x7
++	if notequal _goto EventScript_M5LegendaryRecovered
++	switch 0x8000
++	case SPECIES_CELEBI, EventScript_M5LegendaryCaughtCelebi
++	case SPECIES_REGIROCK, EventScript_M5LegendaryCaughtRegirock
++	case SPECIES_REGICE, EventScript_M5LegendaryCaughtRegice
++	case SPECIES_REGISTEEL, EventScript_M5LegendaryCaughtRegisteel
++	case SPECIES_RAYQUAZA, EventScript_M5LegendaryCaughtRayquaza
++	case SPECIES_DARKRAI, EventScript_M5LegendaryCaughtDarkrai
++	case SPECIES_ARCEUS, EventScript_M5LegendaryCaughtArceus
++	case SPECIES_VICTINI, EventScript_M5LegendaryCaughtVictini
++	case SPECIES_KELDEO, EventScript_M5LegendaryCaughtKeldeo
++	case SPECIES_ETERNATUS, EventScript_M5LegendaryCaughtEternatus
++	case SPECIES_ENAMORUS, EventScript_M5LegendaryCaughtEnamorus
++	case SPECIES_PECHARUNT, EventScript_M5LegendaryCaughtPecharunt
++	case SPECIES_MELOETTA, EventScript_M5LegendaryCaughtMeloetta
++	case SPECIES_DIANCIE, EventScript_M5LegendaryCaughtDiancie
++	case SPECIES_VOLCANION, EventScript_M5LegendaryCaughtVolcanion
++	case SPECIES_MAGEARNA, EventScript_M5LegendaryCaughtMagearna
++	case SPECIES_MARSHADOW, EventScript_M5LegendaryCaughtMarshadow
++	case SPECIES_ZERAORA, EventScript_M5LegendaryCaughtZeraora
++	case SPECIES_CELESTEELA, EventScript_M5LegendaryCaughtCelesteela
++	goto EventScript_M5LegendaryRecovered
++
++.macro m5_hub_caught name, flag
++EventScript_M5LegendaryCaught\name:
++	setflag \flag
++	goto EventScript_M5LegendaryCaught
++.endm
++
++	m5_hub_caught Celebi, FLAG_M5_FOUGHT_CELEBI
++	m5_hub_caught Regirock, FLAG_M5_FOUGHT_REGIROCK
++	m5_hub_caught Regice, FLAG_M5_FOUGHT_REGICE
++	m5_hub_caught Registeel, FLAG_M5_FOUGHT_REGISTEEL
++	m5_hub_caught Rayquaza, FLAG_M5_FOUGHT_RAYQUAZA
++	m5_hub_caught Darkrai, FLAG_M5_FOUGHT_DARKRAI
++	m5_hub_caught Arceus, FLAG_M5_FOUGHT_ARCEUS
++	m5_hub_caught Victini, FLAG_M5_FOUGHT_VICTINI
++	m5_hub_caught Keldeo, FLAG_M5_FOUGHT_KELDEO
++	m5_hub_caught Eternatus, FLAG_M5_FOUGHT_ETERNATUS
++	m5_hub_caught Enamorus, FLAG_M5_FOUGHT_ENAMORUS
++	m5_hub_caught Pecharunt, FLAG_M5_FOUGHT_PECHARUNT
++	m5_hub_caught Meloetta, FLAG_M5_FOUGHT_MELOETTA
++	m5_hub_caught Diancie, FLAG_M5_FOUGHT_DIANCIE
++	m5_hub_caught Volcanion, FLAG_M5_FOUGHT_VOLCANION
++	m5_hub_caught Magearna, FLAG_M5_FOUGHT_MAGEARNA
++	m5_hub_caught Marshadow, FLAG_M5_FOUGHT_MARSHADOW
++	m5_hub_caught Zeraora, FLAG_M5_FOUGHT_ZERAORA
++	m5_hub_caught Celesteela, FLAG_M5_FOUGHT_CELESTEELA
++
++EventScript_M5LegendaryCaught:
++	msgbox gText_M5LegendaryCaught MSG_NORMAL
++	goto EventScript_M5LegendaryCoordinator
++
++EventScript_M5LegendaryRecovered:
++	msgbox gText_M5LegendaryRecovered MSG_NORMAL
++	goto EventScript_M5LegendaryCoordinator
++
+ EventScript_M5LegendaryCompleted:
+ 	msgbox gText_M5LegendaryCompleted MSG_NORMAL
+ 	goto EventScript_M5LegendaryCoordinator
+--- a/strings/Scripts/M5_Legendary_Hub.string
++++ b/strings/Scripts/M5_Legendary_Hub.string
+@@ -7,6 +7,20 @@
+ GENERATION II
+ #org @gText_M5LegendaryGen3
+ GENERATION III
++#org @gText_M5LegendaryGen4
++GENERATION IV
++#org @gText_M5LegendaryGen5
++GENERATION V
++#org @gText_M5LegendaryGen6
++GENERATION VI
++#org @gText_M5LegendaryGen7
++GENERATION VII
++#org @gText_M5LegendaryGen8
++GENERATION VIII
++#org @gText_M5LegendaryGen9
++GENERATION IX
++#org @gText_M5LegendaryMore
++MORE GENERATIONS
+ #org @gText_M5LegendaryCancel
+ CANCEL
+ #org @gText_M5LegendaryBack
+@@ -26,6 +40,44 @@
+ HO-OH
+ #org @gText_M5LegendaryDeoxys
+ DEOXYS
++#org @gText_M5LegendaryCelebi
++CELEBI
++#org @gText_M5LegendaryRegirock
++REGIROCK
++#org @gText_M5LegendaryRegice
++REGICE
++#org @gText_M5LegendaryRegisteel
++REGISTEEL
++#org @gText_M5LegendaryRayquaza
++RAYQUAZA
++#org @gText_M5LegendaryDarkrai
++DARKRAI
++#org @gText_M5LegendaryArceus
++ARCEUS
++#org @gText_M5LegendaryVictini
++VICTINI
++#org @gText_M5LegendaryKeldeo
++KELDEO
++#org @gText_M5LegendaryEternatus
++ETERNATUS
++#org @gText_M5LegendaryEnamorus
++ENAMORUS
++#org @gText_M5LegendaryPecharunt
++PECHARUNT
++#org @gText_M5LegendaryMeloetta
++MELOETTA
++#org @gText_M5LegendaryDiancie
++DIANCIE
++#org @gText_M5LegendaryVolcanion
++VOLCANION
++#org @gText_M5LegendaryMagearna
++MAGEARNA
++#org @gText_M5LegendaryMarshadow
++MARSHADOW
++#org @gText_M5LegendaryZeraora
++ZERAORA
++#org @gText_M5LegendaryCelesteela
++CELESTEELA
+ 
+ #org @gText_M5LegendaryAvailable
+ Status: AVAILABLE.\pTravel to the encounter site now?
+@@ -35,3 +87,9 @@
+ Status: LOCKED.\pDefeat the POK\eMON LEAGUE first.
+ #org @gText_M5LegendaryLockedTicket
+ Status: LOCKED.\pThe corresponding event ticket must\nfirst be registered by research staff.
++#org @gText_M5LegendaryDirectBattle
++The portal stabilizes around\n[BUFFER1]!
++#org @gText_M5LegendaryCaught
++Capture confirmed. This portal is now\npermanently marked COMPLETED.
++#org @gText_M5LegendaryRecovered
++The portal remains AVAILABLE. You may\nrecalibrate it and try again.

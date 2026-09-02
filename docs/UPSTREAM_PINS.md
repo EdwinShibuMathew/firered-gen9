@@ -2,7 +2,7 @@
 
 The build uses exact commits rather than moving branches. See `build-lock.json` for machine-readable pins, offsets, and artifact hashes.
 
-The generated vanilla ROM is used only as a local legal build input. DPE runs first and CFRU runs second. CFRU's current README recommends the pinned grilokapu DPE fork and warns against Leon's ROM base.
+The generated vanilla ROM is used only as a local legal build input. Tracked overlays are applied first, then DPE runs and CFRU runs. CFRU's current README recommends the pinned grilokapu DPE fork and warns against Leon's ROM base.
 
 ## Exact pins and insertion offsets
 
@@ -34,6 +34,8 @@ python3 scripts/make.py
 ```
 
 Python 3.14.4 succeeded; no obsolete global Python was installed. CFRU required Pillow 12.3.0 and the tracked `-ffreestanding` compatibility overlay for modern GCC. The overlay prevents GCC 14 from replacing CFRU's private string loop with an unresolved hosted-libc `strlen` call; it does not change game data or behavior.
+
+Run `scripts/build_pipeline.sh` from the project root to verify all locked overlays and reproduce the current vanilla → DPE → CFRU artifact. The M3 overlays add the Celadon Link Cable listing, reusable Link Cable behavior, Alolan Raichu's Shiny Stone route, and missing Gholdengo/Maushold runtime methods.
 
 ## Installation-order note
 

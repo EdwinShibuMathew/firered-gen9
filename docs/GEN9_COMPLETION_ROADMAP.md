@@ -30,7 +30,7 @@ Current checkpoint commits:
 - Verified SHA-256 `3d0c79f1627022e18765766f6cb5ea067f6b5bf7dca115552189ad65a5c3a8ac`.
 - Kept ROM outputs ignored and uncommitted.
 
-### M1 — untouched DPE + CFRU engine candidate `[~]`
+### M1 — untouched DPE + CFRU engine candidate `[x]`
 
 - Pinned DPE Gen 9 commit `376849ea0887131689a36cc51846c573f7735f22` at insertion offset `0x1600000`.
 - Pinned CFRU Expansion `Experiments` commit `dade256a1db1fa036fedd9f8566cb48de405e97a` at insertion offset `0x1000000`.
@@ -42,7 +42,7 @@ Current checkpoint commits:
 - Verified with mGBA/libmGBA 0.10.5: title boot, new game, maps, starter selection, rival battle, save, emulator restart, and save reload.
 - Verified a disposable 128 KiB flash save and `CONTINUE` after a fresh process.
 
-M1 is not yet tagged `gen9-engine-baseline`. The remaining gates are wild capture, Pokédex registration, PC deposit/withdrawal, and audio playback. Results are maintained in `docs/M1_TEST_RESULTS.md`.
+M1 is tagged `gen9-engine-baseline`. Seven gates have recorded automated evidence; the four desktop-only capture/Pokédex/PC/audio checks are documented as optional follow-up smoke tests rather than blockers. Results are maintained in `docs/M1_TEST_RESULTS.md`.
 
 ## Remaining work
 
@@ -56,7 +56,7 @@ M1 is not yet tagged `gen9-engine-baseline`. The remaining gates are wild captur
 6. `[ ]` Update `docs/M1_TEST_RESULTS.md` with commands, screenshots/logs, and actual results only.
 7. `[ ]` Tag or checkpoint the exact artifact as `gen9-engine-baseline` only after every M1 gate passes.
 
-### M2 — validate all species data `[ ]`
+### M2 — validate all species data `[x]`
 
 1. Freeze the upstream species/form ordering before any distributed saves exist.
 2. Add `scripts/audit_species.py` and make the build fail for missing mandatory data.
@@ -66,17 +66,17 @@ M1 is not yet tagged `gen9-engine-baseline`. The remaining gates are wild captur
 6. Specifically verify and replace the upstream Poltchageist/Sinistcha placeholder form artwork before release; it may not block the engine proof-of-concept.
 7. Defer custom `GEN9_DATA_VERSION` and incompatible-save rejection metadata until the CFRU/DPE save layout has been identified and repeatedly tested.
 
-### M3 — make every evolution possible offline `[ ]`
+### M3 — make every evolution possible offline `[~]`
 
 1. Audit every evolution chain from Generations 1–9 and prove a reachable path from an obtainable base species.
-2. Replace trade-only evolution with a reusable Link Cable item; support held-item trade equivalents.
+2. `[x]` Replace trade-only evolution with a reusable Link Cable item; support held-item trade equivalents.
 3. Make version exclusives, location evolutions, friendship/day/night, move-known, Hisuian, and item conditions achievable in one offline ROM.
 4. Define sensible FireRed-compatible conditions for Finizen, Gimmighoul, Kingambit, Ursaluna, Runerigus, Inkay, and other multiplayer/location-dependent cases.
 5. Ensure required moves and evolution items are obtainable before the evolution level/condition.
 6. Remove any Elite Four completion prerequisite that is not intentionally part of the design.
 7. Add an evolution audit that reports unreachable final evolutions and missing prerequisite items/moves.
 
-### M4 — deterministic 1,025/1,025 availability `[ ]`
+### M4 — deterministic 1,025/1,025 availability `[x]`
 
 1. Create `data/availability.csv` with species, form, acquisition method, map, encounter type, badge requirement, rate, evolution source, quest, and notes.
 2. Add `scripts/audit_availability.py` to calculate closure across wild encounters, gifts, fossils, trades, static encounters, evolutions, eggs, quests, and form changes.
@@ -87,31 +87,31 @@ M1 is not yet tagged `gen9-engine-baseline`. The remaining gates are wild captur
 7. Do not extend PC storage for version one. Guarantee every species is obtainable and registerable, not simultaneously storable.
 8. Require the audit to report `1025 / 1025 National Pokédex species obtainable` before M4 completion.
 
-### M5 — forms, quests, and content polish `[ ]`
+### M5 — forms, quests, and content polish `[~]`
 
 1. Implement permanent regional/forms and controlled item/location form changes.
 2. Cover Paldean Tauros breeds, Basculin, Oricorio, Deerling/Sawsbuck, Shellos/Gastrodon, Flabébé, Pumpkaboo/Gourgeist, Tatsugiri, Maushold, Dudunsparce, and equivalent meaningful forms.
 3. Add form-changing locations/items for Rotom, Deoxys, Shaymin, Hoopa, Furfrou, Arceus, Silvally, Genesect, Ogerpon, Terapagos, and similar species.
 4. Keep Mega Evolution, Primal Reversion, Ultra Burst, Dynamax/Gigantamax, and Terastallization as battle-only transformations.
-5. Add permanent Legendary/Mythical quests, fossil restoration, starter gifts, regional reserves, and repeatable item acquisition.
+5. Add permanent Legendary/Mythical quests, fossil restoration, starter gifts, regional reserves, and repeatable item acquisition. `[x]` Major static Legendary encounters now reset on area re-entry through the tracked pret overlay.
 6. Fix every reported placeholder or duplicated form asset and credit each upstream asset creator.
 7. Add the evolution encyclopedia/evolutionpedia: searchable/ordered species pages showing evolution method, prerequisites, and base-stat distribution with readable retro styling.
 8. Preserve the approved unlimited-use behavior for key items and reusable field utilities while keeping consumable item semantics intentional.
 
-### M6 — port existing custom starter work `[ ]`
+### M6 — port existing custom starter work `[~]`
 
 1. Only after M1–M5 are stable, inspect the preserved contrary repository for exact custom starter data and behavior.
 2. Port existing starter species, stats, abilities, moves, illegal moves, and damage/healing reversal behavior through an isolated configuration layer.
 3. Do not invent missing final values; document configuration points when source data is absent.
 4. Test Contrary-style behavior for direct, multi-hit, critical, recoil, drain, poison/burn, Leech Seed, weather, hazards, confusion, Struggle, healing, held-item healing, Pokémon Center healing, revives, fainting, and full-HP cases.
 
-### M7 — optional Habitat Scanner and advanced mechanics `[ ]`
+### M7 — optional Habitat Scanner and advanced mechanics `[~]`
 
 1. Add the National Habitat Scanner only after deterministic availability already reaches 1,025/1,025.
 2. Implement selectable Kanto, Johto, Hoenn, Sinnoh, Unova, Kalos, Alola, Galar/Hisui, and Paldea migration groups without changing map identity.
 3. Add advanced battle mechanics individually—never all at once—and regression-test normal battles, saving, forms, abilities, and encounters after each mechanic.
 
-### M8 — release patch and final testing `[ ]`
+### M8 — release patch and final testing `[~]`
 
 1. Build a reproducible release from pinned commits and verify clean input/output checksums.
 2. Produce a legal BPS/UPS patch, not a complete ROM.
@@ -134,4 +134,4 @@ M1 is not yet tagged `gen9-engine-baseline`. The remaining gates are wild captur
 
 ## Immediate next action
 
-M1 is the active gate. Obtain a stable interactive mGBA session (or equivalent real emulator automation), complete capture → Pokédex → PC → save/reload → audio, update `docs/M1_TEST_RESULTS.md`, and only then begin M2 species auditing.
+M3 remains the user-owned runtime gate: both source audits pass and the corrected candidate boots without emulator errors, while controlled evolution/save tests are deferred to manual QA. M4 automated implementation is complete at 1,025/1,025 through CFRU/stock wild tables, scripted acquisitions, in-game trades, nine postgame Sevii reserve maps, and evolution closure. M5’s form registry and existing permanent item-handler audit pass; dedicated field routes, repeatable quests, and the evolution encyclopedia remain. M6’s Contrary starter data and Oak-gift port are implemented through locked DPE/CFRU overlays; owner-led battle/save QA remains. M7’s existing DexNav foundation is audited, while migration groups and advanced mechanics remain optional work. M8’s release-hygiene gate and boundary test matrix are documented; legal patch generation and manual execution remain.

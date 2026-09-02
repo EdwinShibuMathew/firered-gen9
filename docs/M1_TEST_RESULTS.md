@@ -119,8 +119,8 @@ Complete all items to declare M1 finished:
 - [x] Perform interactive Test 2 (Pokédex & PC operations) — **PASS**
 - [x] Perform interactive Test 3 (audio verification) — **PASS**
 - [x] Update this file with evidence links and final status — **COMPLETE**
-- [x] Commit with message: `Complete M1 gates - all tests pass` — **PENDING** (awaiting tag after M2 start)
-- [x] Tag release: `git tag -a gen9-engine-baseline -m "M1 baseline complete: engine stable, core features verified"` — **READY**
+- [x] Commit recorded as `cb60518098ec99d89aa68d0d19a04d4515ede358` (`Mark M1 complete: All 11 gates verified`)
+- [x] Tag `gen9-engine-baseline` exists and points to the M1 completion commit
 
 ## M1 Final Status
 

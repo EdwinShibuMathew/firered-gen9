@@ -1,0 +1,58 @@
+diff --git a/include/new/item_tables.h b/include/new/item_tables.h
+index 10ebd56a..bf7b60b5 100644
+--- a/include/new/item_tables.h
++++ b/include/new/item_tables.h
+@@ -1471,7 +1471,8 @@ void __attribute__((long_call)) FieldUseFunc_BerryPouch(u8 taskId);
+ void __attribute__((long_call)) BattleUseFunc_BerryPouch(u8 taskId);
+ void __attribute__((long_call)) FieldUseFunc_TeachyTv(u8 taskId);
+ void __attribute__((long_call)) FieldUseFunc_PowderJar(u8 taskId);
+-void FieldUseFunc_FormChangeItem(u8 taskId);
++void FieldUseFunc_FormChangeItem(u8 taskId);
++bool8 TryChangeMonForm(struct Pokemon *mon, u16 targetSpecies);
+ void FieldUseFunc_AbilityCapsule(u8 taskId);
+ void FieldUseFunc_ExpShare(u8 taskId);
+ void FieldUseFunc_NatureMint(u8 taskId);
+diff --git a/src/party_menu.c b/src/party_menu.c
+index 9137a9d2..749cb20b 100644
+--- a/src/party_menu.c
++++ b/src/party_menu.c
+@@ -2031,10 +2032,37 @@ extern const u8 gText_FormChangeItem[];
+ extern const u8 gText_AlreadyHaveFused[];
+ extern const u8 gText_NoSpaceForDefuse[];
+ extern const u8 gText_CantFuseWithPokemon[];
+-void DoItemFormChange(struct Pokemon* mon, u16 species)
++
++// Single validation/mutation boundary for permanent party form changes.
++bool8 TryChangeMonForm(struct Pokemon *mon, u16 targetSpecies)
+ {
+-        SetMonData(mon, MON_DATA_SPECIES, &species);
++        u16 currentSpecies;
++        u16 oldHp, newMaxHp;
++
++        if (mon == NULL || targetSpecies == SPECIES_NONE || targetSpecies >= NUM_SPECIES)
++                return FALSE;
++        if (GetMonData(mon, MON_DATA_IS_EGG, NULL))
++                return FALSE;
++        currentSpecies = GetMonData(mon, MON_DATA_SPECIES2, NULL);
++        if (currentSpecies == SPECIES_NONE || currentSpecies == targetSpecies)
++                return FALSE;
++        if (SpeciesToNationalPokedexNum(targetSpecies) == NATIONAL_DEX_NONE)
++                return FALSE;
++
++        oldHp = GetMonData(mon, MON_DATA_HP, NULL);
++        SetMonData(mon, MON_DATA_SPECIES, &targetSpecies);
+         CalculateMonStats(mon);
++        newMaxHp = GetMonData(mon, MON_DATA_MAX_HP, NULL);
++        if (oldHp > newMaxHp)
++                oldHp = newMaxHp;
++        SetMonData(mon, MON_DATA_HP, &oldHp);
++        return TRUE;
++}
++
++void DoItemFormChange(struct Pokemon* mon, u16 species)
++{
++        if (!TryChangeMonForm(mon, species))
++                return;
+         UpdateMonIconSpecies(sPartyMenuBoxes[gPartyMenu.slotId].monSpriteId, species);
+         PlayCry1(species, 0);
+         GetMonNickname(mon, gStringVar1);

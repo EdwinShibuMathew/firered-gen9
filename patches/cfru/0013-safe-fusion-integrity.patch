@@ -1,0 +1,22 @@
+--- a/src/party_menu.c
++++ b/src/party_menu.c
+@@ -2254,7 +2254,9 @@
+                                 if (species == SPECIES_KYUREM_BLACK || species == SPECIES_KYUREM_WHITE || species == SPECIES_NECROZMA_DUSK_MANE || species == SPECIES_NECROZMA_DAWN_WINGS || species == SPECIES_CALYREX_ICE_RIDER || species == SPECIES_CALYREX_SHADOW_RIDER)
+                         {
+                                 u8 slotId;
+-                                for (slotId = 0; GetMonData(&gPlayerParty[slotId], MON_DATA_SPECIES, NULL) != SPECIES_NONE && slotId < PARTY_SIZE; ++slotId);
++                                for (slotId = 0; slotId < PARTY_SIZE
++                                     && GetMonData(&gPlayerParty[slotId], MON_DATA_SPECIES, NULL) != SPECIES_NONE;
++                                     ++slotId);
+ 
+                                 if (GetMonData(GetBaseMonForFusedSpecies(species), MON_DATA_SPECIES, NULL) == SPECIES_NONE) //No fused mon
+                                 {
+@@ -2342,7 +2344,7 @@
+                                         if (GetMonData(&gSaveBlock1->fusedSolgaleo, MON_DATA_SPECIES, NULL) != SPECIES_NONE)
+                                                 alreadyFused = TRUE;
+                                         break;
+-                                case SPECIES_ZEKROM:
++                                case SPECIES_LUNALA:
+                                         if (GetMonData(&gSaveBlock1->fusedLunala, MON_DATA_SPECIES, NULL) != SPECIES_NONE)
+                                                 alreadyFused = TRUE;
+                                         break;

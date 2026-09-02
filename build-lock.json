@@ -20,26 +20,107 @@
   "artifacts": {
     "vanilla": {
       "size": 16777216,
-      "sha1": "41cb23d8dccc8ebd7c649cd8fbb58eeace6e2fdc",
-      "sha256": "3d0c79f1627022e18765766f6cb5ea067f6b5bf7dca115552189ad65a5c3a8ac"
+      "sha1": "9a719b3ba9623dcaceeb10db2c443ab783c484db",
+      "sha256": "2000d136a45e1678622656accf257fa402c3be64bb59ca9ff57ae7ddde9c84e5"
     },
     "dpe": {
       "size": 33554432,
-      "sha1": "48e59a1ebc7b519606c480bfa6675cc103c9fbfb",
-      "sha256": "c2c27af7ab7ca9efa0a02a90d78a614b43fe65c1cf2eb45bd01935d3c5e02a25",
-      "payload_sha256": "6a796e57e307e7499a29c1b3ce166f1131329685d50c24707768e03858648f4f"
+      "sha1": "99edcc1382c610cd2502b05a376fcb71618ed1d6",
+      "sha256": "9e0f0231dca363adae4704aa798ca7a6e2d5ef5fe71dffaae707a5838a5ed6b7",
+      "payload_sha256": "992f48148879171d6268d87d2eb929fdb3135a883e26673061d0af43a06b7b86"
     },
     "cfru": {
       "size": 33554432,
-      "sha1": "a20c39647320ffc372365117068a78ded9041c8e",
-      "sha256": "32136e7063ea8ea54eed429a4f311f3ae093037e4281cda00ee9618a353b52cc",
-      "payload_sha256": "34511426e08a2716ad09f95416422d00d978619d6f2a0938e99c2fbd7d329a5c"
+      "sha1": "2a67e4098537f8333d5f64f22a13ccf1fd083412",
+      "sha256": "7853001d128494c4cea3919808227531abf0ac97fb325d22413c1dee4a81ce79",
+      "payload_sha256": "ec8777f17d5e7249ac624f493d6dc8d8c4753aa6ee0f261176a783cf60230a14"
     }
   },
   "compatibility_overlays": {
+    "pret_repeatable_legendary_encounters": {
+      "upstream": "pret_pokefirered",
+      "path": "patches/pret/0001-repeatable-legendary-encounters.patch",
+      "sha256": "638e2b18ad1d0b47f238bf83c9256c95a768d48c3be8bee5a431ee5a14721c19"
+    },
+    "dpe_alolan_raichu_shiny_stone": {
+      "upstream": "dpe_gen9",
+      "path": "patches/dpe/0001-alolan-raichu-shiny-stone.patch",
+      "sha256": "d2e09d662723a2e2d0d1d4cfbdfdc00b9edc0375fe4db7d5d019a856c0b940a3"
+    },
+    "dpe_contrary_charizard_starter_data": {
+      "upstream": "dpe_gen9",
+      "path": "patches/dpe/0002-contrary-charizard-starter-data.patch",
+      "sha256": "72f81a7b4de4342324ead64790d2cc3fe6467c1b91a5f2c18264cec8364502ba"
+    },
     "cfru_modern_gcc_freestanding": {
+      "upstream": "cfru_expansion",
       "path": "patches/cfru/0001-modern-gcc-freestanding.patch",
-      "sha256": "f3d19f78616d0c8956e26a36d2012403d9c817bd76f1e47805579c3448d76833"
+      "sha256": "a5a710d62aec81294459169fd97a624e5535dee90b70a5f1ec4cce726aee902e"
+    },
+    "cfru_reusable_link_cable": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0002-reusable-link-cable.patch",
+      "sha256": "a391b88568cecfe5f330d7c032de70b386eeb765df32616f441b0bac55b39b62"
+    },
+    "cfru_gen9_evolution_methods": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0003-gen9-evolution-methods.patch",
+      "sha256": "d008eb09995119f6e8c1f74a7ed1e732036296afb34e41c2a0aa89f54e4010f9"
+    },
+    "cfru_evolution_prerequisite_moves": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0004-evolution-prerequisite-moves.patch",
+      "sha256": "92a86ce455d96cff372d2c209281330c55ccd0582ab53a99fa8302e11e43a214"
+    },
+    "cfru_celadon_evolution_item_shop": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0005-celadon-evolution-item-shop.patch",
+      "sha256": "951be3c6081626199d4ad14bde108a70fef93444ef9b432355598149de46dad9"
+    },
+    "cfru_gen9_sevii_reserves": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0006-gen9-sevii-reserves.patch",
+      "sha256": "6e560f0075d618c35741e45f69296c3515b04e08ea91176af74aae54dcc840bb"
+    },
+    "cfru_contrary_charizard_starter_gift": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0007-contrary-charizard-starter-gift.patch",
+      "sha256": "a23fd869f5faa41210f467b79b0ba4062aed3f8183118e633fe52e318dfa4482"
+    },
+    "cfru_safe_form_change_routine": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0008-safe-form-change-routine.patch",
+      "sha256": "215ff1428a06dd9c96fd970c23fc187cd1be7a18dc25061714788824a9e4bf1a"
+    },
+    "cfru_cinnabar_form_research_lab": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0009-cinnabar-form-research-lab.patch",
+      "sha256": "dc24f3834b57ce830af457834c35e4c54577d03903facadcbc1692d860bc3657"
+    },
+    "cfru_legendary_research_hub": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0010-legendary-research-hub.patch",
+      "sha256": "978825bc276c8da9ac1865a5064e6ca838cb1830a8f4fe1c24a3c4ba20b10ada"
+    },
+    "cfru_pokedex_evolution_guide": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0011-pokedex-evolution-guide.patch",
+      "sha256": "f862548a9409e9b92c22145db28382036f72a873b18a1cbee8832ac2cb57eee6"
+    },
+    "cfru_form_lab_scrolling_menu": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0012-form-lab-scrolling-menu.patch",
+      "sha256": "e6d2358a18d99bdf90c53a15ae6cd4a604631f4d0192f9fdc13c5571fd2fc67b"
+    },
+    "cfru_safe_fusion_integrity": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0013-safe-fusion-integrity.patch",
+      "sha256": "c391fb5633d3544ffef49e4e30c8cd8d188ce882314469950d72b4df88f1ae64"
+    },
+    "cfru_expanded_legendary_research_hub": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0014-expanded-legendary-research-hub.patch",
+      "sha256": "70f0bc43a3d4871a4eb76d229013fd385b322a5b06c2d5db05a90d6ed14ccad3"
     }
   },
   "toolchain": {

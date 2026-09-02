@@ -1,0 +1,362 @@
+diff --git a/assembly/hooks/general_hooks.s b/assembly/hooks/general_hooks.s
+index 5ff1d98..5ac017f 100644
+--- a/assembly/hooks/general_hooks.s
++++ b/assembly/hooks/general_hooks.s
+@@ -510,6 +510,21 @@ AutoRunHook:
+ 	beq NoRunning
+ 	ldr r0, =0x805BA5A | 1
+ 	bx r0
++.global M5DexGuideInputHook
++M5DexGuideInputHook:
++	bl M5DexGuideHandleInput
++	cmp r0, #0
++	beq M5DexGuideInputPassthrough
++	ldr r0, =0x8104657
++	bx r0
++
++M5DexGuideInputPassthrough:
++	ldr r0, =0x030030F0
++	ldrh r1, [r0, #0x2E]
++	ldr r0, =0x810441D
++	bx r0
++
++.pool
+ 
+ NoRunning:
+ 	ldr r0, =0x805BA8C | 1
+diff --git a/hooks b/hooks
+index de2ec6f..28449af 100644
+--- a/hooks
++++ b/hooks
+@@ -527,6 +527,7 @@ SizeMinigameLoadAlternateHeightHook 080A0774 2
+ PokedexScreenStats 08106370 0
+ GetVisualBaseStat 0801D77C 2
+ FixPokedexCheckNullSpeciesHook 08104ACA 0
++M5DexGuideInputHook 08104418 1
+ 
+ ##Daycare
+ GiveEggFromDaycare 080460D4 1
+diff --git a/.upstream/cfru/src/m5_evolution_guide.c b/src/m5_evolution_guide.c
+new file mode 100644
+index 0000000..74f2028
+--- /dev/null
++++ b/src/m5_evolution_guide.c
+@@ -0,0 +1,252 @@
++#include "defines.h"
++#include "../include/main.h"
++#include "../include/item.h"
++#include "../include/pokemon.h"
++#include "../include/pokemon_icon.h"
++#include "../include/sprite.h"
++#include "../include/string_util.h"
++#include "../include/text.h"
++#include "../include/window.h"
++#include "../include/data2.h"
++#include "../include/new/rom_locs.h"
++
++extern const u8 gMoveNames[][13];
++extern const u8 gText_M5DexFriendship[], gText_M5DexFriendshipDay[], gText_M5DexFriendshipNight[];
++extern const u8 gText_M5DexReachLevel[], gText_M5DexLevel[], gText_M5DexDay[], gText_M5DexNight[];
++extern const u8 gText_M5DexMale[], gText_M5DexFemale[], gText_M5DexAtkGt[], gText_M5DexAtkEq[], gText_M5DexAtkLt[];
++extern const u8 gText_M5DexLinkCable[], gText_M5DexLinkCableHolding[], gText_M5DexConsumed[], gText_M5DexUse[];
++extern const u8 gText_M5DexLevelHolding[], gText_M5DexLevelKnowing[], gText_M5DexCrit[], gText_M5DexCoins[];
++extern const u8 gText_M5DexParty[], gText_M5DexLocation[], gText_M5DexSpecial[];
++extern const u8 gText_M5DexHeader[], gText_M5DexNone[], gText_M5DexCursor[];
++extern const u8 gText_M5DexArrow[], gText_M5DexPage[], gText_M5DexSlash[], gText_M5DexControls[];
++
++#define DEX_DATA_PTR ((u8 **)0x0203ACF0)
++#define DEX_STATE 1
++#define DEX_SPECIES 0x5A
++#define ROUTES_PER_PAGE 3
++#define MAX_ROUTES 32
++
++struct GuideRoute { u16 source, target; struct Evolution evolution; };
++static struct GuideRoute sRoutes[MAX_ROUTES];
++static u8 sRouteCount, sSelection, sWindow = 0xFF;
++static u8 sIconIds[ROUTES_PER_PAGE * 2] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
++static u16 sIconSpecies[ROUTES_PER_PAGE * 2];
++static bool8 sActive, sReturnPending, sReopenPending;
++static u16 sOrigin;
++static u8 sText[128];
++static const u8 sSpace[] = {0x00, EOS};
++
++static const struct WindowTemplate sWindowTemplate = {
++    .bg = 0, .tilemapLeft = 0, .tilemapTop = 2, .width = 30, .height = 16,
++    .paletteNum = 15, .baseBlock = 0x0008,
++};
++
++static u8 *DexData(void) { return *DEX_DATA_PTR; }
++static u16 DexSpecies(void) { return DexData() ? *(u16 *)(DexData() + DEX_SPECIES) : SPECIES_NONE; }
++static void SetDexSpecies(u16 species) { if (DexData()) *(u16 *)(DexData() + DEX_SPECIES) = species; }
++static void SetDexState(u8 state) { if (DexData()) DexData()[DEX_STATE] = state; }
++static void RemoveNormalWindows(void) { ((void (*)(void))0x08106015)(); }
++
++static void Append(u8 *dst, const u8 *src, u32 capacity)
++{
++    u32 i = 0, j = 0;
++    while (i + 1 < capacity && dst[i] != EOS) ++i;
++    while (i + 1 < capacity && src[j] != EOS) dst[i++] = src[j++];
++    dst[i] = EOS;
++}
++
++static void FormatLevel(const u8 *prefix, u16 level)
++{
++    u8 number[5];
++    StringCopy(sText, prefix);
++    Append(sText, sSpace, sizeof(sText));
++    ConvertIntToDecimalStringN(number, level, STR_CONV_MODE_LEFT_ALIGN, 3);
++    Append(sText, number, sizeof(sText));
++}
++
++static void FormatCondition(const struct Evolution *evo)
++{
++    switch (evo->method)
++    {
++    case EVO_FRIENDSHIP: StringCopy(sText, gText_M5DexFriendship); break;
++    case EVO_FRIENDSHIP_DAY: StringCopy(sText, gText_M5DexFriendshipDay); break;
++    case EVO_FRIENDSHIP_NIGHT: StringCopy(sText, gText_M5DexFriendshipNight); break;
++    case EVO_LEVEL: FormatLevel(gText_M5DexReachLevel, evo->param); break;
++    case EVO_LEVEL_DAY: FormatLevel(gText_M5DexReachLevel, evo->param); Append(sText, gText_M5DexDay, sizeof(sText)); break;
++    case EVO_LEVEL_NIGHT: FormatLevel(gText_M5DexReachLevel, evo->param); Append(sText, gText_M5DexNight, sizeof(sText)); break;
++    case EVO_MALE_LEVEL: FormatLevel(gText_M5DexReachLevel, evo->param); Append(sText, gText_M5DexMale, sizeof(sText)); break;
++    case EVO_FEMALE_LEVEL: FormatLevel(gText_M5DexReachLevel, evo->param); Append(sText, gText_M5DexFemale, sizeof(sText)); break;
++    case EVO_LEVEL_ATK_GT_DEF: FormatLevel(gText_M5DexLevel, evo->param); Append(sText, gText_M5DexAtkGt, sizeof(sText)); break;
++    case EVO_LEVEL_ATK_EQ_DEF: FormatLevel(gText_M5DexLevel, evo->param); Append(sText, gText_M5DexAtkEq, sizeof(sText)); break;
++    case EVO_LEVEL_ATK_LT_DEF: FormatLevel(gText_M5DexLevel, evo->param); Append(sText, gText_M5DexAtkLt, sizeof(sText)); break;
++    case EVO_TRADE: StringCopy(sText, gText_M5DexLinkCable); break;
++    case EVO_TRADE_ITEM:
++        StringCopy(sText, gText_M5DexLinkCableHolding);
++        Append(sText, sSpace, sizeof(sText));
++        Append(sText, gItems[evo->param].name, sizeof(sText));
++        Append(sText, gText_M5DexConsumed, sizeof(sText));
++        break;
++    case EVO_ITEM:
++    case EVO_ITEM_NIGHT:
++        StringCopy(sText, gText_M5DexUse);
++        Append(sText, sSpace, sizeof(sText));
++        Append(sText, gItems[evo->param].name, sizeof(sText));
++        Append(sText, gText_M5DexConsumed, sizeof(sText));
++        if (evo->method == EVO_ITEM_NIGHT) Append(sText, gText_M5DexNight, sizeof(sText));
++        break;
++    case EVO_HOLD_ITEM_DAY:
++    case EVO_HOLD_ITEM_NIGHT:
++        StringCopy(sText, gText_M5DexLevelHolding);
++        Append(sText, sSpace, sizeof(sText));
++        Append(sText, gItems[evo->param].name, sizeof(sText));
++        Append(sText, gText_M5DexConsumed, sizeof(sText));
++        break;
++    case EVO_MOVE:
++    case EVO_MOVE_MALE:
++    case EVO_MOVE_FEMALE:
++        StringCopy(sText, gText_M5DexLevelKnowing);
++        Append(sText, sSpace, sizeof(sText));
++        Append(sText, gMoveNames[evo->param], sizeof(sText));
++        break;
++    case EVO_CRITICAL_HIT: StringCopy(sText, gText_M5DexCrit); break;
++    case EVO_COINS: StringCopy(sText, gText_M5DexCoins); break;
++    case EVO_OTHER_PARTY_MON: StringCopy(sText, gText_M5DexParty); break;
++    case EVO_MAP:
++    case EVO_ITEM_LOCATION:
++    case EVO_DAMAGE_LOCATION: StringCopy(sText, gText_M5DexLocation); break;
++    default: StringCopy(sText, gText_M5DexSpecial); break;
++    }
++}
++
++static void DestroyIcons(void)
++{
++    u8 i;
++    for (i = 0; i < ROUTES_PER_PAGE * 2; ++i)
++    {
++        if (sIconIds[i] != 0xFF)
++        {
++            DestroyMonIcon(&gSprites[sIconIds[i]]);
++            SafeFreeMonIconPalette(sIconSpecies[i]);
++            sIconIds[i] = 0xFF;
++        }
++    }
++}
++
++static u8 CreateRouteIcon(u16 species, s16 x, s16 y)
++{
++    u8 spriteId = CreateMonIcon(species, SpriteCB_PokeIcon, x, y, 0, 0, FALSE);
++    if (spriteId >= MAX_SPRITES)
++    {
++        SafeFreeMonIconPalette(species);
++        return 0xFF;
++    }
++    return spriteId;
++}
++
++static void BuildRoutes(u16 species)
++{
++    u16 source;
++    u8 i;
++    sRouteCount = 0;
++    for (source = 1; source < NUM_SPECIES && sRouteCount < MAX_ROUTES; ++source)
++        for (i = 0; i < EVOS_PER_MON; ++i)
++        {
++            const struct Evolution *evo = &gEvolutionTable[source][i];
++            if (evo->method == EVO_NONE) break;
++            if (evo->method < EVO_GIGANTAMAX && evo->targetSpecies == species)
++                sRoutes[sRouteCount++] = (struct GuideRoute){source, species, *evo};
++        }
++    for (i = 0; i < EVOS_PER_MON && sRouteCount < MAX_ROUTES; ++i)
++    {
++        const struct Evolution *evo = &gEvolutionTable[species][i];
++        if (evo->method == EVO_NONE) break;
++        if (evo->method < EVO_GIGANTAMAX && evo->targetSpecies > SPECIES_NONE && evo->targetSpecies < NUM_SPECIES)
++            sRoutes[sRouteCount++] = (struct GuideRoute){species, evo->targetSpecies, *evo};
++    }
++    if (sSelection >= sRouteCount) sSelection = 0;
++}
++
++static void Render(void)
++{
++    u8 i, first = (sSelection / ROUTES_PER_PAGE) * ROUTES_PER_PAGE;
++    u8 pages = (sRouteCount + ROUTES_PER_PAGE - 1) / ROUTES_PER_PAGE;
++    DestroyIcons();
++    FillWindowPixelBuffer(sWindow, PIXEL_FILL(0));
++    StringCopy(sText, gSpeciesNames[DexSpecies()]);
++    Append(sText, gText_M5DexHeader, sizeof(sText));
++    AddTextPrinterParameterized(sWindow, 2, sText, 4, 0, 0, NULL);
++    if (!sRouteCount) AddTextPrinterParameterized(sWindow, 2, gText_M5DexNone, 20, 44, 0, NULL);
++    for (i = 0; i < ROUTES_PER_PAGE && first + i < sRouteCount; ++i)
++    {
++        const struct GuideRoute *route = &sRoutes[first + i];
++        sIconSpecies[i * 2] = route->source;
++        sIconSpecies[i * 2 + 1] = route->target;
++        sIconIds[i * 2] = CreateRouteIcon(route->source, 18, 48 + i * 34);
++        sIconIds[i * 2 + 1] = CreateRouteIcon(route->target, 50, 48 + i * 34);
++        StringCopy(sText, first + i == sSelection ? gText_M5DexCursor : sSpace);
++        Append(sText, gSpeciesNames[route->source], sizeof(sText));
++        Append(sText, gText_M5DexArrow, sizeof(sText));
++        Append(sText, gSpeciesNames[route->target], sizeof(sText));
++        AddTextPrinterParameterized(sWindow, 2, sText, 68, 18 + i * 34, 0, NULL);
++        FormatCondition(&route->evolution);
++        AddTextPrinterParameterized(sWindow, 0, sText, 12, 30 + i * 34, 0, NULL);
++    }
++    if (pages > 1)
++    {
++        u8 number[3];
++        StringCopy(sText, gText_M5DexPage);
++        Append(sText, sSpace, sizeof(sText));
++        ConvertIntToDecimalStringN(number, first / ROUTES_PER_PAGE + 1, STR_CONV_MODE_LEFT_ALIGN, 1);
++        Append(sText, number, sizeof(sText)); Append(sText, gText_M5DexSlash, sizeof(sText));
++        ConvertIntToDecimalStringN(number, pages, STR_CONV_MODE_LEFT_ALIGN, 1);
++        Append(sText, number, sizeof(sText));
++        AddTextPrinterParameterized(sWindow, 0, sText, 190, 112, 0, NULL);
++    }
++    AddTextPrinterParameterized(sWindow, 0, gText_M5DexControls, 4, 112, 0, NULL);
++    PutWindowTilemap(sWindow);
++    CopyWindowToVram(sWindow, COPYWIN_BOTH);
++}
++
++static void Open(void)
++{
++    u16 species = DexSpecies();
++    if (species <= SPECIES_NONE || species >= NUM_SPECIES) return;
++    RemoveNormalWindows();
++    sOrigin = species; sSelection = 0; BuildRoutes(species);
++    sWindow = AddWindow(&sWindowTemplate); sActive = TRUE; sReopenPending = FALSE;
++    Render();
++}
++
++static void Close(u8 state)
++{
++    DestroyIcons();
++    if (sWindow != 0xFF) { ClearWindowTilemap(sWindow); RemoveWindow(sWindow); sWindow = 0xFF; }
++    sActive = FALSE; SetDexState(state);
++}
++
++bool8 M5DexGuideHandleInput(void)
++{
++    if (sReopenPending) { Open(); return TRUE; }
++    if (sReturnPending && JOY_NEW(B_BUTTON))
++    {
++        RemoveNormalWindows(); SetDexSpecies(sOrigin); SetDexState(2);
++        sReturnPending = FALSE; sReopenPending = TRUE; return TRUE;
++    }
++    if (!sActive)
++    {
++        if (JOY_NEW(SELECT_BUTTON)) { Open(); return TRUE; }
++        return FALSE;
++    }
++    if (JOY_NEW(B_BUTTON) || JOY_NEW(SELECT_BUTTON)) { Close(11); return TRUE; }
++    if (sRouteCount && JOY_NEW(DPAD_UP)) sSelection = sSelection ? sSelection - 1 : sRouteCount - 1;
++    else if (sRouteCount && JOY_NEW(DPAD_DOWN)) sSelection = (sSelection + 1) % sRouteCount;
++    else if (sRouteCount > ROUTES_PER_PAGE && JOY_NEW(DPAD_LEFT)) sSelection = sSelection < ROUTES_PER_PAGE ? sRouteCount - 1 : sSelection - ROUTES_PER_PAGE;
++    else if (sRouteCount > ROUTES_PER_PAGE && JOY_NEW(DPAD_RIGHT)) sSelection = (sSelection + ROUTES_PER_PAGE) % sRouteCount;
++    else if (sRouteCount && JOY_NEW(A_BUTTON))
++    {
++        u16 target = sRoutes[sSelection].target;
++        Close(2); SetDexSpecies(target); sReturnPending = TRUE; return TRUE;
++    }
++    else return TRUE;
++    Render(); return TRUE;
++}
+diff --git a/.upstream/cfru/strings/Scripts/M5_Evolution_Guide.string b/strings/Scripts/M5_Evolution_Guide.string
+new file mode 100644
+index 0000000..4601259
+--- /dev/null
++++ b/strings/Scripts/M5_Evolution_Guide.string
+@@ -0,0 +1,60 @@
++#org @gText_M5DexFriendship
++High friendship
++#org @gText_M5DexFriendshipDay
++High friendship during daytime
++#org @gText_M5DexFriendshipNight
++High friendship during nighttime
++#org @gText_M5DexReachLevel
++Reach level
++#org @gText_M5DexLevel
++Level
++#org @gText_M5DexDay
++ in daytime
++#org @gText_M5DexNight
++ at night
++#org @gText_M5DexMale
++ (male)
++#org @gText_M5DexFemale
++ (female)
++#org @gText_M5DexAtkGt
++, Attack > Defense
++#org @gText_M5DexAtkEq
++, Attack = Defense
++#org @gText_M5DexAtkLt
++, Attack < Defense
++#org @gText_M5DexLinkCable
++Use Link Cable (consumed)
++#org @gText_M5DexLinkCableHolding
++Link Cable while holding
++#org @gText_M5DexConsumed
++ (consumed)
++#org @gText_M5DexUse
++Use
++#org @gText_M5DexLevelHolding
++Level up holding
++#org @gText_M5DexLevelKnowing
++Level up knowing
++#org @gText_M5DexCrit
++Land 3 critical hits, then level up
++#org @gText_M5DexCoins
++Level up after collecting 999 Coins
++#org @gText_M5DexParty
++Level up with required party Pok\emon
++#org @gText_M5DexLocation
++Use the required special location
++#org @gText_M5DexSpecial
++Special evolution-ledger condition
++#org @gText_M5DexHeader
++ - EVOLUTION
++#org @gText_M5DexNone
++NO KNOWN EVOLUTIONS
++#org @gText_M5DexCursor
++>
++#org @gText_M5DexArrow
++[ARROW_RIGHT]
++#org @gText_M5DexPage
++PAGE
++#org @gText_M5DexSlash
++/
++#org @gText_M5DexControls
++SELECT/B: BACK  A: TARGET
