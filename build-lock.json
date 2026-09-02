@@ -131,6 +131,11 @@
       "upstream": "cfru_expansion",
       "path": "patches/cfru/0016-complete-evolution-guide-formatters.patch",
       "sha256": "6f3ea16521a9c07550cf13402319500030d022d6c53936fdb4f43d47c0c961ab"
+    },
+    "cfru_form_research_preserve": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0017-form-research-preserve.patch",
+      "sha256": "0508099e109c8f8b59a9cf93e1cb1e2e6ee040027eda3ad0e71bf5b6292ee51d"
     }
   },
   "toolchain": {

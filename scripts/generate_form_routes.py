@@ -50,6 +50,7 @@ BATTLE_EXACT = {
     "SPECIES_CHERRIM_SUN", "SPECIES_AEGISLASH_BLADE", "SPECIES_ASHGRENINJA",
     "SPECIES_MINIOR_SHIELD", "SPECIES_WISHIWASHI_S", "SPECIES_MIMIKYU_BUSTED",
     "SPECIES_NECROZMA_ULTRA", "SPECIES_XERNEAS_NATURAL", "SPECIES_CRAMORANT_GULPING",
+    "SPECIES_ZYGARDE_COMPLETE",
     "SPECIES_CRAMORANT_GORGING", "SPECIES_EISCUE_NOICE", "SPECIES_MORPEKO_HANGRY",
     "SPECIES_ETERNATUS_ETERNAMAX", "SPECIES_PALAFIN_HERO", "SPECIES_OGERPON_TERASTAL",
     "SPECIES_OGERPON_WELLSPRING_TERASTAL", "SPECIES_OGERPON_HEARTHFLAME_TERASTAL",
@@ -122,8 +123,8 @@ def binding(category):
         "HELD_ITEM_DERIVED": ("existing_cfru_held_item", "IMPLEMENTED_UNVERIFIED", "C_HANDLER", "HoldItemFormChange", "", "CFRU held-item form table"),
         "KEY_ITEM_TOGGLE": ("existing_cfru_key_item", "IMPLEMENTED_UNVERIFIED", "C_HANDLER", "ItemUseCB_FormChangeItem", "", "CFRU reusable form item switch"),
         "FORM_LAB_SELECTABLE": ("cinnabar_form_lab", "IMPLEMENTED_UNVERIFIED", "GENERATED_C_TABLE", "M5FormLabApplyPreparedForm", "EventScript_M5FormResearcher", "generated m5_form_routes.h"),
-        "REGIONAL_DISTINCT": ("research_preserve_encounter", "NOT_IMPLEMENTED", "PENDING", "", "", "pending generated encounter binding"),
-        "ENCOUNTER_OR_EVOLUTION_LOCKED": ("research_preserve_encounter", "NOT_IMPLEMENTED", "PENDING", "", "", "pending generated encounter/evolution binding"),
+        "REGIONAL_DISTINCT": ("research_preserve_encounter", "IMPLEMENTED_UNVERIFIED", "GENERATED_ENCOUNTER", "M5ResearchPreservePrepareEncounter", "EventScript_M5ResearchPreserve", "generated m5_form_routes.h"),
+        "ENCOUNTER_OR_EVOLUTION_LOCKED": ("research_preserve_encounter", "IMPLEMENTED_UNVERIFIED", "GENERATED_ENCOUNTER", "M5ResearchPreservePrepareEncounter", "EventScript_M5ResearchPreserve", "generated m5_form_routes.h"),
         "UNSUPPORTED_PLACEHOLDER": ("excluded", "NOT_IMPLEMENTED", "INTENTIONAL_EXCLUSION", "", "", "unsafe/non-obtainable internal slot"),
     }[category]
 
@@ -169,7 +170,15 @@ def render_header(rows):
     lines.extend(["", "static const struct M5FormLabFamily sM5FormLabFamilies[] = {"])
     for i in range(len(families)):
         lines.append(f"    {{sM5GeneratedFormFamily{i}, ARRAY_COUNT(sM5GeneratedFormFamily{i})}},")
-    lines.extend(["};", "", "#define M5_FORM_LAB_MAX_OPTIONS 20", "#endif", ""])
+    preserve = [row["target_form"] for row in rows if row["route_category"] in {
+        "REGIONAL_DISTINCT", "ENCOUNTER_OR_EVOLUTION_LOCKED",
+    }]
+    lines.extend([
+        "};", "", "#define M5_FORM_LAB_MAX_OPTIONS 20", "",
+        f"static const u16 sM5ResearchPreserveForms[] = {{{', '.join(preserve)}}};",
+        "#define M5_RESEARCH_PRESERVE_COUNT ARRAY_COUNT(sM5ResearchPreserveForms)",
+        "#endif", "",
+    ])
     return "\n".join(lines)
 
 

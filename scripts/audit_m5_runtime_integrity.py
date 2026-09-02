@@ -30,6 +30,12 @@ checks = {
     'form lab cancellation path': all(token in system for token in (
         'compare LASTRESULT 0x7F', 'goto EventScript_M5FormResearcherCancel',
     )),
+    'form preserve is encounter-only': all(token in system for token in (
+        'EventScript_M5ResearchPreserve:', 'setwildbattle 0x8000 30 0', 'dowildbattle',
+    )) and 'TryChangeMonForm' not in scripting[
+        scripting.index('void M5ResearchPreservePrepareMenu'):
+        scripting.index('// Called after ChoosePartyMon')
+    ],
     'fusion full-party bound checked first': (
         'for (slotId = 0; slotId < PARTY_SIZE\n'
         '                                     && GetMonData(&gPlayerParty[slotId]' in party

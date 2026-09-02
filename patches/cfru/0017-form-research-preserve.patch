@@ -1,0 +1,141 @@
+diff --git a/src/scripting.c b/src/scripting.c
+index 3df76d2..941e783 100644
+--- a/src/scripting.c
++++ b/src/scripting.c
+@@ -90,6 +90,28 @@ struct M5FormLabFamily
+ #include "../include/generated/m5_form_routes.h"
+ 
+ static const u8 *sM5FormLabDynamicNames[M5_FORM_LAB_MAX_OPTIONS];
++static const u8 *sM5ResearchPreserveNames[M5_RESEARCH_PRESERVE_COUNT];
++
++void M5ResearchPreservePrepareMenu(void)
++{
++    u32 i;
++    for (i = 0; i < M5_RESEARCH_PRESERVE_COUNT; ++i)
++        sM5ResearchPreserveNames[i] = gSpeciesNames[sM5ResearchPreserveForms[i]];
++    Var8000 = 2;
++    Var8001 = 6;
++    gSpecialVar_LastResult = TRUE;
++}
++
++void M5ResearchPreservePrepareEncounter(void)
++{
++    u16 selected = gSpecialVar_LastResult;
++    gSpecialVar_LastResult = FALSE;
++    if (selected >= M5_RESEARCH_PRESERVE_COUNT)
++        return;
++    Var8000 = sM5ResearchPreserveForms[selected];
++    GetSpeciesName(gStringVar1, Var8000);
++    gSpecialVar_LastResult = TRUE;
++}
+ 
+ // Called after ChoosePartyMon. Selects the matching generated scrolling-list
+ // binding; no Pokemon data is touched until the separate apply call.
+@@ -3084,6 +3106,7 @@ const struct ScrollingMulti gScrollingSets[] =
+ {
+ 	{sMultichoiceSet1, ARRAY_COUNT(sMultichoiceSet1)},
+ 	{sM5FormLabDynamicNames, M5_FORM_LAB_MAX_OPTIONS},
++	{sM5ResearchPreserveNames, M5_RESEARCH_PRESERVE_COUNT},
+ };
+ 
+ //Link number of opts shown at once to the box height
+@@ -3118,6 +3141,8 @@ u32 GetSizeOfMultiList(void)
+ #ifdef SCROLLING_MULTICHOICE
+ 	if (Var8000 == 1 && Var8006 < ARRAY_COUNT(sM5FormLabFamilies))
+ 		return sM5FormLabFamilies[Var8006].count;
++	if (Var8000 == 2)
++		return M5_RESEARCH_PRESERVE_COUNT;
+ 	return gScrollingSets[Var8000].count;
+ #else
+ 	return 0;
+diff --git a/assembly/overworld_scripts/system_scripts.s b/assembly/overworld_scripts/system_scripts.s
+index 7b3638d..b8b4f66 100644
+--- a/assembly/overworld_scripts/system_scripts.s
++++ b/assembly/overworld_scripts/system_scripts.s
+@@ -15,6 +15,15 @@
+ EventScript_M5FormResearcher:
+ 	lockall
+ 	faceplayer
++	msgbox gText_M5ResearchServices MSG_KEEPOPEN
++	multichoiceoption gText_M5ResearchFormLab 0
++	multichoiceoption gText_M5ResearchPreserve 1
++	multichoiceoption gText_M5ResearchCancel 2
++	multichoice 0, 0, THREE_MULTICHOICE_OPTIONS, 0
++	compare LASTRESULT 1
++	if equal _goto EventScript_M5ResearchPreserve
++	compare LASTRESULT 0
++	if notequal _goto EventScript_M5FormResearcherCancel
+ 	msgbox gText_M5FormLabIntro MSG_NORMAL
+ 	special SPECIAL_CHOOSE_PARTY_MON
+ 	waitstate
+@@ -64,6 +73,35 @@ EventScript_M5FormResearcherCancel:
+ 	releaseall
+ 	end
+ 
++.global EventScript_M5ResearchPreserve
++EventScript_M5ResearchPreserve:
++	checkflag FLAG_M5_GAME_CLEAR
++	compare LASTRESULT FALSE
++	if equal _goto EventScript_M5ResearchPreserveLocked
++	msgbox gText_M5ResearchPreserveIntro MSG_NORMAL
++	callasm M5ResearchPreservePrepareMenu
++	resetvar 0x8004
++	resetvar 0x800D
++	special 0x158
++	waitstate
++	compare LASTRESULT 0x7F
++	if equal _goto EventScript_M5FormResearcherCancel
++	callasm M5ResearchPreservePrepareEncounter
++	compare LASTRESULT FALSE
++	if equal _goto EventScript_M5FormResearcherFailed
++	msgbox gText_M5ResearchPreserveConfirm MSG_YESNO
++	compare LASTRESULT NO
++	if equal _goto EventScript_M5FormResearcherCancel
++	setwildbattle 0x8000 30 0
++	dowildbattle
++	releaseall
++	end
++
++EventScript_M5ResearchPreserveLocked:
++	msgbox gText_M5ResearchPreserveLocked MSG_NORMAL
++	releaseall
++	end
++
+ @;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ 
+ .global EventScript_SecondBagItemCanBeRegisteredToL
+diff --git a/strings/Scripts/M5_Form_Lab.string b/strings/Scripts/M5_Form_Lab.string
+index 5517b6f..0fcabf0 100644
+--- a/strings/Scripts/M5_Form_Lab.string
++++ b/strings/Scripts/M5_Form_Lab.string
+@@ -1,3 +1,18 @@
++#org @gText_M5ResearchServices
++Which research service do you need?
++#org @gText_M5ResearchFormLab
++FORM LAB
++#org @gText_M5ResearchPreserve
++FORM PRESERVE
++#org @gText_M5ResearchCancel
++CANCEL
++#org @gText_M5ResearchPreserveIntro
++The preserve safeguards permanent forms.\pSelect a regional or encounter-locked\nform to study in a wild encounter.
++#org @gText_M5ResearchPreserveConfirm
++Begin a research encounter with [BUFFER1]?
++#org @gText_M5ResearchPreserveLocked
++The Form Preserve opens after entering\nthe Hall of Fame.
++
+ #org @gText_M5FormLabIntro
+ I study safe, stable Pok\emon forms.\pChoose a Pok\emon, then select one\nof its compatible forms.
+ 
+diff --git a/include/generated/m5_form_routes.h b/include/generated/m5_form_routes.h
+--- a/include/generated/m5_form_routes.h
++++ b/include/generated/m5_form_routes.h
+@@ -17,4 +17,7 @@ static const struct M5FormLabFamily sM5FormLabFamilies[] = {
+ };
+ 
+ #define M5_FORM_LAB_MAX_OPTIONS 20
++
++static const u16 sM5ResearchPreserveForms[] = {SPECIES_UNOWN_B, SPECIES_UNOWN_C, SPECIES_UNOWN_D, SPECIES_UNOWN_E, SPECIES_UNOWN_F, SPECIES_UNOWN_G, SPECIES_UNOWN_H, SPECIES_UNOWN_I, SPECIES_UNOWN_J, SPECIES_UNOWN_K, SPECIES_UNOWN_L, SPECIES_UNOWN_M, SPECIES_UNOWN_N, SPECIES_UNOWN_O, SPECIES_UNOWN_P, SPECIES_UNOWN_Q, SPECIES_UNOWN_R, SPECIES_UNOWN_S, SPECIES_UNOWN_T, SPECIES_UNOWN_U, SPECIES_UNOWN_V, SPECIES_UNOWN_W, SPECIES_UNOWN_X, SPECIES_UNOWN_Y, SPECIES_UNOWN_Z, SPECIES_UNOWN_EXCLAMATION, SPECIES_UNOWN_QUESTION, SPECIES_BASCULIN_RED, SPECIES_UNFEZANT_F, SPECIES_FRILLISH_F, SPECIES_JELLICENT_F, SPECIES_BURMY_SANDY, SPECIES_BURMY_TRASH, SPECIES_WORMADAM_SANDY, SPECIES_WORMADAM_TRASH, SPECIES_SHELLOS_EAST, SPECIES_GASTRODON_EAST, SPECIES_BASCULIN_BLUE, SPECIES_DEERLING_SUMMER, SPECIES_DEERLING_AUTUMN, SPECIES_DEERLING_WINTER, SPECIES_SAWSBUCK_SUMMER, SPECIES_SAWSBUCK_AUTUMN, SPECIES_SAWSBUCK_WINTER, SPECIES_HIPPOPOTAS_F, SPECIES_HIPPOWDON_F, SPECIES_PYROAR_FEMALE, SPECIES_MEOWSTIC_FEMALE, SPECIES_FLABEBE_BLUE, SPECIES_FLABEBE_ORANGE, SPECIES_FLABEBE_YELLOW, SPECIES_FLABEBE_WHITE, SPECIES_FLOETTE_BLUE, SPECIES_FLOETTE_ORANGE, SPECIES_FLOETTE_YELLOW, SPECIES_FLOETTE_WHITE, SPECIES_FLOETTE_ETERNAL, SPECIES_FLORGES_BLUE, SPECIES_FLORGES_ORANGE, SPECIES_FLORGES_YELLOW, SPECIES_FLORGES_WHITE, SPECIES_PUMPKABOO_XL, SPECIES_PUMPKABOO_L, SPECIES_PUMPKABOO_M, SPECIES_GOURGEIST_XL, SPECIES_GOURGEIST_L, SPECIES_GOURGEIST_M, SPECIES_VIVILLON_FANCY, SPECIES_VIVILLON_ARCHIPELAGO, SPECIES_VIVILLON_CONTINENTAL, SPECIES_VIVILLON_ELEGANT, SPECIES_VIVILLON_GARDEN, SPECIES_VIVILLON_HIGH_PLAINS, SPECIES_VIVILLON_ICY_SNOW, SPECIES_VIVILLON_JUNGLE, SPECIES_VIVILLON_MARINE, SPECIES_VIVILLON_MODERN, SPECIES_VIVILLON_MONSOON, SPECIES_VIVILLON_OCEAN, SPECIES_VIVILLON_POKEBALL, SPECIES_VIVILLON_POLAR, SPECIES_VIVILLON_RIVER, SPECIES_VIVILLON_SANDSTORM, SPECIES_VIVILLON_SAVANNA, SPECIES_VIVILLON_SUN, SPECIES_VIVILLON_TUNDRA, SPECIES_RATTATA_A, SPECIES_RATICATE_A, SPECIES_RAICHU_A, SPECIES_SANDSHREW_A, SPECIES_SANDSLASH_A, SPECIES_VULPIX_A, SPECIES_NINETALES_A, SPECIES_DIGLETT_A, SPECIES_DUGTRIO_A, SPECIES_MEOWTH_A, SPECIES_PERSIAN_A, SPECIES_GEODUDE_A, SPECIES_GRAVELER_A, SPECIES_GOLEM_A, SPECIES_GRIMER_A, SPECIES_MUK_A, SPECIES_EXEGGCUTE_A, SPECIES_EXEGGUTOR_A, SPECIES_CUBONE_A, SPECIES_MAROWAK_A, SPECIES_ORICORIO_Y, SPECIES_ORICORIO_P, SPECIES_ORICORIO_S, SPECIES_LYCANROC_N, SPECIES_MINIOR_RED, SPECIES_MINIOR_BLUE, SPECIES_MINIOR_ORANGE, SPECIES_MINIOR_YELLOW, SPECIES_MINIOR_INDIGO, SPECIES_MINIOR_GREEN, SPECIES_MINIOR_VIOLET, SPECIES_LYCANROC_DUSK, SPECIES_PIKACHU_SURFING, SPECIES_PIKACHU_FLYING, SPECIES_PIKACHU_COSPLAY, SPECIES_PIKACHU_LIBRE, SPECIES_PIKACHU_POP_STAR, SPECIES_PIKACHU_ROCK_STAR, SPECIES_PIKACHU_BELLE, SPECIES_PIKACHU_PHD, SPECIES_PIKACHU_CAP_ORIGINAL, SPECIES_PIKACHU_CAP_HOENN, SPECIES_PIKACHU_CAP_SINNOH, SPECIES_PIKACHU_CAP_UNOVA, SPECIES_PIKACHU_CAP_KALOS, SPECIES_PIKACHU_CAP_ALOLA, SPECIES_PIKACHU_CAP_PARTNER, SPECIES_PICHU_SPIKY, SPECIES_ALCREMIE_STRAWBERRY, SPECIES_URSHIFU_SINGLE, SPECIES_TOXTRICITY_LOW_KEY, SPECIES_SINISTEA_CHIPPED, SPECIES_POLTEAGEIST_CHIPPED, SPECIES_ALCREMIE_BERRY, SPECIES_ALCREMIE_CLOVER, SPECIES_ALCREMIE_FLOWER, SPECIES_ALCREMIE_LOVE, SPECIES_ALCREMIE_RIBBON, SPECIES_ALCREMIE_STAR, SPECIES_INDEEDEE_FEMALE, SPECIES_URSHIFU_RAPID, SPECIES_MEOWTH_G, SPECIES_PONYTA_G, SPECIES_RAPIDASH_G, SPECIES_SLOWPOKE_G, SPECIES_SLOWBRO_G, SPECIES_FARFETCHD_G, SPECIES_KOFFING_G, SPECIES_WEEZING_G, SPECIES_MR_MIME_G, SPECIES_ARTICUNO_G, SPECIES_ZAPDOS_G, SPECIES_MOLTRES_G, SPECIES_SLOWKING_G, SPECIES_CORSOLA_G, SPECIES_ZIGZAGOON_G, SPECIES_LINOONE_G, SPECIES_MIME_JR_G, SPECIES_DARUMAKA_G, SPECIES_DARMANITAN_G, SPECIES_YAMASK_G, SPECIES_STUNFISK_G, SPECIES_BASCULEGION_M, SPECIES_BASCULEGION_F, SPECIES_GROWLITHE_H, SPECIES_ARCANINE_H, SPECIES_VOLTORB_H, SPECIES_ELECTRODE_H, SPECIES_TYPHLOSION_H, SPECIES_QWILFISH_H, SPECIES_SNEASEL_H, SPECIES_SAMUROTT_H, SPECIES_LILLIGANT_H, SPECIES_BASCULIN_H, SPECIES_ZORUA_H, SPECIES_ZOROARK_H, SPECIES_BRAVIARY_H, SPECIES_SLIGGOO_H, SPECIES_GOODRA_H, SPECIES_AVALUGG_H, SPECIES_DECIDUEYE_H, SPECIES_OINKOLOGNE_FEMALE, SPECIES_MAUSHOLD_FOUR, SPECIES_SQUAWKABILLY_BLUE, SPECIES_SQUAWKABILLY_YELLOW, SPECIES_SQUAWKABILLY_WHITE, SPECIES_TATSUGIRI_RED, SPECIES_TATSUGIRI_YELLOW, SPECIES_DUDUNSPARCE_THREE, SPECIES_GIMMIGHOUL_ROAMING, SPECIES_TAUROS_P, SPECIES_TAUROS_BLAZE_P, SPECIES_TAUROS_AQUA_P, SPECIES_WOOPER_P, SPECIES_URSALUNA_BLOODMOON, SPECIES_POLTCHAGEIST_ARTISAN, SPECIES_SINISTCHA_MASTERPIECE};
++#define M5_RESEARCH_PRESERVE_COUNT ARRAY_COUNT(sM5ResearchPreserveForms)
+ #endif
+

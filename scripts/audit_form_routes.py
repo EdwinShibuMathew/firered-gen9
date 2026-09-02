@@ -52,8 +52,18 @@ for row in rows:
             bad.append((row, f'unresolved handler {handler!r}'))
         if script and script not in source:
             bad.append((row, f'unresolved script {script!r}'))
+    elif category != 'UNSUPPORTED_PLACEHOLDER':
+        bad.append((row, 'safe form has no runtime binding'))
     if category in {'BATTLE_ONLY', 'REGIONAL_DISTINCT', 'ENCOUNTER_OR_EVOLUTION_LOCKED', 'UNSUPPORTED_PLACEHOLDER'} and row['acquisition_method'] == 'cinnabar_form_lab':
         bad.append((row, 'unsafe Form Lab exposure'))
+    if category == 'FORM_LAB_SELECTABLE' and not all(
+        token in source for token in (row['base_species'], row['target_form'], 'sM5FormLabFamilies')
+    ):
+        bad.append((row, 'generated Form Lab family is incomplete'))
+    if category in {'REGIONAL_DISTINCT', 'ENCOUNTER_OR_EVOLUTION_LOCKED'} and not all(
+        token in source for token in (row['target_form'], 'sM5ResearchPreserveForms')
+    ):
+        bad.append((row, 'generated preserve encounter is incomplete'))
 
 mapped = re.findall(
     r'\[(SPECIES_[A-Z0-9_]+)\s*-\s*1\]\s*=\s*(NATIONAL_DEX_[A-Z0-9_]+)',
