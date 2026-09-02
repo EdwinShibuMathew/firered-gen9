@@ -17,4 +17,4 @@ Automated source/build gates are recorded below; emulator execution is intention
 | Pecharunt | pending | pending | pending | pending | manual |
 | Highest internal form ID | pending | pending | pending | pending | manual |
 
-The matrix must also cover every evolution method/item, encounter type, regional pool, starter/fossil, repeatable quest, blackout/healing path, repeated save/load, and new game after an old save. No row is marked passed without observable mGBA evidence.
+The matrix must also cover every evolution method/item, encounter type, regional pool, starter/fossil, recoverable one-capture Legendary encounter, blackout/healing path, repeated save/load, and new game after an old save. No row is marked passed without observable mGBA evidence.

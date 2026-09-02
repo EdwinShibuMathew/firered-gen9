@@ -1,7 +1,7 @@
 # M6 Custom Starter Port — Progress Report
 
 **Status:** Automated port complete; owner-led runtime validation deferred  
-**Last updated:** 2026-09-01
+**Last updated:** 2026-09-02
 
 The preserved `pokefirered-contrary` repository was inspected at commit `2d57c43dc562a42b81dce5e2e754f0b175c44d89`. Its starter overhaul has been ported through isolated DPE/CFRU overlays.
 

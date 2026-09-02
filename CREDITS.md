@@ -6,3 +6,5 @@
 - The preserved `pokefirered-contrary` worktree — source reference for the Contrary Charizard starter configuration.
 
 Exact upstream commits and local overlays are recorded in `build-lock.json` and `docs/UPSTREAM_PINS.md`. Individual upstream asset attribution remains subject to the upstream repositories' own licensing and attribution files.
+
+`data/asset_provenance.csv` preserves per-file source hashes and status. Unresolved or suspicious duplicate assets must be reviewed before public release; no new unverified third-party art was added during M5–M7 implementation.

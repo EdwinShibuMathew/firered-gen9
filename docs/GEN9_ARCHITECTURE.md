@@ -10,4 +10,6 @@ Tracked overlays under `patches/` are applied to ignored upstream checkouts by `
 
 Milestone boundaries are deliberate: M3 audits offline evolution routes; M4 proves National Dex availability; M5 owns permanent forms, quests, and encyclopedia UI; M6 owns the preserved Contrary starter port; M7 is optional DexNav migration work; M8 owns release packaging and manual QA.
 
+M5's authoritative 442-form contract generates both the Form Lab family table and the Form Preserve encounter table. M7 independently generates nine compact National Dex migration pools and injects one selected representative into DexNav without mutating the underlying wild encounter headers. Expanded save variable `0x515A` stores only the M7 group selection.
+
 ROMs, saves, BIOS files, emulator states, and local toolchains remain ignored and are never distributed by this repository.

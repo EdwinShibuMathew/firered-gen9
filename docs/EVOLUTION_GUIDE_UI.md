@@ -4,6 +4,8 @@
 
 The Evolution Guide is a second page of the existing Pokédex detail task (`Task_DexScreen_ShowMonPage`), not a Start-menu application. CFRU overlay `patches/cfru/0011-pokedex-evolution-guide.patch` hooks the detail input state at `0x08104418`; its runtime renderer reads `gEvolutionTable` directly, while `data/evolution_encyclopedia.csv` remains the generated audit view of the same ledger.
 
+Overlay `patches/cfru/0016-complete-evolution-guide-formatters.patch` explicitly handles all 43 values in DPE's evolution-method enum, corrects the reusable Link Cable label, and adds pixel-width wrapping while retaining the 128-byte bounded text buffer.
+
 Controls are `SELECT` to toggle detail/Guide, `B` or `SELECT` to return, `UP/DOWN` to select a route, `LEFT/RIGHT` to paginate, and `A` to open the target entry. Three routes fit per page; routes beyond that show `PAGE X/Y`. Species names and conditions are rendered even when unseen, while icons use the normal engine fallback.
 
 ## State transition contract

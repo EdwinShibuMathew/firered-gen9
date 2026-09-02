@@ -16,11 +16,12 @@ python3 "$project_root/scripts/audit_forms.py" --require-complete
 python3 "$project_root/scripts/generate_form_routes.py" --check
 python3 "$project_root/scripts/audit_form_routes.py"
 python3 "$project_root/scripts/audit_m5_runtime_integrity.py"
-python3 "$project_root/scripts/generate_evolution_encyclopedia.py"
+python3 "$project_root/scripts/generate_evolution_encyclopedia.py" --check
 python3 "$project_root/scripts/audit_m5_content.py" --require-audited
 python3 "$project_root/scripts/audit_m6_starter.py"
 python3 "$project_root/scripts/generate_m7_habitat.py" --check
 python3 "$project_root/scripts/audit_m7.py"
+python3 "$project_root/scripts/audit_documentation.py"
 python3 "$project_root/scripts/audit_release.py"
 
 PATH="$tool_path" make -C "$project_root/.upstream/pret" -j"${BUILD_JOBS:-2}"

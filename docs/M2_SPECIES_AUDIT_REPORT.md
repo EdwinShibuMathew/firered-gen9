@@ -1,5 +1,7 @@
 # M2 Species Audit - Final Report
 
+> Historical note (2026-09-02): the original heuristic form count below is superseded by `data/form_routes.csv`, which derives 442 canonical alternate-form IDs from DPE's National Dex mapping. The 1,025 base-species result is unchanged.
+
 **Date:** 2026-09-01  
 **Status:** ✓ COMPLETE - All Checks Passed  
 **Auditor:** Automated M2 Audit Framework  

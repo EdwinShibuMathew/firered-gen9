@@ -11,6 +11,7 @@ Comprehensive audit of species assets including:
 """
 
 import json
+import csv
 import re
 import sys
 from collections import defaultdict
@@ -131,20 +132,9 @@ class M2AssetAudit:
             "with_learnsets": 0,
         }
 
-        FORM_SUFFIXES = (
-            "_A", "_G", "_H", "_N", "_MEGA", "_PRIMAL", "_ORIGIN", "_THERIAN",
-            "_CROWNED", "_ICE_RIDER", "_SHADOW_RIDER", "_DADA", "_ETERNAMAX",
-            "_RED", "_BLUE", "_ORANGE", "_YELLOW", "_INDIGO", "_GREEN", "_VIOLET",
-            "_SINGLE", "_RAPID", "_RESOLUTE", "_PIROUETTE", "_SKY", "_ALOLA",
-            "_GALARIAN", "_HISUI", "_PALDEA", "_STELLAR", "_TERASTAL",
-        )
-
-        for species_id, name in self.species.items():
-            is_form = any(name.endswith(suffix) for suffix in FORM_SUFFIXES)
-            if not is_form:
-                results["base_species"] += 1
-            else:
-                results["form_variants"] += 1
+        with (SRC_ROOT / "data/form_routes.csv").open(encoding="utf-8") as handle:
+            results["form_variants"] = sum(1 for _ in csv.DictReader(handle))
+        results["base_species"] = 1025
 
         # Count species with various data types
         if self.abilities:

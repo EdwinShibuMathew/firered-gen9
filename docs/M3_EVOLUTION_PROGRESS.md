@@ -1,8 +1,8 @@
 # M3 Evolution Availability — Progress Report
 
 **Milestone:** Make every evolution possible offline  
-**Status:** Phases 1–3 implemented; runtime validation remains  
-**Last updated:** 2026-09-01
+**Status:** Implementation and automated audits complete; runtime validation remains
+**Last updated:** 2026-09-02
 
 ## Measured baseline
 
@@ -23,7 +23,7 @@ The complete machine-readable mapping is `data/evolution_mapping.csv`. Regenerat
 python3 scripts/m3_evolution_audit.py --csv data/evolution_mapping.csv
 ```
 
-Use `--require-complete` as the eventual milestone gate. It intentionally fails while blockers or unproved prerequisites remain.
+Use `--require-complete` as the milestone gate; it now passes for the tracked 883-edge ledger.
 
 ## Phase status
 
@@ -67,7 +67,7 @@ The rebuilt ROM passes its locked SHA-256 check. The existing `test.sav` fixture
 
 A save-independent SDL-dummy mGBA launch originally exposed an invalid vanilla map overlay: changing the base event-script layout before binary expansion broke CFRU's fixed-address assumptions and produced repeated `Illegal opcode: 0000ea00` logs. Item distribution was moved into CFRU's injected code space and the vanilla ROM returned to its canonical SHA-1. Vanilla, DPE, and CFRU now each run for the same two-second headless smoke window with zero emulator errors. This proves boot regression recovery, not individual evolution behavior.
 
-An interactive mGBA run was also attempted on 2026-09-01, but the execution environment did not expose an authenticated X11 control channel for reliable input or observation. No evolution result was inferred from that attempt; the controlled runtime checklist remains open.
+The Evolution Guide now formats every DPE evolution-method enum value and the 883-edge ledger passes automated checks. No manual result is inferred; Edwin's controlled runtime checklist remains open.
 
 ## Current blockers
 

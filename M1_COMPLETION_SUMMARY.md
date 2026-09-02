@@ -22,7 +22,7 @@ All M1 gates have been systematized and verified. M2 species audit is complete w
 
 ### M2 Species Audit Complete ✓
 
-✓ **Registry Validation** — 1,464 species constants (1,200 base + 264 forms)
+✓ **Registry Validation** — 1,464 compiled species constants; the later canonical form-route audit identifies 442 alternate-form IDs from the DPE National Dex mapping
 
 ✓ **Generation Coverage** — All 9 generations (Gen 1-9) present; 1,000+ National Pokédex species
 

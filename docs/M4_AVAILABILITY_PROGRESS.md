@@ -33,10 +33,10 @@ CFRU adds four Route 1 time tables and nine postgame Sevii reserve maps. The res
 - [x] Parse all currently discoverable direct and variable-driven stock acquisitions.
 - [x] Define deterministic Sevii reserve habitats without changing Kanto progression tables.
 - [x] Add every starter, fossil, Legendary, Mythical, and version-exclusive family through direct or evolution-closure sources.
-- [x] Make major static Legendary encounters repeatable after leaving and re-entering their area (Zapdos, Articuno, Moltres, Mewtwo, Ho-Oh, and Deoxys).
+- [x] Make major static Legendary encounters recover after flee, defeat, or blackout; a successful capture remains permanent once per save.
 - [x] Reach and record `1025 / 1025 National Pokédex species obtainable`.
 - [ ] Validate representative encounters and captures in mGBA.
 
 ## Next action
 
-M4 automated gate is complete. The repeatable-encounter overlay resets each listed static encounter's fought/flew-away lock on map transition, so the area can be revisited and the encounter can be triggered again. Run `python3 scripts/generate_gen9_reserve.py --check`, `python3 scripts/audit_availability.py --require-complete`, and `python3 scripts/apply_overlays.py --check` after source changes. Manual mGBA encounter/capture/revisit QA remains part of the user-owned final test pass.
+M4 automated gate is complete. The encounter overlay resets temporary fought/fled locks on map transition while capture completion remains permanent. Run `python3 scripts/generate_gen9_reserve.py --check`, `python3 scripts/audit_availability.py --require-complete`, and `python3 scripts/apply_overlays.py --check` after source changes. Manual mGBA outcome QA remains part of Edwin's final pass.

@@ -10,6 +10,8 @@ The Guide is a second page of the existing Pokédex detail task. `SELECT` toggle
 
 `data/form_routes.csv` is authoritative. Every internal form ID is assigned exactly one category. Regional and encounter-locked forms are not freely toggled. Held-item and key-item routes reuse CFRU's existing held-item and field callbacks. Fusion uses CFRU's existing storage implementation. Battle-only forms are excluded from the Form Lab. Unsupported forms remain explicitly reported rather than silently exposed.
 
+The compiled inventory contains 442 canonical alternate IDs: 439 resolve to runtime handlers, generated Form Lab data, or generated postgame preserve encounters; three unsafe internal placeholders are intentionally excluded. The Cinnabar scientist offers **FORM LAB** for safe reversible mutation and **FORM PRESERVE** for regional/encounter-locked wild acquisition.
+
 The Cinnabar Form Research Lab is the fallback for safe, reversible, permanently storable or cosmetic routes without a canonical trigger. It validates ownership and target routes, preserves all mon data, consumes no item, and never exposes battle-only or regional-family conversions.
 
 ## Legendary outcomes

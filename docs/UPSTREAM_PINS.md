@@ -39,4 +39,6 @@ Run `scripts/build_pipeline.sh` from the project root to verify all locked overl
 
 ## Installation-order note
 
-DPE's README says a save-block expansion and TM/tutor expansion must precede DPE when it is used without Complete FireRed Upgrade. In this baseline, DPE is immediately followed by the pinned CFRU Expansion/Complete FireRed Upgrade, which supplies those engine expansions. No separate prepatched ROM or Leon ROM base was used. This interpretation still requires the remaining M1 save/data smoke tests before it is accepted as the engine baseline.
+DPE's README says a save-block expansion and TM/tutor expansion must precede DPE when it is used without Complete FireRed Upgrade. Here DPE is immediately followed by the pinned CFRU Expansion/Complete FireRed Upgrade, which supplies those engine expansions. No separate prepatched ROM or Leon ROM base was used. The combined 32 MiB pipeline and overlay chain build reproducibly; expanded-form and feature behavior remains in Edwin's manual test matrix.
+
+Local overlays `0015`–`0018` generate canonical Form Lab data, complete Evolution Guide formatters, bind permanent-form preserve encounters, and integrate the M7 DexNav migration selector. Their hashes and order are authoritative in `build-lock.json`.

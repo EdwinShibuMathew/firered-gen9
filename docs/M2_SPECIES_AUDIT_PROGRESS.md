@@ -3,7 +3,7 @@
 **Milestone:** M2 Validate all species data  
 **Status:** PHASE 3 COMPLETE - All Data Validation Passed ✓  
 **Date Started:** 2026-09-01  
-**Last Updated:** 2026-09-01 14:56  
+**Last Updated:** 2026-09-02 (canonical form inventory reconciled)
 **Target:** 1,025/1,025 National Pokédex species validated - **ACHIEVED** ✓
 
 ---
@@ -22,7 +22,7 @@
 ### Phase 2: Registry Validation ✓ COMPLETE
 - [x] Extract base stats from compiled ROM
 - [x] Parse species registry (1,464 constants, 1,200 base species)
-- [x] Map species forms and variants (479 form variants)
+- [x] Map species forms and variants (442 canonical alternate-form IDs)
 - [x] Validate type constants (22 types, including Fairy and Stellar)
 - [x] Validate core required species (Bulbasaur, MEW, Pecharunt, etc.)
 - [x] Cross-reference JSON species tables with source registry
@@ -51,7 +51,7 @@
 - Source-level audit script passing all checks
 - 1,464 species constants parsed successfully
 - 1,200 base species confirmed (Gen 1-9 coverage)
-- 479 form variants identified
+- 442 canonical alternate-form IDs identified from `Species_To_Pokdex_Table.c`
 - Type constants valid (22 types including Fairy and Stellar)
 - All required core species present (Bulbasaur through Pecharunt)
 - Species tables JSON synchronized with source registry
@@ -157,7 +157,7 @@ From analysis of CFRU source code:
 |----------|-------|--------|
 | Species Constants Parsed | 1,464 | ✓ Complete |
 | Base Species Identified | 1,200 | ✓ Complete |
-| Form Variants | 479 | ✓ Complete |
+| Canonical alternate-form IDs | 442 | ✓ Complete |
 | Type Constants | 22 | ✓ Valid |
 | Learnset Arrays | 1,107 | ✓ Complete |
 | Total Moves in Learnsets | 17,861 | ✓ Complete |
@@ -206,10 +206,10 @@ From analysis of CFRU source code:
 This M2 completion will gate:
 - ✓ M3: Make every evolution possible offline
 - ✓ M4: Deterministic 1,025/1,025 availability
-- ~ M5: Forms, quests, and content polish (automated form audit passes; content/UI work remains)
+- ~ M5: Forms, quests, and content polish (compiled implementation complete; manual QA remains)
 - ~ M6: Port existing custom starter work (source port complete; runtime QA remains)
-- ~ M7: Optional Habitat Scanner (DexNav foundation audited; migration groups/QA pending)
-- ~ M8: Release patch and final testing (release hygiene and matrix documented; patch/manual QA pending)
+- ~ M7: Optional Habitat Scanner (nine migration groups compile; manual QA remains)
+- ~ M8: Release patch and final testing (private BPS candidate built; manual/public-release QA remains)
 
 ---
 

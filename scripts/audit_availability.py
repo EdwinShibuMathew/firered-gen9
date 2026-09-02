@@ -130,9 +130,9 @@ def parse_ingame_trade_rows() -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     for path in (ROOT / ".upstream/pret/data/maps").glob("*/scripts.inc"):
         script = fire_red_preprocess(path.read_text(encoding="utf-8", errors="ignore"))
-        for trade in set(re.findall(
+        for trade in sorted(set(re.findall(
             r"\bsetvar\s+VAR_0x8008\s*,\s*(INGAME_TRADE_[A-Z0-9_]+)", script
-        )):
+        )), reverse=True):
             if trade in species_by_trade:
                 rows.append({
                     "species": species_by_trade[trade], "form": "",
