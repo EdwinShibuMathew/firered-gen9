@@ -2,6 +2,8 @@
 
 The dashboard in `test-dashboard/` is a static GitHub Pages site backed by Supabase. Testers use private codes; the administrator code opens the combined live dashboard.
 
+**Live dashboard:** <https://edwinshibumathew.github.io/firered-gen9/>
+
 The GBA ROM, save files, access codes, uploaded screenshots, and Supabase service-role key must never be committed or published through GitHub Pages.
 
 ## 1. Create the Supabase backend

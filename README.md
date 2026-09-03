@@ -8,6 +8,7 @@ Development is gated by milestones. M0–M4 and the compiled portions of M5–M8
 
 ## Documentation
 
+- [Live playthrough testing dashboard](https://edwinshibumathew.github.io/firered-gen9/) — private-code checklist and combined progress reporting.
 - [`docs/STATUS.md`](docs/STATUS.md) — current milestone state, build evidence, and remaining gates.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — build pipeline, upstream pins, offsets, and reproducibility.
 - [`docs/FEATURES.md`](docs/FEATURES.md) — implemented gameplay systems and their runtime contracts.

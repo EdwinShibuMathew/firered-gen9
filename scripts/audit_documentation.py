@@ -50,11 +50,19 @@ for name in retired:
 history = (ROOT / "docs/HISTORY.md").read_text(encoding="utf-8")
 for name in retired:
     commits = subprocess.check_output(["git", "rev-list", "--all", "--", name], cwd=ROOT, text=True).splitlines()
-    if not commits:
+    original = None
+    for commit in commits:
+        candidate = subprocess.run(
+            ["git", "show", f"{commit}:{name}"], cwd=ROOT,
+            stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+        )
+        if candidate.returncode == 0:
+            original = candidate.stdout
+            break
+    if original is None:
         print(f"FAIL retired document missing from pre-cleanup revision: {name}")
         failed = True
         continue
-    original = subprocess.check_output(["git", "show", f"{commits[0]}:{name}"], cwd=ROOT)
     expected = hashlib.sha256(original).hexdigest()
     row = re.search(rf"\| `{re.escape(name)}` \| `?([0-9a-f]{{64}})`? \|", history)
     if not row or row.group(1) != expected:
