@@ -1,0 +1,22 @@
+# Project-local actions for Codex integrations that support environment actions.
+# The shell scripts remain usable directly when an integration does not load this file.
+
+[actions.status]
+command = "bash .codex/status.sh"
+working_directory = "."
+
+[actions.audit]
+command = "bash .codex/run-audits.sh"
+working_directory = "."
+
+[actions.build]
+command = "bash .codex/build-and-verify.sh"
+working_directory = "."
+
+[actions.docs]
+command = "python3 scripts/audit_documentation.py"
+working_directory = "."
+
+[actions.release-check]
+command = "python3 scripts/audit_release.py"
+working_directory = "."

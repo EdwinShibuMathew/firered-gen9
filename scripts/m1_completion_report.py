@@ -226,7 +226,7 @@ Interactive Testing (3 manual tests required):
 
 After completing tests:
    1. Run: python3 scripts/m1_complete_final.py --capture
-   2. Update: docs/M1_TEST_RESULTS.md with results and screenshots
+   2. Update: docs/TESTING.md with results and screenshots
    3. Commit: git add -A && git commit -m "Complete M1 gates with interactive verification"
    4. Tag: git tag -a gen9-engine-baseline -m "M1 baseline: engine stable, all features tested"
 """)
@@ -243,7 +243,7 @@ Once M1 is complete and tagged, begin M2:
 4. Report missing assets and placeholder artwork
 5. Target completion: All 1,025 species verifiable and obtainable
 
-See docs/GEN9_COMPLETION_ROADMAP.md for full M2 requirements.
+See docs/HISTORY.md for the retained M2 requirements and execution record.
 """)
     
     # Write report
@@ -255,7 +255,7 @@ See docs/GEN9_COMPLETION_ROADMAP.md for full M2 requirements.
     print("\nSummary:")
     print("- 7/11 M1 gates verified programmatically")
     print("- 4/11 M1 gates require manual interactive testing")
-    print("\nTo complete M1: Run the remaining manual tests and update docs/M1_TEST_RESULTS.md")
+    print("\nTo complete M1: Run the remaining manual tests and update docs/TESTING.md")
     
     return 0
 
@@ -277,7 +277,7 @@ def main() -> int:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("docs/M1_COMPLETION_REPORT.md"),
+        default=Path("build/reports/m1_completion_report.md"),
         help="Output report file",
     )
     args = parser.parse_args()

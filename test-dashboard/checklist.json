@@ -1,0 +1,1111 @@
+{
+  "version": "b98af261426c",
+  "source": "docs/FULL_PLAYTHROUGH_TEST_PLAN.md",
+  "count": 138,
+  "items": [
+    {
+      "id": "R01",
+      "section": "Quick checks to repeat everywhere",
+      "sectionOrder": 2,
+      "order": 0,
+      "instruction": "Walk in all four directions.",
+      "expected": "movement and collision feel normal."
+    },
+    {
+      "id": "R02",
+      "section": "Quick checks to repeat everywhere",
+      "sectionOrder": 2,
+      "order": 1,
+      "instruction": "Enter and leave each available door or cave.",
+      "expected": "the correct area loads without a black screen."
+    },
+    {
+      "id": "R03",
+      "section": "Quick checks to repeat everywhere",
+      "sectionOrder": 2,
+      "order": 2,
+      "instruction": "Talk to nearby people and read signs.",
+      "expected": "text is readable and closes normally."
+    },
+    {
+      "id": "R04",
+      "section": "Quick checks to repeat everywhere",
+      "sectionOrder": 2,
+      "order": 3,
+      "instruction": "Listen to the music and sound effects.",
+      "expected": "audio plays without loud noise, silence, or getting stuck."
+    },
+    {
+      "id": "R05",
+      "section": "Quick checks to repeat everywhere",
+      "sectionOrder": 2,
+      "order": 4,
+      "instruction": "Open and close the menu.",
+      "expected": "graphics and controls remain normal."
+    },
+    {
+      "id": "R06",
+      "section": "Quick checks to repeat everywhere",
+      "sectionOrder": 2,
+      "order": 5,
+      "instruction": "Start at least one trainer or wild battle.",
+      "expected": "battle starts and returns to the map normally."
+    },
+    {
+      "id": "R07",
+      "section": "Quick checks to repeat everywhere",
+      "sectionOrder": 2,
+      "order": 6,
+      "instruction": "Pick up visible and hidden items you find.",
+      "expected": "the item appears in the correct Bag pocket."
+    },
+    {
+      "id": "R08",
+      "section": "Quick checks to repeat everywhere",
+      "sectionOrder": 2,
+      "order": 7,
+      "instruction": "Save after important story events.",
+      "expected": "CONTINUE restores the new progress."
+    },
+    {
+      "id": "A01",
+      "section": "1. Start a new game",
+      "sectionOrder": 3,
+      "order": 8,
+      "instruction": "Open the ROM in mGBA.",
+      "expected": "the title screen appears and does not freeze."
+    },
+    {
+      "id": "A02",
+      "section": "1. Start a new game",
+      "sectionOrder": 3,
+      "order": 9,
+      "instruction": "Listen at the title screen.",
+      "expected": "music and button sounds play normally."
+    },
+    {
+      "id": "A03",
+      "section": "1. Start a new game",
+      "sectionOrder": 3,
+      "order": 10,
+      "instruction": "Select NEW GAME.",
+      "expected": "Professor Oak's introduction begins."
+    },
+    {
+      "id": "A04",
+      "section": "1. Start a new game",
+      "sectionOrder": 3,
+      "order": 11,
+      "instruction": "Choose the player appearance.",
+      "expected": "the chosen appearance is used in the game."
+    },
+    {
+      "id": "A05",
+      "section": "1. Start a new game",
+      "sectionOrder": 3,
+      "order": 12,
+      "instruction": "Enter the player and rival names.",
+      "expected": "both names appear correctly later."
+    },
+    {
+      "id": "A06",
+      "section": "1. Start a new game",
+      "sectionOrder": 3,
+      "order": 13,
+      "instruction": "Finish the bedroom introduction.",
+      "expected": "you can walk downstairs and leave the house."
+    },
+    {
+      "id": "A07",
+      "section": "1. Start a new game",
+      "sectionOrder": 3,
+      "order": 14,
+      "instruction": "Open the Bag, party, settings, and save screens.",
+      "expected": "each screen opens and closes normally."
+    },
+    {
+      "id": "A08",
+      "section": "1. Start a new game",
+      "sectionOrder": 3,
+      "order": 15,
+      "instruction": "Make a normal game save and restart mGBA.",
+      "expected": "CONTINUE returns you to the same place."
+    },
+    {
+      "id": "A09",
+      "section": "1. Start a new game",
+      "sectionOrder": 3,
+      "order": 16,
+      "instruction": "Create checkpoint 01-new-game-start.ss1.",
+      "expected": "The checkpoint file is created successfully."
+    },
+    {
+      "id": "B01",
+      "section": "2. Starter and first rival battle",
+      "sectionOrder": 4,
+      "order": 17,
+      "instruction": "Enter Oak's lab and inspect the available starters.",
+      "expected": "the choices and text display normally."
+    },
+    {
+      "id": "B02",
+      "section": "2. Starter and first rival battle",
+      "sectionOrder": 4,
+      "order": 18,
+      "instruction": "Cancel the starter choice once.",
+      "expected": "cancellation does not give a Pokémon or freeze the game."
+    },
+    {
+      "id": "B03",
+      "section": "2. Starter and first rival battle",
+      "sectionOrder": 4,
+      "order": 19,
+      "instruction": "Choose the starter you want for the playthrough.",
+      "expected": "the correct Pokémon joins the party."
+    },
+    {
+      "id": "B04",
+      "section": "2. Starter and first rival battle",
+      "sectionOrder": 4,
+      "order": 20,
+      "instruction": "Open the starter's summary.",
+      "expected": "name, level, type, ability, stats, moves, sprite, and held item are visible."
+    },
+    {
+      "id": "B05",
+      "section": "2. Starter and first rival battle",
+      "sectionOrder": 4,
+      "order": 21,
+      "instruction": "If Charmander was selected, check its ability.",
+      "expected": "it shows Contrary."
+    },
+    {
+      "id": "B06",
+      "section": "2. Starter and first rival battle",
+      "sectionOrder": 4,
+      "order": 22,
+      "instruction": "If Charmander was selected, check its moves.",
+      "expected": "Overheat, Psycho Boost, Thunderbolt, and Ice Beam are present."
+    },
+    {
+      "id": "B07",
+      "section": "2. Starter and first rival battle",
+      "sectionOrder": 4,
+      "order": 23,
+      "instruction": "Complete the rival battle.",
+      "expected": "attacks, animations, cries, HP, experience, and the result work normally."
+    },
+    {
+      "id": "B08",
+      "section": "2. Starter and first rival battle",
+      "sectionOrder": 4,
+      "order": 24,
+      "instruction": "Make a normal game save and restart mGBA.",
+      "expected": "the starter and rival progress remain saved."
+    },
+    {
+      "id": "B09",
+      "section": "2. Starter and first rival battle",
+      "sectionOrder": 4,
+      "order": 25,
+      "instruction": "Create checkpoint 02-starter-and-rival.ss1.",
+      "expected": "The checkpoint file is created successfully."
+    },
+    {
+      "id": "C01",
+      "section": "3. First wild Pokémon and Pokédex",
+      "sectionOrder": 5,
+      "order": 26,
+      "instruction": "Receive the Pokédex.",
+      "expected": "it appears in the menu."
+    },
+    {
+      "id": "C02",
+      "section": "3. First wild Pokémon and Pokédex",
+      "sectionOrder": 5,
+      "order": 27,
+      "instruction": "Encounter a wild Pokémon in grass.",
+      "expected": "its name, level, sprite, cry, and battle work normally."
+    },
+    {
+      "id": "C03",
+      "section": "3. First wild Pokémon and Pokédex",
+      "sectionOrder": 5,
+      "order": 28,
+      "instruction": "Catch a wild Pokémon.",
+      "expected": "it joins the party or goes to the PC."
+    },
+    {
+      "id": "C04",
+      "section": "3. First wild Pokémon and Pokédex",
+      "sectionOrder": 5,
+      "order": 29,
+      "instruction": "Open the caught Pokémon's summary.",
+      "expected": "its information and sprite are correct and readable."
+    },
+    {
+      "id": "C05",
+      "section": "3. First wild Pokémon and Pokédex",
+      "sectionOrder": 5,
+      "order": 30,
+      "instruction": "Open its Pokédex entry.",
+      "expected": "it is marked as caught and its entry displays normally."
+    },
+    {
+      "id": "C06",
+      "section": "3. First wild Pokémon and Pokédex",
+      "sectionOrder": 5,
+      "order": 31,
+      "instruction": "Deposit the caught Pokémon in the PC.",
+      "expected": "it disappears from the party and appears in the chosen box."
+    },
+    {
+      "id": "C07",
+      "section": "3. First wild Pokémon and Pokédex",
+      "sectionOrder": 5,
+      "order": 32,
+      "instruction": "Withdraw the same Pokémon.",
+      "expected": "it returns with the same level, moves, stats, name, and held item."
+    },
+    {
+      "id": "C08",
+      "section": "3. First wild Pokémon and Pokédex",
+      "sectionOrder": 5,
+      "order": 33,
+      "instruction": "Make a normal game save and restart mGBA.",
+      "expected": "the caught Pokémon and Pokédex entry remain saved."
+    },
+    {
+      "id": "C09",
+      "section": "3. First wild Pokémon and Pokédex",
+      "sectionOrder": 5,
+      "order": 34,
+      "instruction": "Create checkpoint 03-first-capture.ss1.",
+      "expected": "The checkpoint file is created successfully."
+    },
+    {
+      "id": "D01",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 35,
+      "instruction": "Defeat Brock.",
+      "expected": "the badge, reward, and story progress are saved."
+    },
+    {
+      "id": "D02",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 36,
+      "instruction": "Create checkpoint 04-brock.ss1.",
+      "expected": "The checkpoint file is created successfully."
+    },
+    {
+      "id": "D03",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 37,
+      "instruction": "Travel through Mt. Moon.",
+      "expected": "maps, ladders, battles, fossils, and exits work normally."
+    },
+    {
+      "id": "D04",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 38,
+      "instruction": "Defeat Misty.",
+      "expected": "the badge, reward, and story progress are saved."
+    },
+    {
+      "id": "D05",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 39,
+      "instruction": "Complete the S.S. Anne story.",
+      "expected": "trainers, rooms, rival battle, captain, and ship exit work."
+    },
+    {
+      "id": "D06",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 40,
+      "instruction": "Defeat Lt. Surge.",
+      "expected": "the badge, reward, and story progress are saved."
+    },
+    {
+      "id": "D07",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 41,
+      "instruction": "Complete Rock Tunnel.",
+      "expected": "lighting, encounters, ladders, and exits work normally."
+    },
+    {
+      "id": "D08",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 42,
+      "instruction": "Complete the Celadon and Rocket Hideout events.",
+      "expected": "lifts, switches, battles, items, and story flags work."
+    },
+    {
+      "id": "D09",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 43,
+      "instruction": "Buy and use the reusable Link Cable in Celadon.",
+      "expected": "it costs ₽3,000 and remains after use."
+    },
+    {
+      "id": "D10",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 44,
+      "instruction": "Defeat Erika.",
+      "expected": "the badge, reward, and story progress are saved."
+    },
+    {
+      "id": "D11",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 45,
+      "instruction": "Complete Pokémon Tower.",
+      "expected": "rival, ghosts, stairs, healing, and story events work."
+    },
+    {
+      "id": "D12",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 46,
+      "instruction": "Complete Silph Co.",
+      "expected": "lifts, warp tiles, rival, boss battle, gift, and story events work."
+    },
+    {
+      "id": "D13",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 47,
+      "instruction": "Defeat Koga.",
+      "expected": "the badge, reward, and story progress are saved."
+    },
+    {
+      "id": "D14",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 48,
+      "instruction": "Defeat Sabrina.",
+      "expected": "the badge, reward, and story progress are saved."
+    },
+    {
+      "id": "D15",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 49,
+      "instruction": "Complete Cinnabar Island and Pokémon Mansion.",
+      "expected": "doors, switches, encounters, and key item progress work."
+    },
+    {
+      "id": "D16",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 50,
+      "instruction": "Defeat Blaine.",
+      "expected": "the badge, reward, and story progress are saved."
+    },
+    {
+      "id": "D17",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 51,
+      "instruction": "Defeat Giovanni.",
+      "expected": "the eighth badge and final story progress are saved."
+    },
+    {
+      "id": "D18",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 52,
+      "instruction": "Complete Victory Road.",
+      "expected": "strength puzzles, encounters, items, and exit work normally."
+    },
+    {
+      "id": "D19",
+      "section": "4. Normal story playthrough",
+      "sectionOrder": 6,
+      "order": 53,
+      "instruction": "Create checkpoint 05-before-elite-four.ss1.",
+      "expected": "The checkpoint file is created successfully."
+    },
+    {
+      "id": "E01",
+      "section": "5. General battle and item checks",
+      "sectionOrder": 7,
+      "order": 54,
+      "instruction": "Let a party Pokémon faint.",
+      "expected": "battle continues or ends correctly."
+    },
+    {
+      "id": "E02",
+      "section": "5. General battle and item checks",
+      "sectionOrder": 7,
+      "order": 55,
+      "instruction": "Lose a battle on purpose once.",
+      "expected": "you return to the correct healing location without losing story progress."
+    },
+    {
+      "id": "E03",
+      "section": "5. General battle and item checks",
+      "sectionOrder": 7,
+      "order": 56,
+      "instruction": "Run from a wild battle.",
+      "expected": "the battle ends and the map returns normally."
+    },
+    {
+      "id": "E04",
+      "section": "5. General battle and item checks",
+      "sectionOrder": 7,
+      "order": 57,
+      "instruction": "Use a healing item in battle.",
+      "expected": "the correct Pokémon recovers the correct amount."
+    },
+    {
+      "id": "E05",
+      "section": "5. General battle and item checks",
+      "sectionOrder": 7,
+      "order": 58,
+      "instruction": "Use a status-healing item.",
+      "expected": "the status is removed."
+    },
+    {
+      "id": "E06",
+      "section": "5. General battle and item checks",
+      "sectionOrder": 7,
+      "order": 59,
+      "instruction": "Use a TM or move-teaching item.",
+      "expected": "the selected Pokémon learns the move and menus remain correct."
+    },
+    {
+      "id": "E07",
+      "section": "5. General battle and item checks",
+      "sectionOrder": 7,
+      "order": 60,
+      "instruction": "Give and remove a held item.",
+      "expected": "the correct item and Pokémon are updated."
+    },
+    {
+      "id": "E08",
+      "section": "5. General battle and item checks",
+      "sectionOrder": 7,
+      "order": 61,
+      "instruction": "Fill the party with six Pokémon.",
+      "expected": "later captures go to the PC safely."
+    },
+    {
+      "id": "E09",
+      "section": "5. General battle and item checks",
+      "sectionOrder": 7,
+      "order": 62,
+      "instruction": "Change party order.",
+      "expected": "the new order remains after a normal save and restart."
+    },
+    {
+      "id": "F01",
+      "section": "6. Evolution checks",
+      "sectionOrder": 8,
+      "order": 63,
+      "instruction": "Evolve a Pokémon by level.",
+      "expected": "the correct species, sprite, cry, stats, and Pokédex entry appear."
+    },
+    {
+      "id": "F02",
+      "section": "6. Evolution checks",
+      "sectionOrder": 8,
+      "order": 64,
+      "instruction": "Evolve a Pokémon with a stone.",
+      "expected": "the item is used and the correct evolution appears."
+    },
+    {
+      "id": "F03",
+      "section": "6. Evolution checks",
+      "sectionOrder": 8,
+      "order": 65,
+      "instruction": "Evolve a Pokémon using the Link Cable.",
+      "expected": "evolution works and the Link Cable remains in the Bag."
+    },
+    {
+      "id": "F04",
+      "section": "6. Evolution checks",
+      "sectionOrder": 8,
+      "order": 66,
+      "instruction": "Evolve a Pokémon using a required held item.",
+      "expected": "the correct evolution occurs."
+    },
+    {
+      "id": "F05",
+      "section": "6. Evolution checks",
+      "sectionOrder": 8,
+      "order": 67,
+      "instruction": "Evolve a Pokémon through friendship.",
+      "expected": "it evolves only after the required friendship condition."
+    },
+    {
+      "id": "F06",
+      "section": "6. Evolution checks",
+      "sectionOrder": 8,
+      "order": 68,
+      "instruction": "Evolve one Pokémon with a time-of-day condition.",
+      "expected": "it follows the displayed condition."
+    },
+    {
+      "id": "F07",
+      "section": "6. Evolution checks",
+      "sectionOrder": 8,
+      "order": 69,
+      "instruction": "Evolve one Pokémon that must know a move.",
+      "expected": "it follows the displayed condition."
+    },
+    {
+      "id": "F08",
+      "section": "6. Evolution checks",
+      "sectionOrder": 8,
+      "order": 70,
+      "instruction": "Test one branching family such as Eevee.",
+      "expected": "the chosen condition produces the chosen branch."
+    },
+    {
+      "id": "F09",
+      "section": "6. Evolution checks",
+      "sectionOrder": 8,
+      "order": 71,
+      "instruction": "Cancel an evolution by pressing B.",
+      "expected": "the Pokémon remains unchanged and the game continues."
+    },
+    {
+      "id": "F10",
+      "section": "6. Evolution checks",
+      "sectionOrder": 8,
+      "order": 72,
+      "instruction": "Save and restart after an evolution.",
+      "expected": "the evolved Pokémon and Pokédex entry remain correct."
+    },
+    {
+      "id": "G01",
+      "section": "7. Pokédex Evolution Guide",
+      "sectionOrder": 9,
+      "order": 73,
+      "instruction": "Open a Pokémon's Pokédex details and press SELECT.",
+      "expected": "the Evolution Guide opens."
+    },
+    {
+      "id": "G02",
+      "section": "7. Pokédex Evolution Guide",
+      "sectionOrder": 9,
+      "order": 74,
+      "instruction": "Press SELECT again.",
+      "expected": "normal details return for the same Pokémon."
+    },
+    {
+      "id": "G03",
+      "section": "7. Pokédex Evolution Guide",
+      "sectionOrder": 9,
+      "order": 75,
+      "instruction": "Open a Pokémon with no evolution.",
+      "expected": "it says NO KNOWN EVOLUTIONS."
+    },
+    {
+      "id": "G04",
+      "section": "7. Pokédex Evolution Guide",
+      "sectionOrder": 9,
+      "order": 76,
+      "instruction": "Open Eevee or another branching family.",
+      "expected": "all routes can be viewed."
+    },
+    {
+      "id": "G05",
+      "section": "7. Pokédex Evolution Guide",
+      "sectionOrder": 9,
+      "order": 77,
+      "instruction": "Press UP and DOWN.",
+      "expected": "the selected route changes."
+    },
+    {
+      "id": "G06",
+      "section": "7. Pokédex Evolution Guide",
+      "sectionOrder": 9,
+      "order": 78,
+      "instruction": "Press LEFT and RIGHT on a family with many routes.",
+      "expected": "pages change and show PAGE X/Y."
+    },
+    {
+      "id": "G07",
+      "section": "7. Pokédex Evolution Guide",
+      "sectionOrder": 9,
+      "order": 79,
+      "instruction": "Press A on an evolution route.",
+      "expected": "the target Pokémon's entry opens."
+    },
+    {
+      "id": "G08",
+      "section": "7. Pokédex Evolution Guide",
+      "sectionOrder": 9,
+      "order": 80,
+      "instruction": "Return from the target entry.",
+      "expected": "the original Pokémon, page, and route return."
+    },
+    {
+      "id": "G09",
+      "section": "7. Pokédex Evolution Guide",
+      "sectionOrder": 9,
+      "order": 81,
+      "instruction": "View a route with long text.",
+      "expected": "the text wraps and remains readable."
+    },
+    {
+      "id": "G10",
+      "section": "7. Pokédex Evolution Guide",
+      "sectionOrder": 9,
+      "order": 82,
+      "instruction": "Open and close the Guide 20 times.",
+      "expected": "it never freezes or shows broken graphics or stale text."
+    },
+    {
+      "id": "H01",
+      "section": "8. Cinnabar Form Lab",
+      "sectionOrder": 10,
+      "order": 83,
+      "instruction": "Speak to the Form Lab scientist in Cinnabar Pokémon Lab Research Room.",
+      "expected": "the Form Lab menu opens."
+    },
+    {
+      "id": "H02",
+      "section": "8. Cinnabar Form Lab",
+      "sectionOrder": 10,
+      "order": 84,
+      "instruction": "Cancel the party selection.",
+      "expected": "no Pokémon changes."
+    },
+    {
+      "id": "H03",
+      "section": "8. Cinnabar Form Lab",
+      "sectionOrder": 10,
+      "order": 85,
+      "instruction": "Try to select an Egg.",
+      "expected": "it is refused and remains unchanged."
+    },
+    {
+      "id": "H04",
+      "section": "8. Cinnabar Form Lab",
+      "sectionOrder": 10,
+      "order": 86,
+      "instruction": "Try an unsupported Pokémon.",
+      "expected": "a clear refusal appears and nothing changes."
+    },
+    {
+      "id": "H05",
+      "section": "8. Cinnabar Form Lab",
+      "sectionOrder": 10,
+      "order": 87,
+      "instruction": "Change one supported Pokémon's form.",
+      "expected": "the chosen form appears correctly."
+    },
+    {
+      "id": "H06",
+      "section": "8. Cinnabar Form Lab",
+      "sectionOrder": 10,
+      "order": 88,
+      "instruction": "Change that Pokémon back.",
+      "expected": "the original form returns."
+    },
+    {
+      "id": "H07",
+      "section": "8. Cinnabar Form Lab",
+      "sectionOrder": 10,
+      "order": 89,
+      "instruction": "Test a Rotom form change.",
+      "expected": "its chosen appliance form appears correctly."
+    },
+    {
+      "id": "H08",
+      "section": "8. Cinnabar Form Lab",
+      "sectionOrder": 10,
+      "order": 90,
+      "instruction": "Test a Deoxys form change.",
+      "expected": "its chosen form and stats appear correctly."
+    },
+    {
+      "id": "H09",
+      "section": "8. Cinnabar Form Lab",
+      "sectionOrder": 10,
+      "order": 91,
+      "instruction": "Test a Furfrou form change.",
+      "expected": "its chosen trim appears correctly."
+    },
+    {
+      "id": "H10",
+      "section": "8. Cinnabar Form Lab",
+      "sectionOrder": 10,
+      "order": 92,
+      "instruction": "Test Magearna or Zarude if available.",
+      "expected": "the chosen supported form appears correctly."
+    },
+    {
+      "id": "H11",
+      "section": "8. Cinnabar Form Lab",
+      "sectionOrder": 10,
+      "order": 93,
+      "instruction": "Check the changed Pokémon's summary.",
+      "expected": "nickname, level, moves, item, nature, ability, and ownership did not unexpectedly change."
+    },
+    {
+      "id": "H12",
+      "section": "8. Cinnabar Form Lab",
+      "sectionOrder": 10,
+      "order": 94,
+      "instruction": "Deposit the changed Pokémon in the PC and withdraw it.",
+      "expected": "its form and information remain correct."
+    },
+    {
+      "id": "H13",
+      "section": "8. Cinnabar Form Lab",
+      "sectionOrder": 10,
+      "order": 95,
+      "instruction": "Make a normal game save and restart mGBA.",
+      "expected": "the form remains correct."
+    },
+    {
+      "id": "H14",
+      "section": "8. Cinnabar Form Lab",
+      "sectionOrder": 10,
+      "order": 96,
+      "instruction": "Create checkpoint 06-form-lab.ss1.",
+      "expected": "The checkpoint file is created successfully."
+    },
+    {
+      "id": "I01",
+      "section": "9. Elite Four and Champion",
+      "sectionOrder": 11,
+      "order": 97,
+      "instruction": "Defeat each Elite Four member.",
+      "expected": "every battle starts and ends normally."
+    },
+    {
+      "id": "I02",
+      "section": "9. Elite Four and Champion",
+      "sectionOrder": 11,
+      "order": 98,
+      "instruction": "Defeat the Champion.",
+      "expected": "the ending and Hall of Fame sequence complete."
+    },
+    {
+      "id": "I03",
+      "section": "9. Elite Four and Champion",
+      "sectionOrder": 11,
+      "order": 99,
+      "instruction": "Watch the credits.",
+      "expected": "graphics, music, text, and the return to the title screen work."
+    },
+    {
+      "id": "I04",
+      "section": "9. Elite Four and Champion",
+      "sectionOrder": 11,
+      "order": 100,
+      "instruction": "Select CONTINUE after the credits.",
+      "expected": "the postgame save loads correctly."
+    },
+    {
+      "id": "I05",
+      "section": "9. Elite Four and Champion",
+      "sectionOrder": 11,
+      "order": 101,
+      "instruction": "Check the Hall of Fame record.",
+      "expected": "the winning party is displayed correctly."
+    },
+    {
+      "id": "I06",
+      "section": "9. Elite Four and Champion",
+      "sectionOrder": 11,
+      "order": 102,
+      "instruction": "Create checkpoint 07-champion.ss1.",
+      "expected": "The checkpoint file is created successfully."
+    },
+    {
+      "id": "J01",
+      "section": "10. Sevii Islands and postgame access",
+      "sectionOrder": 12,
+      "order": 103,
+      "instruction": "Use the ferry to visit each available island.",
+      "expected": "destinations and return trips work normally."
+    },
+    {
+      "id": "J02",
+      "section": "10. Sevii Islands and postgame access",
+      "sectionOrder": 12,
+      "order": 104,
+      "instruction": "Enter Pokémon Centers, caves, routes, and special buildings on the islands.",
+      "expected": "maps load correctly."
+    },
+    {
+      "id": "J03",
+      "section": "10. Sevii Islands and postgame access",
+      "sectionOrder": 12,
+      "order": 105,
+      "instruction": "Complete available island story events.",
+      "expected": "progress remains after a normal save and restart."
+    },
+    {
+      "id": "J04",
+      "section": "10. Sevii Islands and postgame access",
+      "sectionOrder": 12,
+      "order": 106,
+      "instruction": "Visit the Form Lab after becoming Champion.",
+      "expected": "FORM PRESERVE is available."
+    },
+    {
+      "id": "J05",
+      "section": "10. Sevii Islands and postgame access",
+      "sectionOrder": 12,
+      "order": 107,
+      "instruction": "Use Form Preserve to meet one regional form.",
+      "expected": "the correct wild form appears and can be caught."
+    },
+    {
+      "id": "J06",
+      "section": "10. Sevii Islands and postgame access",
+      "sectionOrder": 12,
+      "order": 108,
+      "instruction": "Use Form Preserve to meet one special cosmetic or encounter-only form.",
+      "expected": "the correct wild form appears and can be caught."
+    },
+    {
+      "id": "J07",
+      "section": "10. Sevii Islands and postgame access",
+      "sectionOrder": 12,
+      "order": 109,
+      "instruction": "Check both caught forms in the party and PC.",
+      "expected": "their form, sprite, icon, moves, and information remain correct."
+    },
+    {
+      "id": "J08",
+      "section": "10. Sevii Islands and postgame access",
+      "sectionOrder": 12,
+      "order": 110,
+      "instruction": "Make a normal game save and restart mGBA.",
+      "expected": "both forms remain correct."
+    },
+    {
+      "id": "J09",
+      "section": "10. Sevii Islands and postgame access",
+      "sectionOrder": 12,
+      "order": 111,
+      "instruction": "Create checkpoint 08-postgame-forms.ss1.",
+      "expected": "The checkpoint file is created successfully."
+    },
+    {
+      "id": "K01",
+      "section": "11. Legendary and Mythical Research Hub",
+      "sectionOrder": 13,
+      "order": 112,
+      "instruction": "Speak to the coordinator in Seven Island Pokémon Center 1F.",
+      "expected": "the Research Hub menu opens."
+    },
+    {
+      "id": "K02",
+      "section": "11. Legendary and Mythical Research Hub",
+      "sectionOrder": 13,
+      "order": 113,
+      "instruction": "View every generation menu.",
+      "expected": "entries, status labels, and hints are readable."
+    },
+    {
+      "id": "K03",
+      "section": "11. Legendary and Mythical Research Hub",
+      "sectionOrder": 13,
+      "order": 114,
+      "instruction": "Back out of every menu once.",
+      "expected": "cancellation returns to the previous menu or the game."
+    },
+    {
+      "id": "K04",
+      "section": "11. Legendary and Mythical Research Hub",
+      "sectionOrder": 13,
+      "order": 115,
+      "instruction": "Select an available Legendary encounter.",
+      "expected": "the correct encounter or destination opens."
+    },
+    {
+      "id": "K05",
+      "section": "11. Legendary and Mythical Research Hub",
+      "sectionOrder": 13,
+      "order": 116,
+      "instruction": "Run from one Legendary.",
+      "expected": "it can be selected or encountered again."
+    },
+    {
+      "id": "K06",
+      "section": "11. Legendary and Mythical Research Hub",
+      "sectionOrder": 13,
+      "order": 117,
+      "instruction": "Defeat one Legendary without catching it.",
+      "expected": "it can be selected or encountered again."
+    },
+    {
+      "id": "K07",
+      "section": "11. Legendary and Mythical Research Hub",
+      "sectionOrder": 13,
+      "order": 118,
+      "instruction": "Lose to one Legendary.",
+      "expected": "it remains available after healing."
+    },
+    {
+      "id": "K08",
+      "section": "11. Legendary and Mythical Research Hub",
+      "sectionOrder": 13,
+      "order": 119,
+      "instruction": "Save before catching a Legendary and restart mGBA.",
+      "expected": "it is still available."
+    },
+    {
+      "id": "K09",
+      "section": "11. Legendary and Mythical Research Hub",
+      "sectionOrder": 13,
+      "order": 120,
+      "instruction": "Catch the Legendary.",
+      "expected": "the coordinator changes its status to COMPLETED."
+    },
+    {
+      "id": "K10",
+      "section": "11. Legendary and Mythical Research Hub",
+      "sectionOrder": 13,
+      "order": 121,
+      "instruction": "Try to encounter the same Legendary again.",
+      "expected": "it does not return."
+    },
+    {
+      "id": "K11",
+      "section": "11. Legendary and Mythical Research Hub",
+      "sectionOrder": 13,
+      "order": 122,
+      "instruction": "Put the captured Legendary in the PC and restart mGBA.",
+      "expected": "it remains stored and the entry remains COMPLETED."
+    },
+    {
+      "id": "K12",
+      "section": "11. Legendary and Mythical Research Hub",
+      "sectionOrder": 13,
+      "order": 123,
+      "instruction": "Create checkpoint 09-legendary-hub.ss1.",
+      "expected": "The checkpoint file is created successfully."
+    },
+    {
+      "id": "L01",
+      "section": "12. DexNav migration groups",
+      "sectionOrder": 14,
+      "order": 124,
+      "instruction": "Open DexNav after becoming Champion and press SELECT.",
+      "expected": "a region selector opens."
+    },
+    {
+      "id": "L02",
+      "section": "12. DexNav migration groups",
+      "sectionOrder": 14,
+      "order": 125,
+      "instruction": "Scroll through the selector.",
+      "expected": "Kanto, Johto, Hoenn, Sinnoh, Unova, Kalos, Alola, Galar/Hisui, and Paldea appear."
+    },
+    {
+      "id": "L03",
+      "section": "12. DexNav migration groups",
+      "sectionOrder": 14,
+      "order": 126,
+      "instruction": "Cancel without choosing.",
+      "expected": "the previous choice remains unchanged."
+    },
+    {
+      "id": "L04",
+      "section": "12. DexNav migration groups",
+      "sectionOrder": 14,
+      "order": 127,
+      "instruction": "Choose one region and press A.",
+      "expected": "the choice is accepted and DexNav refreshes."
+    },
+    {
+      "id": "L05",
+      "section": "12. DexNav migration groups",
+      "sectionOrder": 14,
+      "order": 128,
+      "instruction": "Search for a migration Pokémon.",
+      "expected": "it can be found through DexNav."
+    },
+    {
+      "id": "L06",
+      "section": "12. DexNav migration groups",
+      "sectionOrder": 14,
+      "order": 129,
+      "instruction": "Walk in the same area without DexNav.",
+      "expected": "the normal wild Pokémon still appear."
+    },
+    {
+      "id": "L07",
+      "section": "12. DexNav migration groups",
+      "sectionOrder": 14,
+      "order": 130,
+      "instruction": "Make a normal game save and restart mGBA.",
+      "expected": "the selected migration region remains active."
+    },
+    {
+      "id": "L08",
+      "section": "12. DexNav migration groups",
+      "sectionOrder": 14,
+      "order": 131,
+      "instruction": "Change to a second region.",
+      "expected": "the new choice replaces the old one only after confirmation."
+    },
+    {
+      "id": "L09",
+      "section": "12. DexNav migration groups",
+      "sectionOrder": 14,
+      "order": 132,
+      "instruction": "Create checkpoint 10-dexnav.ss1.",
+      "expected": "The checkpoint file is created successfully."
+    },
+    {
+      "id": "M01",
+      "section": "13. Final checks",
+      "sectionOrder": 15,
+      "order": 133,
+      "instruction": "Load each checkpoint file once.",
+      "expected": "every checkpoint opens at the expected part of the game."
+    },
+    {
+      "id": "M02",
+      "section": "13. Final checks",
+      "sectionOrder": 15,
+      "order": 134,
+      "instruction": "Load the latest normal save using CONTINUE.",
+      "expected": "the final party, PC, badges, Pokédex, forms, and postgame progress are present."
+    },
+    {
+      "id": "M03",
+      "section": "13. Final checks",
+      "sectionOrder": 15,
+      "order": 135,
+      "instruction": "Review the checklist for unchecked items.",
+      "expected": "every unchecked item has a FAIL or SKIP explanation."
+    },
+    {
+      "id": "M04",
+      "section": "13. Final checks",
+      "sectionOrder": 15,
+      "order": 136,
+      "instruction": "Review screenshots and notes.",
+      "expected": "every failure has enough information for another person to reproduce it."
+    },
+    {
+      "id": "M05",
+      "section": "13. Final checks",
+      "sectionOrder": 15,
+      "order": 137,
+      "instruction": "Play for at least 30 minutes after the final postgame test.",
+      "expected": "there are no new crashes, freezes, corrupted graphics, or broken audio."
+    }
+  ]
+}

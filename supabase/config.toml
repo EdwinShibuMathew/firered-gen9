@@ -1,0 +1,4 @@
+project_id = "rummdnxdcdcsxpbwhsma"
+
+[functions.evidence]
+verify_jwt = false

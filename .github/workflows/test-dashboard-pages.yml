@@ -1,0 +1,63 @@
+name: Deploy testing dashboard
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/test-dashboard-pages.yml"
+      - "docs/FULL_PLAYTHROUGH_TEST_PLAN.md"
+      - "scripts/generate_test_dashboard_data.py"
+      - "test-dashboard/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Verify generated checklist
+        run: python3 scripts/generate_test_dashboard_data.py --check
+
+      - name: Require Supabase project variables
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          test -n "$SUPABASE_URL"
+          test -n "$SUPABASE_PUBLISHABLE_KEY"
+
+      - name: Prepare static site
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          mkdir -p _site
+          cp test-dashboard/index.html test-dashboard/styles.css test-dashboard/app.js test-dashboard/checklist.json _site/
+          python3 -c 'import json, os, pathlib; value = {"supabaseUrl": os.environ["SUPABASE_URL"], "supabasePublishableKey": os.environ["SUPABASE_PUBLISHABLE_KEY"], "evidenceFunction": "evidence"}; pathlib.Path("_site/config.js").write_text("window.TEST_DASHBOARD_CONFIG = " + json.dumps(value) + ";\n")'
+          touch _site/.nojekyll
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

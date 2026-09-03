@@ -10,7 +10,7 @@ Completes the remaining M1 gates:
 5. Graphics corruption check
 
 This harness uses mGBA SDL frontend with X11/Wayland support for interactive gameplay.
-Tests are manually observed and results documented in docs/M1_TEST_RESULTS.md.
+Tests are manually observed and results documented in docs/TESTING.md.
 """
 
 import argparse
@@ -116,7 +116,7 @@ def launch_interactive_mgba(rom_path: Path):
     print("       • Menu/interaction sounds")
     print()
     print("Once you've completed all tests above, document results in:")
-    print("  docs/M1_TEST_RESULTS.md")
+    print("  docs/TESTING.md")
     print()
     print("Press Enter to launch mGBA, then close the window when tests are done.")
     input("> ")
@@ -176,7 +176,7 @@ def main() -> int:
     print("Interactive tests completed!")
     print("=" * 70)
     print("\nNext steps:")
-    print("  1. Update docs/M1_TEST_RESULTS.md with:")
+    print("  1. Update docs/TESTING.md with:")
     print("     - Test results (PASS/FAIL) for each gate")
     print("     - Observed evidence (screenshots, descriptions)")
     print("     - Any graphics/audio issues noted")
