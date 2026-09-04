@@ -20,27 +20,27 @@
   "artifacts": {
     "vanilla": {
       "size": 16777216,
-      "sha1": "9a719b3ba9623dcaceeb10db2c443ab783c484db",
-      "sha256": "2000d136a45e1678622656accf257fa402c3be64bb59ca9ff57ae7ddde9c84e5"
+      "sha1": "76ce183f8982f9accb9535a6f6e709cf44196b58",
+      "sha256": "6fec597217b3793b87625531fea5f84b367e05a23f268fbf142831428d32522b"
     },
     "dpe": {
       "size": 33554432,
-      "sha1": "99edcc1382c610cd2502b05a376fcb71618ed1d6",
-      "sha256": "9e0f0231dca363adae4704aa798ca7a6e2d5ef5fe71dffaae707a5838a5ed6b7",
+      "sha1": "56092ab7361841594f9ee42549c8d50bf12bf092",
+      "sha256": "b4bcf9a2acd4918d42733539f22a6fa330d614ec1f2ec91ad848efb74f7545c5",
       "payload_sha256": "992f48148879171d6268d87d2eb929fdb3135a883e26673061d0af43a06b7b86"
     },
     "cfru": {
       "size": 33554432,
-      "sha1": "2a67e4098537f8333d5f64f22a13ccf1fd083412",
-      "sha256": "7853001d128494c4cea3919808227531abf0ac97fb325d22413c1dee4a81ce79",
-      "payload_sha256": "ec8777f17d5e7249ac624f493d6dc8d8c4753aa6ee0f261176a783cf60230a14"
+      "sha1": "7a83ec72b74823c1a00333d5df4db9bcf234f447",
+      "sha256": "2cd43618ea7a8bf9eeca2783e60df9b64710c23792a498b8cfd0b0ca17437358",
+      "payload_sha256": "2b5903e71759d5e71a506fcb182247bbf79b3ea68279220b4224275589bd5834"
     }
   },
   "compatibility_overlays": {
     "pret_repeatable_legendary_encounters": {
       "upstream": "pret_pokefirered",
       "path": "patches/pret/0001-repeatable-legendary-encounters.patch",
-      "sha256": "638e2b18ad1d0b47f238bf83c9256c95a768d48c3be8bee5a431ee5a14721c19"
+      "sha256": "64e27bd4d0ce0f1f7b0cca390c4cf0d405393d02e2f7636602e9693766413317"
     },
     "dpe_alolan_raichu_shiny_stone": {
       "upstream": "dpe_gen9",
@@ -141,6 +141,16 @@
       "upstream": "cfru_expansion",
       "path": "patches/cfru/0018-dexnav-habitat-migrations.patch",
       "sha256": "c5f4d08939961c070c3493d79285d2dd10f920c739f954f0eda528aae6006918"
+    },
+    "cfru_deterministic_grit_lz_padding": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0019-deterministic-grit-lz-padding.patch",
+      "sha256": "8bdbd1cf58312a97b130c915fd05b47c76c8126b5896ef11394d15697b66fd8e"
+    },
+    "cfru_fast_field_speed_defaults": {
+      "upstream": "cfru_expansion",
+      "path": "patches/cfru/0020-fast-field-speed-defaults.patch",
+      "sha256": "d5d789b280fafb74defc0543fa2648e2ddd1f75150372c65c161ab0896260af8"
     }
   },
   "toolchain": {

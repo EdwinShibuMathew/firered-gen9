@@ -1,0 +1,28 @@
+diff --git a/src/overworld.c b/src/overworld.c
+index 41109740..795cb157 100644
+--- a/src/overworld.c
++++ b/src/overworld.c
+@@ -1872,7 +1872,7 @@ s16 GetPlayerSpeed(void)
+ 	else if (gPlayerAvatar->flags & PLAYER_AVATAR_FLAG_DASH)
+ 		return 2;
+ 	else
+-		return 1;
++		return 2;
+ }
+ 
+ void MoveOnBike(u8 direction)
+diff --git a/src/save.c b/src/save.c
+index 7e7a7d2b..0f5ad0a0 100644
+--- a/src/save.c
++++ b/src/save.c
+@@ -510,6 +510,10 @@ void NewGameWipeNewSaveData(void)
+ 	#else
+ 	Memset((void*) SAVE_BLOCK_PARASITE, 0, 0x2EA4);
+ 	#endif
++
++	gSaveBlock2->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
++	FlagSet(FLAG_BIKE_TURBO_BOOST);
++	FlagSet(FLAG_SURF_TURBO_BOOST);
+ }
+ 
+ static void Task_SaveErrorStatus_RunPrinter(unusedArg u8 taskId)
