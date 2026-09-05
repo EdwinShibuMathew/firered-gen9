@@ -2,13 +2,14 @@
 """Validate the canonical documentation set and reject stale milestone claims."""
 from pathlib import Path
 import hashlib
+import json
 import re
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 required = {
     "README.md": ("442 canonical alternate-form IDs", "nine optional DexNav migration groups"),
-    "docs/STATUS.md": ("development-complete", "e2d4da0696ac9b0c"),
+    "docs/STATUS.md": ("development-complete", "Candidate ROM SHA-256:"),
     "docs/FEATURES.md": ("439 resolve", "nine-region selector"),
     "docs/ARCHITECTURE.md": ("0x1600000", "0x1000000"),
     "docs/TESTING.md": ("Boundary matrix", "manual"),
@@ -31,6 +32,12 @@ retired = {
     "M1_COMPLETION_SUMMARY.md",
 }
 failed = False
+lock = json.loads((ROOT / "build-lock.json").read_text(encoding="utf-8"))
+status = (ROOT / "docs/STATUS.md").read_text(encoding="utf-8")
+candidate_hashes = re.findall(r"^- Candidate ROM SHA-256: `([0-9a-f]{64})`", status, re.M)
+if candidate_hashes != [lock["artifacts"]["cfru"]["sha256"]]:
+    print("FAIL current status candidate must match the CFRU artifact in build-lock.json")
+    failed = True
 for name, tokens in required.items():
     text = (ROOT / name).read_text(encoding="utf-8")
     for token in tokens:

@@ -10,10 +10,10 @@ run() {
 
 run python3 scripts/apply_overlays.py --check
 run python3 scripts/generate_gen9_reserve.py --check
-run python3 scripts/audit_availability.py --require-complete
+run python3 scripts/audit_availability.py --require-complete --check
 run python3 scripts/audit_m4_repeatable.py
 run python3 scripts/audit_legendary_encounters.py
-run python3 scripts/audit_forms.py --require-complete
+run python3 scripts/audit_forms.py --require-complete --check
 run python3 scripts/generate_form_routes.py --check
 run python3 scripts/audit_form_routes.py
 run python3 scripts/audit_m5_runtime_integrity.py

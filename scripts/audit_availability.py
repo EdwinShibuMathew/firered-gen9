@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import io
 import json
 import re
 from pathlib import Path
@@ -178,14 +179,14 @@ def c_fire_red_preprocess(text: str) -> str:
     return fire_red_preprocess(text)
 
 
-def write_rows(path: Path, rows: list[dict[str, str]]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
+def render_rows(rows: list[dict[str, str]]) -> bytes:
     fields = ("species", "form", "acquisition_method", "map", "encounter_type",
               "badge_requirement", "rate", "evolution_source", "quest", "notes")
-    with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields)
-        writer.writeheader()
-        writer.writerows(rows)
+    handle = io.StringIO(newline="")
+    writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
+    writer.writeheader()
+    writer.writerows(sorted(rows, key=lambda row: tuple(row[field] for field in fields)))
+    return handle.getvalue().encode("utf-8")
 
 
 def parse_reserve_rows() -> list[dict[str, str]]:
@@ -212,10 +213,19 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--csv", type=Path, default=DEFAULT_CSV)
     parser.add_argument("--require-complete", action="store_true")
+    parser.add_argument("--check", action="store_true", help="compare the ledger without writing it")
     args = parser.parse_args()
     rows = (parse_wild_rows() + parse_stock_wild_rows() + parse_scripted_rows()
             + parse_ingame_trade_rows() + parse_reserve_rows())
-    write_rows(args.csv, rows)
+    rendered = render_rows(rows)
+    ledger_ok = True
+    if args.check:
+        ledger_ok = args.csv.is_file() and args.csv.read_bytes() == rendered
+        print(f"{'PASS' if ledger_ok else 'STALE'} availability ledger: {args.csv}")
+    else:
+        args.csv.parent.mkdir(parents=True, exist_ok=True)
+        args.csv.write_bytes(rendered)
+        print(f"Wrote ledger: {args.csv}")
     seeds = {row["species"] for row in rows}
     closure = evolution_closure(seeds)
     dex_map = species_to_dex()
@@ -228,10 +238,9 @@ def main() -> int:
     print(f"Species/forms after evolution closure: {len(closure)}")
     print(f"National Pokédex coverage: {len(covered & targets)} / {len(targets)}")
     print(f"Missing National Pokédex species: {len(missing)}")
-    print(f"Wrote ledger: {args.csv}")
     if missing:
         print("First missing entries: " + ", ".join(name.removeprefix("NATIONAL_DEX_") for name in missing[:20]))
-    return 1 if args.require_complete and missing else 0
+    return 1 if not ledger_ok or (args.require_complete and missing) else 0
 
 
 if __name__ == "__main__":

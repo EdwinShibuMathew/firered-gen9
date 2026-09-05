@@ -44,3 +44,7 @@ The preserved Contrary checkout was inspected at commit `2d57c43dc562a42b81dce5e
 After Hall of Fame completion, `SELECT` in DexNav opens a nine-region selector. `UP/DOWN` chooses Kanto, Johto, Hoenn, Sinnoh, Unova, Kalos, Alola, Galar/Hisui, or Paldea; `A` saves the choice and rebuilds the scanner; cancel preserves the old selection.
 
 `scripts/generate_m7_habitat.py` derives nine 16-species pools from the National Dex mapping and excludes Legendary contract entries. Variable `VAR_M7_MIGRATION_GROUP` (`0x515A`) persists the selected group. Migration species augment DexNav only; normal map encounter headers and map identity remain unchanged.
+
+## Field-speed defaults
+
+CFRU overlay `0020` returns speed 2 for ordinary walking and initializes new saves with fast text plus the bike and surf turbo flags. These save defaults are initialized for a new game; this overlay does not retroactively set the flags in existing saves. Movement and menu behavior remain subject to the manual playthrough checklist.

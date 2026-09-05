@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import io
 import re
 from pathlib import Path
 
@@ -41,6 +42,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--csv", type=Path, default=DEFAULT_CSV)
     parser.add_argument("--require-complete", action="store_true")
+    parser.add_argument("--check", action="store_true", help="compare the ledger without writing it")
     args = parser.parse_args()
     species_text = SPECIES.read_text(encoding="utf-8")
     known = set(re.findall(r"^#define\s+(SPECIES_[A-Z0-9_]+)\s+0x[0-9A-Fa-f]+", species_text, re.M))
@@ -53,17 +55,24 @@ def main() -> int:
         handler = "item/form handler present" if any(member in handler_text for member in present) else "requires handler review"
         rows.append({"family": family, "members": ";".join(members), "present": ";".join(present), "missing": ";".join(absent), "handler": handler})
         missing.extend((family, member) for member in absent)
-    args.csv.parent.mkdir(parents=True, exist_ok=True)
-    with args.csv.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=("family", "members", "present", "missing", "handler"))
-        writer.writeheader()
-        writer.writerows(rows)
+    handle = io.StringIO(newline="")
+    writer = csv.DictWriter(handle, fieldnames=("family", "members", "present", "missing", "handler"))
+    writer.writeheader()
+    writer.writerows(rows)
+    rendered = handle.getvalue().encode("utf-8")
+    ledger_ok = True
+    if args.check:
+        ledger_ok = args.csv.is_file() and args.csv.read_bytes() == rendered
+        print(f"{'PASS' if ledger_ok else 'STALE'} forms ledger: {args.csv}")
+    else:
+        args.csv.parent.mkdir(parents=True, exist_ok=True)
+        args.csv.write_bytes(rendered)
+        print(f"Wrote ledger: {args.csv}")
     print(f"M5 FORM AUDIT: {len(FAMILIES) - len({f for f, _ in missing})}/{len(FAMILIES)} families have all requested constants")
     print(f"Form families audited: {len(FAMILIES)}; missing constants: {len(missing)}")
-    print(f"Wrote ledger: {args.csv}")
     if missing:
         print("Missing: " + ", ".join(f"{family}:{member}" for family, member in missing))
-    return 1 if args.require_complete and missing else 0
+    return 1 if not ledger_ok or (args.require_complete and missing) else 0
 
 
 if __name__ == "__main__":

@@ -1,0 +1,31 @@
+diff --git a/scripts/build.py b/scripts/build.py
+--- a/scripts/build.py
++++ b/scripts/build.py
+@@ -3 +3 @@
+-from glob import glob
++from build_order import glob, NormalizeSpritePadding
+@@ -435,0 +436,1 @@
++    NormalizeSpritePadding(assembledFile)
+diff --git a/scripts/tm_tutor.py b/scripts/tm_tutor.py
+--- a/scripts/tm_tutor.py
++++ b/scripts/tm_tutor.py
+@@ -3 +3 @@
+-from glob import glob
++from build_order import glob
+diff --git a/scripts/build_order.py b/scripts/build_order.py
+new file mode 100644
+--- /dev/null
++++ b/scripts/build_order.py
+@@ -0,0 +1,12 @@
++"""Use the orchestration repository's reviewed build-input order."""
++from functools import partial
++from pathlib import Path
++import sys
++
++root = Path(__file__).resolve().parents[3]
++sys.path.insert(0, str(root / "scripts"))
++from ordered_build_inputs import ordered_glob
++from grit_lz_padding import normalize
++
++glob = partial(ordered_glob, manifest=root / "data/build_order/dpe.json")
++NormalizeSpritePadding = partial(normalize, manifest=root / "data/build_order/dpe_lz_padding.json")

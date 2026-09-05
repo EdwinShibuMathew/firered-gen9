@@ -21,7 +21,7 @@ Tested historical artifact: CFRU SHA-256 `32136e7063ea8ea54eed429a4f311f3ae09303
 
 All 11 M1 gates—seven automated plus wild capture, Pokédex, PC, and audio checks—were recorded complete on 2026-09-01 in commit `cb60518098ec99d89aa68d0d19a04d4515ede358`; tag `gen9-engine-baseline` points to that milestone.
 
-Supporting commands:
+Historical supporting commands (not the current acceptance workflow):
 
 ```sh
 python3 scripts/m1_automated_test.py
@@ -29,11 +29,43 @@ python3 scripts/m1_completion_report.py
 python3 scripts/m1_interactive_test.py
 ```
 
-The report generator writes to ignored `build/reports/` by default. Test saves under `.upstream/` are disposable and must not be committed.
+The report generator writes to ignored `build/reports/` by default. The automated M1 helper defaults to rewriting the tracked root `m1_test_output.txt`, and the save-completer mutates its input save. Their approximate save analysis and simulated operations cannot certify runtime behavior. Use disposable saves and explicit ignored output paths if investigating these historical helpers.
+
+## Historical startup-regression evidence
+
+The clean 2026-09-04 CFRU artifact has SHA-256 `ce5522a7229b6f46930f313d679c98567becc0036d3231f80f9f2ff68602ddc1`. It was tested with the local mGBA 0.10.5 SDL frontend and HLE BIOS.
+
+| Check | Result | Evidence |
+|---|---|---|
+| Clean pipeline | PASS | Vanilla, DPE, and CFRU stages matched their locked digests and boot-critical layout checks. |
+| Headless boot smoke | PASS | An eight-second run stayed alive with no bad-memory, invalid-address, illegal-opcode, crash, or unimplemented-memory log entry. |
+| Startup/title path | PASS | Symbolic debugger breakpoints reached `CB2_InitCopyrightScreenAfterBootup`, `CB2_InitTitleScreen`, and `CB2_TitleScreenRun`. |
+| Existing save load | PASS | Deterministic debugger input selected `CONTINUE` from the existing disposable save and reached `CB2_Overworld`. |
+| Initial overworld frames | PASS | The ROM ran for approximately ten additional seconds and `gMain.callback2` remained `CB2_Overworld` (`0x080565B5`). |
+| Sound initialization contract | PASS | CFRU's intended `0xC500` to `0xCC00` Direct Sound replacement remains at ROM offset `0x1DD0C8`; the adjacent loop count remains four. At the title callback, `SOUND_INFO_PTR` referenced `gSoundInfo`, whose identifier and all four `gMPlayInfo` identifiers were the valid `0x68736D53`. |
+| Legendary defeat recovery | STATIC PASS | The seven intended `setflag` to `clearflag` event-command swaps compile at their locked offsets without changing vanilla layout. Runtime flee/defeat/capture/blackout cases remain in the manual procedure below. |
+
+This is targeted regression evidence, not completion of the full manual feature matrix.
+
+## 2026-09-05 cleanup verification
+
+Current artifact SHA-256: `2cd43618ea7a8bf9eeca2783e60df9b64710c23792a498b8cfd0b0ca17437358`. Earlier `ce5522…` observations above remain attached to that earlier artifact.
+
+| Check | Result | Evidence |
+|---|---|---|
+| Isolated rebuilds | PASS | Two workspaces with different discovery order reproduced all stage and payload digests. One used clean upstream clones, rebuilt agbcc/grit, locally extracted compiler libraries, and no copied ROM build outputs. |
+| Incremental rebuild | PASS | Rebuilding after the isolated source corrections retained the exact current CFRU hash. |
+| Ordering/padding regression tests | PASS | Missing, duplicate, unlisted, and unsafe inputs fail; normalization preserves compressed bytes, handles tail widths, and leaves malformed streams unchanged. |
+| Audit check modes | PASS | Good/missing/stale/altered ledgers tested; 2,685 availability records including duplicates preserved; full audit suite changed no tracked file content. |
+| New game | PASS (automated emulator) | mGBA 0.10.5 SDL with dummy video/audio and HLE BIOS reached the title callback, then a new game reached `CB2_Overworld` after 5,302 injected-input frames. |
+| In-game save and restart | PASS (automated emulator) | Start-menu Save produced a 131,088-byte container; a separate mGBA process selected Continue and reached `CB2_Overworld`. |
+| Continued execution | PASS (automated emulator) | 600 additional frames retained `gMain.callback2 = 0x080565B5`. Debugger logs contained no illegal-opcode, invalid-address, bad-memory, crash, or unimplemented-memory entries. |
+
+Input was injected into `gMain` key fields immediately after `ReadKeys` at `0x0800041E`; gameplay/save routines were not bypassed. The ROM and logs were kept in a disposable directory. These checks do not establish visual/audio quality, full save compatibility, or completion of the manual feature matrix. Owner observations stay in `TEST_OBSERVATIONS.md`.
 
 ## Current candidate procedure
 
-Candidate ROM: `build/private/firered-gen9-m5-test.gba`
+Candidate ROM: `.upstream/cfru/test.gba`, verified with `python3 scripts/verify_build_artifact.py cfru .upstream/cfru/test.gba`. Copy it to a separate ignored location for manual testing; verify any older private copy before using it.
 
 Use a separate save and existing CFRU debug facilities. After every representative mutation, save in-game, close mGBA completely, reopen it, and load the save.
 

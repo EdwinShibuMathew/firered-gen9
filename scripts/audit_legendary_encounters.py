@@ -10,6 +10,17 @@ ROWS = list(csv.DictReader((ROOT / "data/legendary_encounters.csv").open(encodin
 FLAGS = (ROOT / ".upstream/pret/include/constants/flags.h").read_text(encoding="utf-8")
 HUB = (ROOT / ".upstream/cfru/assembly/overworld_scripts/system_scripts.s").read_text(encoding="utf-8")
 RESET = (ROOT / "patches/pret/0001-repeatable-legendary-encounters.patch").read_text(encoding="utf-8")
+RESET_ADDITIONS = {
+    line[1:].strip()
+    for line in RESET.splitlines()
+    if line.startswith("+") and not line.startswith("+++")
+}
+DEFEAT_CLEAR_FLAGS = {
+    "FLAG_FOUGHT_ARTICUNO",
+    "FLAG_FOUGHT_ZAPDOS",
+    "FLAG_FOUGHT_MOLTRES",
+    "FLAG_FOUGHT_MEWTWO",
+}
 
 implemented = [row for row in ROWS if row["implementation_status"] != "NOT_IMPLEMENTED"]
 errors: list[str] = []
@@ -27,7 +38,7 @@ for row in implemented:
         errors.append(f"missing map {row['portal_or_map']}")
     if row["species"] not in HUB and row["species"] not in {"SPECIES_ARTICUNO", "SPECIES_ZAPDOS", "SPECIES_MOLTRES", "SPECIES_MEWTWO", "SPECIES_LUGIA", "SPECIES_HO_OH", "SPECIES_DEOXYS"}:
         errors.append(f"missing hub binding {row['species']}")
-    if f"clearflag {flag}" in RESET:
+    if f"clearflag {flag}" in RESET_ADDITIONS and flag not in DEFEAT_CLEAR_FLAGS:
         errors.append(f"capture completion is reset for {row['species']}")
 
 if len(implemented) != len(ROWS):

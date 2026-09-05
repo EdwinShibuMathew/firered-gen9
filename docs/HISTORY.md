@@ -1,5 +1,13 @@
 # Milestone History
 
+## 2026-09-05 reproducibility cleanup
+
+Cleanup acceptance is complete with an explicit owner waiver of the fellow-programmer onboarding walkthrough. The owner requested removal of `docs/CLEANUP_PROGRESS.md`; that temporary checkpoint was removed. No human onboarding pass is claimed. Automated verification and exact-artifact emulator evidence remain in [TESTING.md](TESTING.md), and the tested Linux environment and provisioning limitations remain in [DEVELOPMENT_SETUP.md](DEVELOPMENT_SETUP.md). Public-release gameplay QA, asset review, and current BPS validation remain separate gates. Pre-existing working-tree changes were preserved alongside the cleanup.
+
+An isolated workspace exposed filesystem-dependent DPE linking. Replaying the original file order restored the locked output. A rebuild of generated sprite assembly then exposed an unused LZ77 padding byte; a manifest now preserves baseline DPE tails. A fully fresh CFRU checkout exposed three historical Urshifu species-flag aliases that had remained local-only. Additional tracked overlays preserve these inputs without changing the stage or ROM hashes. See `ARCHITECTURE.md` for the current contract and `TESTING.md` for measured build/runtime evidence.
+
+The root `m1_test_output.txt` is an early diagnostic report with a 2/5 result, retained as historical evidence. Its scripts use approximate save offsets and simulated checks; neither that file nor a regenerated M1 completion report establishes current gameplay correctness. The later M1 evidence below and current exact-artifact tests must remain distinguished.
+
 This document preserves the unique information from retired milestone plans, progress reports, generated reports, and summaries. It is historical evidence, not the source of current status; use `STATUS.md` for current claims and `TESTING.md` for active verification.
 
 The retired files are removed only after this index and the repository's Git history preserve their contents. The manifest below records the pre-cleanup SHA-256 for auditability; the commit that performs the cleanup is the canonical archival point. Historical path references inside archived excerpts are intentionally left unchanged.
@@ -158,3 +166,11 @@ python3 scripts/apply_overlays.py --check
 M5 added the direct Evolution Guide, canonical generated form routing, `TryChangeMonForm`, Cinnabar Form Lab/Form Preserve, fusion guards, and Generation I–IX Legendary Hub. M6 ported the Contrary starter through isolated overlays without modifying its reference checkout. M7 added the optional nine-group DexNav selector. M8 produced the ignored ROM and round-trip BPS candidate.
 
 The current implementation details, hashes, and pending gates live in `FEATURES.md`, `ARCHITECTURE.md`, `STATUS.md`, and `TESTING.md`; this separation prevents historical plans from contradicting the active handoff.
+
+## 2026-09-03 startup regression and repair
+
+Commit `28fa112` introduced a pret Legendary-recovery overlay that inserted and deleted event commands. Although the event behavior was locally reasonable, changing the vanilla ROM size before CFRU violated CFRU's fixed-offset patching contract. CFRU's Direct Sound byte replacement at ROM offset `0x1DD0C8` consequently landed four bytes late: it changed the `m4aSoundInit` music-player loop count from four to `0xCC00` instead of changing the intended Direct Sound constant from `0xC500` to `0xCC00`.
+
+At boot, `m4aSoundInit` advanced beyond the four-entry `gMPlayTable` into `gSongTable`. `MPlayOpen` then interpreted song data as music-player and track pointers, and `Clear64byte` began writing through those invalid addresses. The first observed corrupt write was from `SoundMainBTM`/`Clear64byte`, called by `MPlayOpen`; the eventual jump to `0x04000DF4` was downstream control-flow corruption, not a legitimate callback target.
+
+The repair reduced the overlay to seven same-size `setflag` to `clearflag` opcode substitutions in the affected defeat handlers. Capture paths retain their permanent completion flags, while defeat paths clear the corresponding fought or temporary fled flag. The vanilla stage now differs from clean FireRed at exactly those seven bytes, so CFRU's sound replacement again targets the intended constant and the loop count remains four. Locked stage digests and a boot-critical byte verifier were added to prevent recurrence. The clean fixed ROM reached the title screen, loaded the existing save into `CB2_Overworld`, and survived additional overworld frames in mGBA 0.10.5; the full Legendary outcome matrix remains manual QA.

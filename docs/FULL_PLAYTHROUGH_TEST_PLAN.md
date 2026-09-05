@@ -14,7 +14,7 @@ Date started:
 mGBA version (Help > About):
 Computer and operating system:
 Controller or keyboard:
-ROM SHA-256: e2d4da0696ac9b0cf6ba74ff3c117e6b3b55baa48f43f6839717f191340ec80d
+ROM SHA-256: ce5522a7229b6f46930f313d679c98567becc0036d3231f80f9f2ff68602ddc1
 ```
 
 ### How to mark a test

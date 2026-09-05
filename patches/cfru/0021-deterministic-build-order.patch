@@ -1,0 +1,21 @@
+diff --git a/scripts/build.py b/scripts/build.py
+--- a/scripts/build.py
++++ b/scripts/build.py
+@@ -4 +4 @@
+-from glob import glob
++from build_order import glob
+diff --git a/scripts/build_order.py b/scripts/build_order.py
+new file mode 100644
+--- /dev/null
++++ b/scripts/build_order.py
+@@ -0,0 +1,10 @@
++"""Use the orchestration repository's reviewed build-input order."""
++from functools import partial
++from pathlib import Path
++import sys
++
++root = Path(__file__).resolve().parents[3]
++sys.path.insert(0, str(root / "scripts"))
++from ordered_build_inputs import ordered_glob
++
++glob = partial(ordered_glob, manifest=root / "data/build_order/cfru.json")

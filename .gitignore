@@ -2,6 +2,7 @@
 .work/
 .venv/
 .tools/
+base-rom/
 *.gba
 *.sav
 *.sgm

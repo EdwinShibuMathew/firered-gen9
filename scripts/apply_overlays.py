@@ -22,8 +22,10 @@ UPSTREAM_DIRS = {
 
 
 def git_apply(repo: Path, patch: Path, *options: str) -> bool:
+    # The fixed-layout pret overlay uses zero-context, one-line opcode swaps so
+    # its patch file itself remains clean under `git diff --check`.
     result = subprocess.run(
-        ["git", "apply", *options, str(patch)], cwd=repo,
+        ["git", "apply", "--unidiff-zero", *options, str(patch)], cwd=repo,
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False,
     )
     return result.returncode == 0

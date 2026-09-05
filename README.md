@@ -8,6 +8,9 @@ Development is gated by milestones. M0–M4 and the compiled portions of M5–M8
 
 ## Documentation
 
+- [Linux development setup](docs/DEVELOPMENT_SETUP.md) — pinned tools, fresh build, and troubleshooting.
+- [Contributing](CONTRIBUTING.md) — reading order, ownership, focused changes, and verification gates.
+- [Script reference](docs/SCRIPTS.md) — prerequisites and write effects for checks and generators.
 - [Live playthrough testing dashboard](https://edwinshibumathew.github.io/firered-gen9/) — private-code checklist and combined progress reporting.
 - [`docs/STATUS.md`](docs/STATUS.md) — current milestone state, build evidence, and remaining gates.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — build pipeline, upstream pins, offsets, and reproducibility.

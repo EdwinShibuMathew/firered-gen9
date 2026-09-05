@@ -1,0 +1,122 @@
+[
+  {
+    "file": "binutils-arm-none-eabi_2.45.50.20251209-1ubuntu1+23build1_amd64.deb",
+    "sha256": "abccb894e824f007bd2f969e2164d164d308badf507910f105c3c3641345b416",
+    "package": "binutils-arm-none-eabi",
+    "version": "2.45.50.20251209-1ubuntu1+23build1"
+  },
+  {
+    "file": "gcc-arm-none-eabi_15%3a14.2.rel1-1_amd64.deb",
+    "sha256": "43e626970e5b2c7b25bf03fb84508a4aff6d85216544038ff80bf6363787c12d",
+    "package": "gcc-arm-none-eabi",
+    "version": "15:14.2.rel1-1"
+  },
+  {
+    "file": "libdeflate0_1.23-2ubuntu1_amd64.deb",
+    "sha256": "40ee517cffd3730405be6ae30826533bec0ddf8773bb7ac2cccd22a57acafc25",
+    "package": "libdeflate0",
+    "version": "1.23-2ubuntu1"
+  },
+  {
+    "file": "libfreeimage-dev_3.18.0+ds2-11build1_amd64.deb",
+    "sha256": "db49b0be89407133ee0374f3481d9e7dde6f9247753dca49498658a656887d4e",
+    "package": "libfreeimage-dev",
+    "version": "3.18.0+ds2-11build1"
+  },
+  {
+    "file": "libfreeimage3_3.18.0+ds2-11build1_amd64.deb",
+    "sha256": "0edf9a6e0b2217a4aa17367e4d0384599ece10b5f25fffa2531a75eed644aec1",
+    "package": "libfreeimage3",
+    "version": "3.18.0+ds2-11build1"
+  },
+  {
+    "file": "libimath-3-1-29t64_3.1.12-1ubuntu5_amd64.deb",
+    "sha256": "526ae12ddc13b3c7a9b582e44f43d376aa248e896b2ecf21be1b0c3dc36bfd18",
+    "package": "libimath-3-1-29t64",
+    "version": "3.1.12-1ubuntu5"
+  },
+  {
+    "file": "libjbig0_2.1-6.1ubuntu3_amd64.deb",
+    "sha256": "bb2ffa4e359ee7a29dab9902b45e5c85de06f019272700cb2538e4762f141ee8",
+    "package": "libjbig0",
+    "version": "2.1-6.1ubuntu3"
+  },
+  {
+    "file": "libjpeg8_8c-2ubuntu12_amd64.deb",
+    "sha256": "1403d44d2c2d3eba6a7a8aea97fab0bac2e89e144a3bf600adfdd3ecdc3d9394",
+    "package": "libjpeg8",
+    "version": "8c-2ubuntu12"
+  },
+  {
+    "file": "libjxr0t64_1.2~git20170615.f752187-5.3build1_amd64.deb",
+    "sha256": "748b8f398ee64ef4e1c33a1eb3f7e6937da7286435a5955725817ec6a9987b5d",
+    "package": "libjxr0t64",
+    "version": "1.2~git20170615.f752187-5.3build1"
+  },
+  {
+    "file": "liblerc4_4.0.0+ds-5ubuntu2_amd64.deb",
+    "sha256": "29051d37d010a7a0e3b5648f73f30d35eb1e313061137c88f3a2c2078925a36d",
+    "package": "liblerc4",
+    "version": "4.0.0+ds-5ubuntu2"
+  },
+  {
+    "file": "libnewlib-arm-none-eabi_4.6.0.20260123-1_all.deb",
+    "sha256": "8a58c66a59d5e57515cc3ca093f67599c682cb880992d87acb87145c47e33d8b",
+    "package": "libnewlib-arm-none-eabi",
+    "version": "4.6.0.20260123-1"
+  },
+  {
+    "file": "libnewlib-dev_4.6.0.20260123-1_all.deb",
+    "sha256": "5c90e34938803a087deba5f79417076a71193e4d60c451a26211abbf24190ab9",
+    "package": "libnewlib-dev",
+    "version": "4.6.0.20260123-1"
+  },
+  {
+    "file": "libopenexr-3-1-30_3.1.13-2build1_amd64.deb",
+    "sha256": "040a38c394002ffcea3f63bebb50b9edf474846341a22f496df943140ff2ca44",
+    "package": "libopenexr-3-1-30",
+    "version": "3.1.13-2build1"
+  },
+  {
+    "file": "libopenjp2-7_2.5.4-1ubuntu0.1_amd64.deb",
+    "sha256": "e004284779778e47573997b8994109120b5d5101e6b6c7dfa9b30b346c819845",
+    "package": "libopenjp2-7",
+    "version": "2.5.4-1ubuntu0.1"
+  },
+  {
+    "file": "libpng-dev_1.6.57-1_amd64.deb",
+    "sha256": "06dc3b12e940079ba59da9877995f05ba01130739375563e910b94101760e000",
+    "package": "libpng-dev",
+    "version": "1.6.57-1"
+  },
+  {
+    "file": "libpng16-16t64_1.6.57-1_amd64.deb",
+    "sha256": "e3af297b2131aea35eab7e2751b4158ec7ae4ffb6d746043199f766fc727744f",
+    "package": "libpng16-16t64",
+    "version": "1.6.57-1"
+  },
+  {
+    "file": "libraw23t64_0.21.5b-1ubuntu1.1_amd64.deb",
+    "sha256": "dde3ec8e0171bfbac4d556a84bb7334797d7244b73bbade50c0c885c8f6cfa51",
+    "package": "libraw23t64",
+    "version": "0.21.5b-1ubuntu1.1"
+  },
+  {
+    "file": "libtiff6_4.7.0-3ubuntu5_amd64.deb",
+    "sha256": "f48cb837a644826b9411ecd9692cbd57fbcb57b5b8fba026652d9204b3acb169",
+    "package": "libtiff6",
+    "version": "4.7.0-3ubuntu5"
+  },
+  {
+    "file": "libwebpmux3_1.5.0-0.1build1_amd64.deb",
+    "sha256": "e4da6abdb642623afd2e4a60ef354539f8b74ba0f2daaaeb0e058a392d4ae571",
+    "package": "libwebpmux3",
+    "version": "1.5.0-0.1build1"
+  },
+  {
+    "file": "mgba-sdl_0.10.5+dfsg-3build1_amd64.deb",
+    "sha256": "23ac9bd1e9555e4c73e91176a4e19205fa74894fea55aef30faf7795c600e3ee",
+    "package": "mgba-sdl",
+    "version": "0.10.5+dfsg-3build1"
+  }
+]

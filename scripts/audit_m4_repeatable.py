@@ -1,21 +1,47 @@
 #!/usr/bin/env python3
-"""Verify one-capture static Legendary recovery contracts."""
+"""Verify layout-preserving one-capture static Legendary recovery changes."""
+
 from pathlib import Path
+
+
 ROOT = Path(__file__).resolve().parents[1]
 PATCH = ROOT / "patches/pret/0001-repeatable-legendary-encounters.patch"
-EXPECTED = ("FLAG_FOUGHT_ZAPDOS", "FLAG_FOUGHT_ARTICUNO", "FLAG_FOUGHT_MOLTRES", "FLAG_FOUGHT_MEWTWO", "FLAG_FOUGHT_LUGIA", "FLAG_FOUGHT_HO_OH", "FLAG_FOUGHT_DEOXYS")
+FLAGS = (
+    "FLAG_FOUGHT_ZAPDOS",
+    "FLAG_FOUGHT_ARTICUNO",
+    "FLAG_FOUGHT_MOLTRES",
+    "FLAG_FOUGHT_MEWTWO",
+    "FLAG_LUGIA_FLEW_AWAY",
+    "FLAG_HO_OH_FLEW_AWAY",
+    "FLAG_DEOXYS_FLEW_AWAY",
+)
+
+
+def changed_lines(text: str, prefix: str) -> list[str]:
+    return [
+        line[1:].strip()
+        for line in text.splitlines()
+        if line.startswith(prefix) and not line.startswith(prefix * 3)
+    ]
+
+
 text = PATCH.read_text(encoding="utf-8")
-cleared_completion = [flag for flag in EXPECTED if f"clearflag {flag}" in text]
-missing_capture_guards = [flag for flag in EXPECTED if flag not in text]
-temporary_resets = ("FLAG_LUGIA_FLEW_AWAY", "FLAG_HO_OH_FLEW_AWAY", "FLAG_DEOXYS_FLEW_AWAY")
-missing_temporary = [flag for flag in temporary_resets if f"clearflag {flag}" not in text]
-errors = bool(cleared_completion or missing_capture_guards or missing_temporary)
-print(f"M4 one-capture recovery: {len(EXPECTED) - len(missing_capture_guards)}/{len(EXPECTED)} capture guards; "
-      f"{len(temporary_resets) - len(missing_temporary)}/{len(temporary_resets)} temporary locks reset")
-if cleared_completion:
-    print("Completion flags incorrectly cleared: " + ", ".join(cleared_completion))
-if missing_capture_guards:
-    print("Missing capture guards: " + ", ".join(missing_capture_guards))
-if missing_temporary:
-    print("Missing temporary resets: " + ", ".join(missing_temporary))
-raise SystemExit(1 if errors else 0)
+added = changed_lines(text, "+")
+removed = changed_lines(text, "-")
+expected_added = {f"clearflag {flag}" for flag in FLAGS}
+expected_removed = {f"setflag {flag}" for flag in FLAGS}
+errors = []
+
+if set(added) != expected_added or len(added) != len(FLAGS):
+    errors.append("additions are not exactly the seven same-size clearflag commands")
+if set(removed) != expected_removed or len(removed) != len(FLAGS):
+    errors.append("removals are not exactly the seven matching setflag commands")
+if text.count("diff --git a/data/maps/") != len(FLAGS):
+    errors.append("unexpected number of map files changed")
+
+if errors:
+    for error in errors:
+        print(f"FAIL M4 layout contract: {error}")
+    raise SystemExit(1)
+
+print("PASS M4 one-capture recovery: 7/7 defeat flags use layout-preserving opcode swaps")
