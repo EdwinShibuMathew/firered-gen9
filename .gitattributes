@@ -1,0 +1,3 @@
+# Unified-diff context uses a leading space, including before tabs and on blank
+# lines. These are patch syntax, not whitespace defects in the patched source.
+patches/**/*.patch whitespace=-blank-at-eol,-space-before-tab
